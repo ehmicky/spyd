@@ -1,6 +1,11 @@
 import { handleError } from './error.js'
 
-// Call `keyword.test()`
+// Call `keyword.test()`.
+// Keywords cannot validate inputs in `test()`, i.e. any exception is considered
+// a keyword bug.
+//  - This is because `test()` is called before definition function, which might
+//    return `undefined`, i.e. might skip the keyword
+//  - Inputs must be validated in `main()` instead
 export const callTest = async function ({ test, input, info, keyword }) {
   return await callFunc({
     func: test,
@@ -13,7 +18,9 @@ export const callTest = async function ({ test, input, info, keyword }) {
   })
 }
 
-// Call `keyword.normalize()`
+// Call `keyword.normalize()`.
+// Exceptions starting with "must" can be thrown for invalid definitions.
+// Other exceptions are considered keyword bugs.
 export const callNormalize = async function ({
   normalize,
   definition,
@@ -34,7 +41,9 @@ export const callNormalize = async function ({
   })
 }
 
-// Call definition function
+// Call definition function.
+// Exceptions starting with "must" can be thrown for invalid input.
+// Other exceptions are considered invalid definitions.
 export const callDefinition = async function ({
   definition,
   input,
@@ -58,6 +67,8 @@ export const callDefinition = async function ({
 }
 
 // Call `keyword.main()`
+// Exceptions starting with "must" can be thrown for invalid input.
+// Other exceptions are considered keyword bugs.
 export const callMain = async function ({
   main,
   definition,
@@ -84,7 +95,7 @@ export const callMain = async function ({
 // Call a function from `test()`, `main()` or a definition.
 // They are all:
 //  - Optionally async
-//  - Called with same arguments
+//  - Called with similar arguments
 //  - Error handled
 const callFunc = async function ({
   func,
