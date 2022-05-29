@@ -23,6 +23,7 @@ const configProp = {
 const configPropAny = [
   {
     name: 'config.*',
+    required: true,
     path: normalizeConfigFilePath,
     transform: resolveConfig,
   },

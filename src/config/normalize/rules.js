@@ -138,6 +138,7 @@ const select = {
 
 const selectAny = {
   name: 'select.*',
+  required: true,
   pick: amongCommands(['dev', 'remove', 'run', 'show']),
   schema: { type: 'string' },
   example: EXAMPLE_SELECT,

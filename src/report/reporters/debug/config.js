@@ -34,6 +34,7 @@ export const config = [
   },
   {
     name: 'stats.*',
+    required: true,
     schema: {
       type: 'string',
       enum: ALL_STAT_NAMES,

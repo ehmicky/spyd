@@ -21,6 +21,7 @@ const tasks = {
 
 const tasksAny = {
   name: 'tasks.*',
+  required: true,
   pick,
   glob: true,
   example: DEFAULT_TASKS,

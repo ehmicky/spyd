@@ -12,6 +12,7 @@ export const config = [
   },
   {
     name: 'require.*',
+    required: true,
     schema: {
       type: 'string',
       minLength: 1,

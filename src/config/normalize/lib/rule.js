@@ -1,5 +1,4 @@
 import { normalizeQuery, serializeQuery } from 'wild-wild-parser'
-import { get } from 'wild-wild-path'
 
 import { wrapError } from '../../../error/wrap.js'
 
@@ -13,19 +12,7 @@ export const normalizeRules = function (rules, all) {
 const normalizeRule = function ({ name, ...rule }, all) {
   const namePath = getNamePath(name)
   const nameQuery = serializeQuery(namePath)
-  const defaultRule = {
-    required: defaultRequired,
-    example: rule.default,
-    ...all,
-  }
-  return { ...defaultRule, ...rule, nameQuery, namePath }
-}
-
-// `required` defaults to `false` except for array items.
-// This validates against sparse arrays by default, since they are usually
-// unwanted.
-const defaultRequired = function ({ path, config }) {
-  return path.length !== 0 && Array.isArray(get(config, path.slice(0, -1)))
+  return { example: rule.default, ...all, ...rule, nameQuery, namePath }
 }
 
 const getNamePath = function (name) {
