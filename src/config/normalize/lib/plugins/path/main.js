@@ -20,11 +20,11 @@ export const input = true
 // This is performed before `transform()` and `validate()`.
 //  - This allows using `validate()` to validate file existence, parent
 //    directories, timestamps, file types, etc.
-export const main = async function (keywords, value, { cwd }) {
+export const main = async function (definition, value, { cwd }) {
   validateDefinedString(value)
   const valueA = resolve(cwd, value)
-  const keywordsA = checkKeywords(keywords)
-  await validateFile(valueA, keywordsA)
+  const keywords = checkKeywords(definition)
+  await validateFile(valueA, keywords)
   return { value: valueA }
 }
 

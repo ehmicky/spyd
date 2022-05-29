@@ -17,8 +17,8 @@ export const input = true
 //  - This allows using `validate()` to validate parent directories, timestamps,
 //    file types, etc.
 // This is performed before `path` in cases both are `true`.
-export const main = async function (glob, value, { cwd }) {
-  if (!glob) {
+export const main = async function (definition, value, { cwd }) {
+  if (!definition) {
     return
   }
 

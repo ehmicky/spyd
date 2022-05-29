@@ -4,12 +4,12 @@ export const input = true
 
 // Apply `transform(value, opts)` which transforms the value set by the user.
 // If can also delete it by returning `undefined`.
-export const main = function (transform, value) {
-  const { value: valueA, newProp } = isTransformMove(transform)
-    ? transform
+export const main = function (definition, value) {
+  const { value: valueA, newProp } = isTransformMove(definition)
+    ? definition
     : {
-        value: transform,
-        newProp: findCommonMove(transform, value),
+        value: definition,
+        newProp: findCommonMove(definition, value),
       }
   return { value: valueA, path: newProp }
 }
@@ -19,12 +19,12 @@ export const main = function (transform, value) {
 //  - It does not move the property.
 //  - Instead, it indicates it's been moved so error messages show the name
 //    of the property before being moved
-const isTransformMove = function (transform) {
+const isTransformMove = function (definition) {
   return (
-    typeof transform === 'object' &&
-    transform !== null &&
-    'value' in transform &&
-    'newProp' in transform
+    typeof definition === 'object' &&
+    definition !== null &&
+    'value' in definition &&
+    'newProp' in definition
   )
 }
 

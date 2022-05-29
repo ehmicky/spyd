@@ -42,27 +42,27 @@ const applyPlugin = async function ({
   state: { value, config, moves, opts, warnings },
   rule,
 }) {
-  const ruleArg = rule[name]
+  const definition = rule[name]
 
   if (
-    ruleArg === undefined ||
+    definition === undefined ||
     (defined === true && value === undefined) ||
     (defined === false && value !== undefined)
   ) {
     return state
   }
 
-  const ruleArgA =
-    typeof ruleArg === 'function'
-      ? await callFunc({ func: ruleArg, value, opts, input, defined })
-      : ruleArg
+  const definitionA =
+    typeof definition === 'function'
+      ? await callFunc({ func: definition, value, opts, input, defined })
+      : definition
 
-  if (ruleArgA === undefined) {
+  if (definitionA === undefined) {
     return state
   }
 
   const returnValue = await callFunc({
-    func: main.bind(undefined, ruleArgA),
+    func: main.bind(undefined, definitionA),
     value,
     opts,
     input,
