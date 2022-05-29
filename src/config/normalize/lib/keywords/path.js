@@ -1,8 +1,7 @@
 import { normalizePath } from 'wild-wild-parser'
 
-import { wrapError } from '../../../error/wrap.js'
-
-import { addMove } from './move.js'
+import { wrapError } from '../../../../error/wrap.js'
+import { addMove } from '../move.js'
 
 export const applyPath = function (
   { path },

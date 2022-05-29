@@ -1,5 +1,5 @@
 import { callConstraintFunc } from './call.js'
-import { applyKeywords } from './keyword.js'
+import { applyKeywords } from './keywords/main.js'
 
 // Once the initial input has been computed, apply validation and transforms,
 // unless the input is `undefined`.

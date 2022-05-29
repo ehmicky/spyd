@@ -3,7 +3,7 @@ import { basename } from 'path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { validateDefinedString } from '../type.js'
+import { validateDefinedString } from '../../type.js'
 
 export const name = 'glob'
 export const hasInput = true

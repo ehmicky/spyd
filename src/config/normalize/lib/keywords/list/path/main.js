@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 
-import { validateDefinedString } from '../../type.js'
+import { validateDefinedString } from '../../../type.js'
 
 import { validateAccess } from './access.js'
 import { checkKeywords } from './check.js'

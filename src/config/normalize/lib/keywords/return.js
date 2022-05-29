@@ -1,7 +1,8 @@
+import { addWarning } from '../warn.js'
+
 import { applyPath } from './path.js'
 import { applyRename } from './rename.js'
 import { transformInput } from './transform.js'
-import { addWarning } from './warn.js'
 
 export const applyReturnValue = function ({
   returnValue,

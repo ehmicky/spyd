@@ -1,9 +1,9 @@
 import { serializePath, normalizePath } from 'wild-wild-parser'
 import { remove } from 'wild-wild-path'
 
-import { wrapError } from '../../../error/wrap.js'
+import { wrapError } from '../../../../error/wrap.js'
+import { addMove } from '../move.js'
 
-import { addMove } from './move.js'
 import { setConfig } from './set.js'
 
 export const applyRename = function ({
