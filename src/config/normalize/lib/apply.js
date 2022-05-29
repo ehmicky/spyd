@@ -1,12 +1,12 @@
-import { remove, set } from 'wild-wild-path'
+import { remove } from 'wild-wild-path'
 
-import { callInputFunc, callNoInputFunc } from './call.js'
+import { callInputFunc } from './call.js'
 import { applyKeywords } from './keywords/main.js'
 
 // Apply a rule on a specific property
 export const applyRule = async function ({
   rule,
-  rule: { pick, condition, compute },
+  rule: { pick, condition },
   input,
   config,
   moves,
@@ -22,15 +22,7 @@ export const applyRule = async function ({
     return { config, warnings, moves }
   }
 
-  const configB = await computeInput(config, compute, opts)
-  return await applyKeywords({
-    rule,
-    input,
-    config: configB,
-    moves,
-    warnings,
-    opts,
-  })
+  return await applyKeywords({ rule, input, config, moves, warnings, opts })
 }
 
 // Apply `pick[(input, opts)]` which omits the current input if `false` is
@@ -47,15 +39,4 @@ const againstCondition = async function (input, condition, opts) {
   return (
     condition !== undefined && !(await callInputFunc(condition, input, opts))
   )
-}
-
-// Apply `compute[(opts)]` which sets an input from the system, instead of the
-// user
-const computeInput = async function (config, compute, opts) {
-  if (compute === undefined) {
-    return config
-  }
-
-  const input = await callNoInputFunc(compute, opts)
-  return set(config, opts.funcOpts.path, input)
 }
