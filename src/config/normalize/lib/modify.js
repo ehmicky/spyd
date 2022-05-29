@@ -17,12 +17,7 @@ export const validateAndModify = async function ({
     return { config, warnings, moves }
   }
 
-  const {
-    config: configA,
-    warnings: warningsA,
-    moves: movesA,
-  } = await applyKeywords({ rule, input, config, moves, warnings, opts })
-  return { config: configA, warnings: warningsA, moves: movesA }
+  return await applyKeywords({ rule, input, config, moves, warnings, opts })
 }
 
 // Apply `required[(opts)]` which throws if `true` and input is `undefined`
