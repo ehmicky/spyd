@@ -1,31 +1,61 @@
+import { statSync } from 'fs'
 import { stat } from 'fs/promises'
 import { resolve } from 'path'
 import { cwd as getCwd } from 'process'
 
-const normalizeAsync = async function (definition) {
-  await validateCwd(definition)
+const normalize = function (definition) {
+  validateCwd(definition)
   return resolve(definition)
 }
 
-const validateCwd = async function (definition) {
+const normalizeAsync = async function (definition) {
+  await validateCwdAsync(definition)
+  return resolve(definition)
+}
+
+const validateCwd = function (definition) {
+  validateCwdString(definition)
+  const cwdStat = getStat(definition)
+  validateCwdStat(cwdStat)
+}
+
+const validateCwdAsync = async function (definition) {
+  validateCwdString(definition)
+  const cwdStat = await getStatAsync(definition)
+  validateCwdStat(cwdStat)
+}
+
+const validateCwdString = function (definition) {
   if (typeof definition !== 'string') {
     throw new TypeError('must be a string.')
   }
+}
 
-  const cwdStat = await getStat(definition)
-
-  if (!cwdStat.isDirectory()) {
-    throw new Error('must be a directory.')
+const getStat = function (definition) {
+  try {
+    return statSync(definition)
+  } catch (error) {
+    throw handleStatError(error)
   }
 }
 
-const getStat = async function (definition) {
+const getStatAsync = async function (definition) {
   try {
     return await stat(definition)
   } catch (error) {
-    throw error.code === 'ENOENT'
-      ? new Error('must be an existing file.')
-      : error
+    throw handleStatError(error)
+  }
+}
+
+const handleStatError = function (error) {
+  return error.code === 'ENOENT'
+    ? new Error('must be an existing file.')
+    : error
+}
+
+const validateCwdStat = function (cwdStat) {
+  if (!cwdStat.isDirectory()) {
+    throw new Error('must be a directory.')
   }
 }
 
@@ -39,6 +69,7 @@ export default {
   name: 'cwd',
   undefinedInput: true,
   exampleDefinition: getCwd(),
+  normalize,
   normalizeAsync,
   main,
 }
