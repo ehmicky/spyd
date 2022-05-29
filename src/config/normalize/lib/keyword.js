@@ -1,5 +1,5 @@
 import { callFunc } from './call.js'
-import { KEYWORDS } from './keywords/main.js'
+import { KEYWORDS } from './list/main.js'
 import { applyReturnValue } from './return.js'
 import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 
