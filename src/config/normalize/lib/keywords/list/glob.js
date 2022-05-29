@@ -36,6 +36,7 @@ const main = async function (definition, input, { cwd }) {
 export default {
   name: 'glob',
   hasInput: true,
+  exampleDefinition: true,
   normalize: normalizeBoolean,
   main,
 }

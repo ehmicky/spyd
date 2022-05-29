@@ -11,6 +11,7 @@ export default {
   name: 'condition',
   hasInput: true,
   undefinedInput: true,
+  exampleDefinition: true,
   normalize: normalizeBoolean,
   main,
 }

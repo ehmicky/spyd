@@ -8,6 +8,7 @@ const main = function (definition) {
 export default {
   name: 'prefix',
   undefinedInput: true,
+  exampleDefinition: 'Configuration property',
   normalize: normalizeString,
   main,
 }

@@ -10,10 +10,7 @@ const normalize = function (definition) {
   try {
     return AJV.compile(definition)
   } catch (error) {
-    throw wrapError(
-      error,
-      '"schema" value is invalid JSON schema (version 2020).\n',
-    )
+    throw wrapError(error, 'must be a valid JSON schema (version 2020).\n')
   }
 }
 
@@ -61,6 +58,7 @@ const serializeAjvError = function ({ instancePath, message }) {
 export default {
   name: 'schema',
   hasInput: true,
+  exampleDefinition: { type: 'string' },
   normalize,
   main,
 }

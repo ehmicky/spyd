@@ -6,5 +6,6 @@ const main = function (definition) {
 export default {
   name: 'context',
   undefinedInput: true,
+  exampleDefinition: { anyContextProp: true },
   main,
 }

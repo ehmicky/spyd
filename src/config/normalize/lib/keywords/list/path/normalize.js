@@ -1,7 +1,7 @@
 // Ensure the `path` definition is correct
 export const normalize = function (definition) {
   if (!Array.isArray(definition)) {
-    throw new TypeError(`The definition must be an array.`)
+    throw new TypeError('must be an array.')
   }
 
   definition.forEach(checkKeyword)
@@ -10,14 +10,12 @@ export const normalize = function (definition) {
 
 const checkKeyword = function (keyword) {
   if (typeof keyword !== 'string') {
-    throw new TypeError(`The definition value ${keyword} must be a string.`)
+    throw new TypeError('must have string keywords.')
   }
 
   if (!KEYWORDS_SET.has(keyword)) {
     const availableKeywords = KEYWORDS.map(quoteWord).join(', ')
-    throw new TypeError(
-      `The definition value "${keyword}" must be one of: ${availableKeywords}`,
-    )
+    throw new TypeError(`must have keywords among: ${availableKeywords}`)
   }
 }
 
@@ -40,4 +38,5 @@ const KEYWORDS = [
   WRITE_KEYWORD,
   EXEC_KEYWORD,
 ]
+export const EXAMPLE_KEYWORDS = [EXIST_KEYWORD, FILE_KEYWORD, READ_KEYWORD]
 const KEYWORDS_SET = new Set(KEYWORDS)

@@ -1,8 +1,6 @@
-import { normalizePath, serializePath } from 'wild-wild-parser'
+import { serializePath } from 'wild-wild-parser'
 
-const normalize = function (definition) {
-  return normalizePath(definition)
-}
+import { normalizePropertyPath } from '../normalize/common.js'
 
 // `normalizePath()` might throw if `parent` contains syntax errors.
 const main = function (definition, { originalPath }) {
@@ -19,6 +17,7 @@ const main = function (definition, { originalPath }) {
 export default {
   name: 'parent',
   undefinedInput: true,
-  normalize,
+  exampleDefinition: 'parentPropertyName',
+  normalize: normalizePropertyPath,
   main,
 }

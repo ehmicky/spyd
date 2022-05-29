@@ -4,7 +4,7 @@ import { validateDefinedString } from '../../../type.js'
 
 import { validateAccess } from './access.js'
 import { fileExists, validateExists } from './exist.js'
-import { normalize } from './normalize.js'
+import { normalize, EXAMPLE_KEYWORDS } from './normalize.js'
 import { validateType } from './type.js'
 
 const main = async function (keywords, input, { cwd }) {
@@ -36,6 +36,7 @@ const validateFile = async function (input, keywords) {
 export default {
   name: 'path',
   hasInput: true,
+  exampleDefinition: EXAMPLE_KEYWORDS,
   normalize,
   main,
 }

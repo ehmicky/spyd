@@ -11,6 +11,7 @@ const main = function (definition) {
 export default {
   name: 'default',
   undefinedInput: true,
+  exampleDefinition: 'anyDefaultValue',
   test,
   main,
 }

@@ -13,7 +13,7 @@ const normalize = function (definition) {
   try {
     return { value, newProp: normalizePath(newProp) }
   } catch (error) {
-    throw wrapError(error, 'Invalid "newProp" return value:')
+    throw wrapError(error, 'must return a valid "newProp":')
   }
 }
 
@@ -76,6 +76,7 @@ export default {
   name: 'transform',
   hasInput: true,
   undefinedDefinition: true,
+  exampleDefinition: 'newValue',
   normalize,
   main,
 }

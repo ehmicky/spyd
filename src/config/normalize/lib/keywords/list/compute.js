@@ -9,5 +9,6 @@ export default {
   name: 'compute',
   undefinedInput: true,
   undefinedDefinition: true,
+  exampleDefinition: 'anyValue',
   main,
 }

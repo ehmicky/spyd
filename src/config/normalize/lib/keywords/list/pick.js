@@ -13,6 +13,7 @@ export default {
   name: 'pick',
   hasInput: true,
   undefinedInput: true,
+  exampleDefinition: true,
   normalize: normalizeBoolean,
   main,
 }

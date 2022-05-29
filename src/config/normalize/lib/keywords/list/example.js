@@ -7,6 +7,7 @@ const main = function (definition) {
 export default {
   name: 'example',
   aliases: ['default'],
+  exampleDefinition: 'anyExampleValue',
   undefinedInput: true,
   main,
 }

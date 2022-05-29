@@ -1,8 +1,4 @@
-import { normalizePath } from 'wild-wild-parser'
-
-const normalize = function (definition) {
-  return normalizePath(definition)
-}
+import { normalizePropertyPath } from '../normalize/common.js'
 
 const main = function (definition) {
   return { rename: definition }
@@ -14,6 +10,7 @@ const main = function (definition) {
 export default {
   name: 'rename',
   hasInput: true,
-  normalize,
+  exampleDefinition: 'newPropertyName',
+  normalize: normalizePropertyPath,
   main,
 }

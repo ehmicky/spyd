@@ -16,6 +16,7 @@ const main = function (definition) {
 export default {
   name: 'required',
   undefinedInput: true,
+  exampleDefinition: true,
   test,
   normalize: normalizeBoolean,
   main,
