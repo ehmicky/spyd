@@ -149,7 +149,9 @@ const applyPath = function (
   }
 
   const newNamePath = getMovedPath(path, oldNamePath)
-  return addMove(moves, oldNamePath, newNamePath)
+  return newNamePath.length === oldNamePath.length
+    ? moves
+    : addMove(moves, oldNamePath, newNamePath)
 }
 
 const applyRename = function ({
