@@ -1,70 +1,92 @@
 import { inspect } from 'util'
 
 import { wrapError } from '../../../error/wrap.js'
-import { maybeFunction } from '../../../utils/function.js'
 
-import { addPrefix } from './prefix.js'
-import { handleValidateError } from './validate.js'
-
-export const callFunc = async function ({ func, input, info, hasInput, test }) {
-  if (hasInput) {
-    return await callInputFunc(func, input, info)
-  }
-
-  if (test === undefined) {
-    return await callNoInputFunc(func, info)
-  }
-
-  return await callConstraintFunc(func, info)
-}
-
-// Most rule methods follow the same patterns:
-//  - Called with `input` and `info`
+// Call a function from `test()`, `main()` or a definition.
+// They are all:
 //  - Optionally async
-export const callInputFunc = async function (func, input, info) {
+//  - Called with same arguments
+//  - Error handled
+export const callFunc = async function ({
+  func,
+  input,
+  info: { originalName },
+  info: { example, prefix, ...info },
+  hasInput,
+  test,
+}) {
   try {
-    return await callUserFunc(func.bind(undefined, input), info)
+    return await (hasInput ? func(input, info) : func(info))
   } catch (error) {
-    const errorA = handleError(error, info)
-    const errorB = addCurrentValue(errorA, input)
-    throw addExampleValue(errorB, info)
+    throw handleError({
+      error,
+      input,
+      example,
+      prefix,
+      originalName,
+      hasInput,
+      test,
+    })
   }
 }
 
-// Some methods are not called with any `input` but their logic requires knowing
-// whether it is undefined
-const callConstraintFunc = async function (func, info) {
-  try {
-    return await callUserFunc(func, info)
-  } catch (error) {
-    const errorA = handleError(error, info)
-    throw addExampleValue(errorA, info)
+const handleError = function ({
+  error,
+  input,
+  example,
+  prefix,
+  originalName,
+  hasInput,
+  test,
+}) {
+  const isValidation = isValidateError(error)
+  const errorA = addPrefix({ error, prefix, originalName, isValidation })
+
+  if (!isValidation) {
+    return errorA
   }
+
+  // eslint-disable-next-line fp/no-mutation
+  errorA.validation = true
+  const errorB = addCurrentValue(errorA, input, hasInput)
+  const errorC = addExampleValue({ error: errorB, example, hasInput, test })
+  return errorC
 }
 
-// Some methods are not called with any input
-const callNoInputFunc = async function (func, info) {
-  try {
-    return await callUserFunc(func, info)
-  } catch (error) {
-    throw handleError(error, info)
-  }
+// Consumers can distinguish users errors from system bugs by checking
+// the `error.validation` boolean property.
+// User errors are distinguished by having error message starting with "must".
+// We fail on the first error, as opposed to aggregating all errors
+//  - Otherwise, a failed property might be used by another property, which
+//    would also appear as failed, even if it has no issues
+// We detect this using the error message instead of the error class because:
+//  - It is simpler for users
+//  - It works both on browsers and in Node.js
+//  - It ensures the error message looks good
+const isValidateError = function (error) {
+  return error instanceof Error && error.message.startsWith('must')
 }
 
-const handleError = function (error, info) {
-  handleValidateError(error)
-  return addPrefix(error, info)
+const addPrefix = function ({ error, prefix, originalName, isValidation }) {
+  const prefixA = getPrefix(prefix, originalName)
+  const prefixB = isValidation ? prefixA : `${prefixA}: `
+  return wrapError(error, prefixB)
+}
+
+// The `prefix` is the name of the type of property to show in error
+// message and warnings such as "Option".
+export const getPrefix = function (prefix, originalName) {
+  return `${prefix} "${originalName}"`
 }
 
 // Add the current input value as error suffix
-const addCurrentValue = function (error, input) {
-  return error.validation
-    ? wrapErrorValue(error, 'Current value', input)
-    : error
+const addCurrentValue = function (error, input, hasInput) {
+  return hasInput ? wrapErrorValue(error, 'Current value', input) : error
 }
 
-const addExampleValue = function (error, { example }) {
-  return error.validation && example !== undefined
+// Add the example as error suffix
+const addExampleValue = function ({ error, example, hasInput, test }) {
+  return example !== undefined && (hasInput || test !== undefined)
     ? wrapErrorValue(error, 'Example value', example)
     : error
 }
@@ -77,9 +99,4 @@ const serializeValue = function (value) {
   const valueStr = inspect(value)
   const separator = valueStr.includes('\n') ? '\n' : ' '
   return `${separator}${valueStr}`
-}
-
-// eslint-disable-next-line no-unused-vars
-const callUserFunc = async function (func, { example, prefix, ...info }) {
-  return await maybeFunction(func, info)
 }
