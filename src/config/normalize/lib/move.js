@@ -1,8 +1,8 @@
 import { isParentPath, isSamePath } from 'wild-wild-parser'
 
 // When a property is moved to another with `rename|path`
-export const addMove = function (moves, oldNamePath, newNamePath) {
-  return [...moves, { oldNamePath, newNamePath }]
+export const addMove = function (moves, oldPath, newPath) {
+  return [...moves, { oldPath, newPath }]
 }
 
 // Rewind previous moves to retrieve the `originalName` behind a `name`.
@@ -12,18 +12,18 @@ export const addMove = function (moves, oldNamePath, newNamePath) {
 // a `newProp` and `value` properties.
 // We automatically record those when we can: `rule.rename`, array
 // normalization, etc.
-export const applyMoves = function (moves, namePath) {
-  return moves.reduceRight(applyMove, namePath)
+export const applyMoves = function (moves, path) {
+  return moves.reduceRight(applyMove, path)
 }
 
-const applyMove = function (namePath, { oldNamePath, newNamePath }) {
-  if (isSamePath(newNamePath, namePath)) {
-    return oldNamePath
+const applyMove = function (path, { oldPath, newPath }) {
+  if (isSamePath(newPath, path)) {
+    return oldPath
   }
 
-  if (isParentPath(newNamePath, namePath)) {
-    return [...oldNamePath, ...namePath.slice(newNamePath.length)]
+  if (isParentPath(newPath, path)) {
+    return [...oldPath, ...path.slice(newPath.length)]
   }
 
-  return namePath
+  return path
 }

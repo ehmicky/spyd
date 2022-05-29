@@ -4,7 +4,7 @@ import { wrapError } from '../../../../error/wrap.js'
 import { addMove } from '../move.js'
 
 // Keywords can give a hint on where a value has moved by returning a `path`
-export const applyPath = function ({ path }, moves, { path: oldNamePath }) {
+export const applyPath = function ({ path }, moves, { path: oldPath }) {
   if (path === undefined) {
     return moves
   }
@@ -15,8 +15,8 @@ export const applyPath = function ({ path }, moves, { path: oldNamePath }) {
     return moves
   }
 
-  const newNamePath = [...oldNamePath, ...pathA]
-  return addMove(moves, oldNamePath, newNamePath)
+  const newPath = [...oldPath, ...pathA]
+  return addMove(moves, oldPath, newPath)
 }
 
 const safeNormalizePath = function (path) {

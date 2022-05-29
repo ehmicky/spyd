@@ -13,32 +13,32 @@ export const applyRename = function ({
   moves,
   input,
   opts,
-  opts: { name: oldNameString, path: oldNamePath },
+  opts: { name: oldName, path: oldPath },
 }) {
   if (rename === undefined) {
     return { config, moves, opts }
   }
 
-  const newNamePath = safeNormalizePath(rename)
-  const newNameString = serializePath(newNamePath)
+  const newPath = safeNormalizePath(rename)
+  const newName = serializePath(newPath)
 
-  if (newNameString === oldNameString) {
+  if (newName === oldName) {
     return { config, moves, opts }
   }
 
-  const configA = remove(config, oldNamePath)
-  const configB = setConfig(configA, newNamePath, input)
-  const movesA = addMove(moves, oldNamePath, newNamePath)
+  const configA = remove(config, oldPath)
+  const configB = setConfig(configA, newPath, input)
+  const movesA = addMove(moves, oldPath, newPath)
   return {
     config: configB,
     moves: movesA,
-    opts: { ...opts, path: newNamePath, name: newNameString },
+    opts: { ...opts, path: newPath, name: newName },
   }
 }
 
-const safeNormalizePath = function (path) {
+const safeNormalizePath = function (rename) {
   try {
-    return normalizePath(path)
+    return normalizePath(rename)
   } catch (error) {
     throw wrapError(error, 'The "rename" path is invalid:')
   }
