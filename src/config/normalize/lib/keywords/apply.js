@@ -5,17 +5,17 @@ import { applyReturnValue } from './return.js'
 
 // Call `keyword.normalize()`, then `keyword.main()` and apply the return value
 export const applyKeywordMain = async function ({
-  definition,
+  keyword,
+  test,
+  hasInput,
+  exampleDefinition,
   normalize,
   normalizeSync,
-  info,
-  keyword,
-  exampleDefinition,
   main,
   mainSync,
   input,
-  hasInput,
-  test,
+  definition,
+  info,
   state,
 }) {
   const normalizedDefinition = await normalizeDefinition({

@@ -125,17 +125,17 @@ const applyKeyword = async function ({
   }
 
   return await applyKeywordMain({
-    definition: definitionA,
+    keyword,
+    test,
+    hasInput,
+    exampleDefinition,
     normalize,
     normalizeSync,
-    info,
-    keyword,
-    exampleDefinition,
     main,
     mainSync,
     input,
-    hasInput,
-    test,
+    definition: definitionA,
+    info,
     state,
   })
 }
