@@ -6,7 +6,6 @@ import { isNotJunk } from 'junk'
 import { validateDefinedString } from '../type.js'
 
 export const name = 'glob'
-
 export const hasInput = true
 
 // Apply `glob[(input, opts)]` which resolves the input as a globbing pattern

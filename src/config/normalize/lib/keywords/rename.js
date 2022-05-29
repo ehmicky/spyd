@@ -1,5 +1,4 @@
 export const name = 'rename'
-
 export const hasInput = true
 
 // Apply `rename[(input, opts)]` which transforms the property's name.

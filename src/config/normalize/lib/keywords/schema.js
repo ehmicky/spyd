@@ -7,7 +7,6 @@ import { decodePointer } from 'json-ptr'
 import { wrapError } from '../../../../error/wrap.js'
 
 export const name = 'schema'
-
 export const hasInput = true
 
 // Apply `schema[(input, opts)]` which throws on JSON schema validation errors

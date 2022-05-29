@@ -8,7 +8,6 @@ import { fileExists, validateExists } from './exist.js'
 import { validateType } from './type.js'
 
 export const name = 'path'
-
 export const hasInput = true
 
 // Apply `path[(input, opts)]` which resolves the input as an absolute file path

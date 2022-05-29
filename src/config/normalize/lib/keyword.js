@@ -33,7 +33,13 @@ export const applyKeywords = async function ({
 
 /* eslint-disable complexity, max-statements, max-lines-per-function */
 const applyKeyword = async function ({
-  keyword: { name, main, undefinedInput = false, hasInput = false },
+  keyword: {
+    name,
+    main,
+    hasInput = false,
+    undefinedInput = false,
+    undefinedDefinition = false,
+  },
   state,
   state: { input, config, moves, opts, warnings },
   rule,
@@ -59,7 +65,7 @@ const applyKeyword = async function ({
         })
       : definition
 
-  if (definitionA === undefined) {
+  if (definitionA === undefined && !undefinedDefinition) {
     return state
   }
 

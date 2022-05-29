@@ -1,6 +1,6 @@
 export const name = 'transform'
-
 export const hasInput = true
+export const undefinedDefinition = true
 
 // Apply `transform(input, opts)` which transforms the input.
 // If can also delete it by returning `undefined`.
