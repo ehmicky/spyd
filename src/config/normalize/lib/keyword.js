@@ -31,6 +31,22 @@ import { addWarning } from './warn.js'
 //          e.g. when mapping the `definition` object, and not expect any
 //          behavior change
 //        - This allows any keyword to have default values
+// `main(definition[, input], opts)` arguments are:
+//  - `definition`
+//  - `input`: only if `keyword.hasInput` is `true`
+//  - `opts`:
+//      - `name`, `path`, `originalName`, `originalPath`
+//      - `config`
+//      - `context`
+//      - `cwd`
+// `main()` return value is optional. It is an object with optional properties:
+//  - `value` `{any}`: modifies the input value.
+//     - If `undefined`, the property is deleted
+//  - `skip` `{boolean}`: if true, next keywords in the current rule are skipped
+//  - `warning` `{string}`: print on the console
+//  - `move` `{string|array}`: move the input value to another property
+//  - `path` `{string|array}`: hint when the input value has been moved to a
+//    new path
 export const applyKeywords = async function ({
   rule,
   input,
