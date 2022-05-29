@@ -9,6 +9,7 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 // Users pass `definition` values to configure each keyword.
 // Those provide the following named exports:
 //  - `name` `{string}` (required): property name in rules
+//  - `aliases` `{string[]}`: alias property names
 //  - `main` `function`: main function
 //  - `test` `(value, info) => boolean`: skip the keyword when returning `false`
 //  - `hasInput` `boolean` (default: false): pass `input` to `main()`
@@ -70,6 +71,7 @@ export const applyKeywords = async function ({
 const applyKeyword = async function ({
   keyword: {
     name,
+    aliases,
     test,
     hasInput = false,
     undefinedInput = false,
@@ -80,7 +82,7 @@ const applyKeyword = async function ({
   state: { input, info },
   rule,
 }) {
-  const definition = rule[name]
+  const definition = getDefinition(rule, name, aliases)
 
   if (
     await shouldSkipKeyword({ definition, input, undefinedInput, test, info })
@@ -105,4 +107,19 @@ const applyKeyword = async function ({
     test,
   })
   return applyReturnValue({ returnValue, state })
+}
+
+// The property name is defined by `name`.
+// `aliases` can be defined to either:
+//   - Augment the behavior of another keyword
+//   - Rename a keyword
+const getDefinition = function (rule, name, aliases) {
+  const definition = rule[name]
+
+  if (definition !== undefined || aliases === undefined) {
+    return definition
+  }
+
+  const aliasA = aliases.find((alias) => rule[alias] !== undefined)
+  return aliasA === undefined ? undefined : rule[aliasA]
 }
