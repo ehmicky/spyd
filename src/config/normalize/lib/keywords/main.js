@@ -123,7 +123,7 @@ const applyKeyword = async function ({
     return state
   }
 
-  const definitionB = await normalizeDefinition({
+  const normalizedDefinition = await normalizeDefinition({
     definition: definitionA,
     normalize,
     info,
@@ -132,7 +132,8 @@ const applyKeyword = async function ({
   })
   const returnValue = await callMain({
     main,
-    definition: definitionB,
+    normalizedDefinition,
+    definition: definitionA,
     input,
     info,
     hasInput,

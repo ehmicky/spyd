@@ -34,7 +34,7 @@ export const shouldSkipKeyword = async function ({
 //  - This is because some keywords might only apply when the input has a
 //    specific value (e.g. `undefined` for `required|default` keywords), i.e.
 //    need to check the input during `test()` but should not pass it during
-//    `main()` nor the definition function
+//    `main()` not the definition function
 const hasSkippedTest = async function ({ test, input, info, keyword }) {
   return test !== undefined && !(await callTest({ test, input, info, keyword }))
 }

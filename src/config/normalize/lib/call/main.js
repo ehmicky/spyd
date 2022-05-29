@@ -71,6 +71,7 @@ export const callNormalize = async function ({
 // Other exceptions are considered keyword bugs.
 export const callMain = async function ({
   main,
+  normalizedDefinition,
   definition,
   input,
   info,
@@ -78,7 +79,7 @@ export const callMain = async function ({
   test,
   keyword,
 }) {
-  const func = main.bind(undefined, definition)
+  const func = main.bind(undefined, normalizedDefinition)
   return await callFunc({
     func,
     input,
