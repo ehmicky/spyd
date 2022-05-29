@@ -1,5 +1,10 @@
-export { reportTerminal } from './report.js'
-export { config } from './config.js'
+import { config } from './config.js'
+import { reportTerminal } from './report.js'
 
-export const id = 'history'
-export const capabilities = { history: true }
+// eslint-disable-next-line import/no-default-export
+export default {
+  id: 'history',
+  capabilities: { history: true },
+  config,
+  reportTerminal,
+}

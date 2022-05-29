@@ -1,4 +1,9 @@
-export { reportTerminal } from './report.js'
-export { config } from './config.js'
+import { config } from './config.js'
+import { reportTerminal } from './report.js'
 
-export const id = 'histogram'
+// eslint-disable-next-line import/no-default-export
+export default {
+  id: 'histogram',
+  config,
+  reportTerminal,
+}

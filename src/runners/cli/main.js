@@ -1,4 +1,9 @@
-export { config } from './config.js'
-export { launch } from './launch.js'
+import { config } from './config.js'
+import { launch } from './launch.js'
 
-export const id = 'cli'
+// eslint-disable-next-line import/no-default-export
+export default {
+  id: 'cli',
+  config,
+  launch,
+}
