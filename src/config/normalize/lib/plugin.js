@@ -162,7 +162,7 @@ const applyRename = function ({
   opts,
   opts: {
     funcOpts,
-    funcOpts: { path: oldNamePath },
+    funcOpts: { name: oldNameString, path: oldNamePath },
   },
 }) {
   if (rename === undefined) {
@@ -170,6 +170,11 @@ const applyRename = function ({
   }
 
   const { newNamePath, newNameString } = getRenamedPath(rename)
+
+  if (newNameString === oldNameString) {
+    return { config, moves, opts }
+  }
+
   const configA = remove(config, oldNamePath)
   const configB = setValue(configA, newNamePath, value)
   const movesA = addMove(moves, oldNamePath, newNamePath)
