@@ -9,7 +9,7 @@ export const addPrefix = function (error, opts) {
   return wrapError(error, prefixA)
 }
 
-export const getPrefix = function ({ prefix, funcOpts: { originalName } }) {
+export const getPrefix = function ({ prefix, originalName }) {
   return `${prefix} "${originalName}"`
 }
 

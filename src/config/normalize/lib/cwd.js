@@ -13,7 +13,7 @@ import { validateDefinedString } from './type.js'
 //    at runtime, not load time.
 export const computeCwd = async function (cwd, opts) {
   const cwdA = await getCwd({ cwd, opts })
-  return { ...opts, funcOpts: { ...opts.funcOpts, cwd: cwdA } }
+  return { ...opts, cwd: cwdA }
 }
 
 const getCwd = async function ({ cwd = DEFAULT_CWD, opts }) {

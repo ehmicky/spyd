@@ -8,8 +8,9 @@ import { applyMoves } from './move.js'
 import { computeParent } from './parent.js'
 import { DEFAULT_PREFIX } from './prefix.js'
 
-// Retrieve `opts` passed to most methods.
-// `funcOpts` are passed to user-provided functions.
+// Retrieve `opts` passed to:
+//  - Definitions functions
+//  - Keyword `main()`
 export const getOpts = async function ({
   namePath,
   config,
@@ -23,15 +24,16 @@ export const getOpts = async function ({
   const name = serializePath(namePath)
   const originalPath = applyMoves(moves, namePath)
   const originalName = serializePath(originalPath)
-  const funcOpts = {
+  const opts = {
     name,
     path: namePath,
     originalName,
     originalPath,
     config,
     context,
+    example,
+    prefix: DEFAULT_PREFIX,
   }
-  const opts = { funcOpts, example, prefix: DEFAULT_PREFIX }
   const optsA = await computeParent(parent, opts)
   const optsB = await computePrefix(prefix, optsA)
   const optsC = await computeCwd(cwd, optsB)

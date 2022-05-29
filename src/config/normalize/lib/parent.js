@@ -10,7 +10,7 @@ import { callNoInputFunc } from './call.js'
 // They are intended for error messages.
 // This is in contrast to `name|path` which are the main properties, intended to
 // work with everything else, including `rule.name`, `rule.rename` and
-// `funcOpts.config`.
+// `opts.config`.
 export const computeParent = async function (parent, opts) {
   try {
     return await getParent(parent, opts)
@@ -22,10 +22,7 @@ export const computeParent = async function (parent, opts) {
 const getParent = async function (parent, opts) {
   const originalPath = await appendParentToName(parent, opts)
   const originalName = serializePath(originalPath)
-  return {
-    ...opts,
-    funcOpts: { ...opts.funcOpts, originalName, originalPath },
-  }
+  return { ...opts, originalName, originalPath }
 }
 
 // The `parent` option are the names of the parent properties.
@@ -36,5 +33,5 @@ const getParent = async function (parent, opts) {
 const appendParentToName = async function (parent, opts) {
   const parentA = await callNoInputFunc(parent, opts)
   const parentPath = normalizePath(parentA)
-  return [...parentPath, ...opts.funcOpts.originalPath]
+  return [...parentPath, ...opts.originalPath]
 }

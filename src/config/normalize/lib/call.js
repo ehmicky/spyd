@@ -100,6 +100,7 @@ const serializeValue = function (value) {
   return `${separator}${valueStr}`
 }
 
-const callUserFunc = async function (userFunc, { funcOpts }) {
-  return await maybeFunction(userFunc, funcOpts)
+// eslint-disable-next-line no-unused-vars
+const callUserFunc = async function (userFunc, { example, prefix, ...opts }) {
+  return await maybeFunction(userFunc, opts)
 }

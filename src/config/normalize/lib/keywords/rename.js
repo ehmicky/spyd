@@ -13,10 +13,7 @@ export const applyRename = function ({
   moves,
   input,
   opts,
-  opts: {
-    funcOpts,
-    funcOpts: { name: oldNameString, path: oldNamePath },
-  },
+  opts: { name: oldNameString, path: oldNamePath },
 }) {
   if (rename === undefined) {
     return { config, moves, opts }
@@ -35,10 +32,7 @@ export const applyRename = function ({
   return {
     config: configB,
     moves: movesA,
-    opts: {
-      ...opts,
-      funcOpts: { ...funcOpts, path: newNamePath, name: newNameString },
-    },
+    opts: { ...opts, path: newNamePath, name: newNameString },
   }
 }
 
