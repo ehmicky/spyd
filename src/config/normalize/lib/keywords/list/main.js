@@ -4,6 +4,7 @@ import * as condition from './condition.js'
 import * as defaultKeyword from './default.js'
 import * as glob from './glob.js'
 import * as path from './path/main.js'
+import * as pick from './pick.js'
 import * as rename from './rename.js'
 import * as required from './required.js'
 import * as schema from './schema.js'
@@ -14,6 +15,7 @@ import * as warn from './warn.js'
 /* eslint-enable import/no-namespace */
 
 export const KEYWORDS = [
+  pick,
   condition,
   compute,
   defaultKeyword,
