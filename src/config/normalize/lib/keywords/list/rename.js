@@ -1,3 +1,9 @@
+import { normalizePath } from 'wild-wild-parser'
+
+const normalize = function (definition) {
+  return normalizePath(definition)
+}
+
 const main = function (definition) {
   return { rename: definition }
 }
@@ -8,5 +14,6 @@ const main = function (definition) {
 export default {
   name: 'rename',
   hasInput: true,
+  normalize,
   main,
 }

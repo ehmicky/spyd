@@ -1,7 +1,20 @@
 import isPlainObj from 'is-plain-obj'
+import { normalizePath } from 'wild-wild-parser'
+
+import { wrapError } from '../../../../../error/wrap.js'
 
 const normalize = function (definition) {
-  return isTransformMove(definition) ? definition : { value: definition }
+  if (!isTransformMove(definition)) {
+    return { value: definition }
+  }
+
+  const { value, newProp } = definition
+
+  try {
+    return { value, newProp: normalizePath(newProp) }
+  } catch (error) {
+    throw wrapError(error, 'Invalid "newProp" return value:')
+  }
 }
 
 // `transform()` can return a `{ newProp, value }` object to indicate the
