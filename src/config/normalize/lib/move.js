@@ -49,7 +49,7 @@ const applyMove = function (namePath, { oldNamePath, newNamePath }) {
   }
 
   if (isParentPath(newNamePath, namePath)) {
-    return [...oldNamePath, namePath.slice(0, newNamePath.length)]
+    return [...oldNamePath, ...namePath.slice(newNamePath.length)]
   }
 
   return namePath
