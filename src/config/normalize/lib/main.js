@@ -20,15 +20,15 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all, context } = normalizeOpts(opts)
+  const { soft, all } = normalizeOpts(opts)
   const rulesA = normalizeRules(rules, all)
 
   try {
-    const { inputs: inputsA, warnings } = await pReduce(
-      rulesA,
-      (memo, rule) => applyRuleDeep(memo, { rule, context }),
-      { inputs, moves: [], warnings: [] },
-    )
+    const { inputs: inputsA, warnings } = await pReduce(rulesA, applyRuleDeep, {
+      inputs,
+      moves: [],
+      warnings: [],
+    })
     const inputsB = cleanObject(inputsA)
     logWarnings(warnings, soft)
     return { inputs: inputsB, warnings }
@@ -38,14 +38,11 @@ export const normalizeInputs = async function (inputs, rules, opts) {
   }
 }
 
-const normalizeOpts = function ({ soft = false, all, context } = {}) {
-  return { soft, all, context }
+const normalizeOpts = function ({ soft = false, all } = {}) {
+  return { soft, all }
 }
 
-const applyRuleDeep = async function (
-  { inputs, moves, warnings },
-  { rule, context },
-) {
+const applyRuleDeep = async function ({ inputs, moves, warnings }, rule) {
   const entries = list(inputs, rule.name, {
     childFirst: true,
     sort: true,
@@ -55,7 +52,7 @@ const applyRuleDeep = async function (
   return await pReduce(
     entries,
     (memo, { value, path }) =>
-      applyEntryRule(memo, { input: value, path, rule, context }),
+      applyEntryRule(memo, { input: value, path, rule }),
     { inputs, moves, warnings },
   )
 }
@@ -63,9 +60,9 @@ const applyRuleDeep = async function (
 // Apply rule for a specific entry
 const applyEntryRule = async function (
   { inputs, moves, warnings },
-  { input, path, rule, context },
+  { input, path, rule },
 ) {
-  const info = await getInfo({ path, inputs, context, moves })
+  const info = getInfo(path, inputs, moves)
   return await applyKeywords({ rule, input, inputs, moves, warnings, info })
 }
 

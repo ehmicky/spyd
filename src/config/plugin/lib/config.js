@@ -86,8 +86,7 @@ const normalizeSharedConfig = async function ({
 }) {
   const dummyRules = getDummyRules(pluginConfigRules)
   return await safeNormalizeConfig(pluginConfig, [...shared, ...dummyRules], {
-    context: { ...context, plugin },
-    all: { cwd, prefix, parent },
+    all: { cwd, prefix, parent, context: { ...context, plugin } },
     UserErrorType: ConsumerError,
     SystemErrorType: UserError,
   })
@@ -107,8 +106,7 @@ const normalizeSpecificConfig = async function ({
     pluginConfig,
     [...dummyRules, ...pluginConfigRules],
     {
-      context,
-      all: { cwd, prefix, parent },
+      all: { cwd, prefix, parent, context },
       UserErrorType: ConsumerError,
       SystemErrorType: PluginError,
     },

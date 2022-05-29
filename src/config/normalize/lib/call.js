@@ -48,7 +48,7 @@ const callConstraintFunc = async function (userFunc, info) {
 }
 
 // Some methods are not called with any input
-export const callNoInputFunc = async function (userFunc, info) {
+const callNoInputFunc = async function (userFunc, info) {
   try {
     return typeof userFunc === 'function'
       ? await callUserFunc(userFunc, info)

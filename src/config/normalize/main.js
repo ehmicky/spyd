@@ -8,11 +8,11 @@ import { normalizeInputs } from './lib/main.js'
 export const normalizeConfig = async function (
   config,
   rules,
-  { UserErrorType = UserError, ...opts },
+  { UserErrorType = UserError, all = {}, ...opts },
 ) {
   const { inputs, error } = await normalizeInputs(config, rules, {
     ...opts,
-    all: { prefix: PREFIX },
+    all: { ...all, prefix: PREFIX },
     soft: true,
   })
 

@@ -12,8 +12,10 @@ export const normalizeShape = async function ({
   opts: { shape, sharedPropNames, context },
 }) {
   const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
-    context: { sharedPropNames, locationType, originalLocation },
-    all: { prefix: PLUGIN_PREFIX },
+    all: {
+      prefix: PLUGIN_PREFIX,
+      context: { sharedPropNames, locationType, originalLocation },
+    },
     UserErrorType: PluginError,
     SystemErrorType: CoreError,
   })
@@ -26,8 +28,7 @@ export const normalizeShape = async function ({
     pluginA,
     [...getDummyRules(COMMON_SHAPE_RULES), ...shape],
     {
-      context,
-      all: { prefix: PLUGIN_PREFIX },
+      all: { prefix: PLUGIN_PREFIX, context },
       UserErrorType: PluginError,
       SystemErrorType: UserError,
     },

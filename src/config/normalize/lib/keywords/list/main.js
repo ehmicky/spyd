@@ -1,5 +1,6 @@
 import compute from './compute.js'
 import condition from './condition.js'
+import context from './context.js'
 import cwd from './cwd.js'
 import defaultKeyword from './default.js'
 import example from './example.js'
@@ -17,6 +18,7 @@ import validate from './validate.js'
 import warn from './warn.js'
 
 export const KEYWORDS = [
+  context,
   parent,
   prefix,
   example,

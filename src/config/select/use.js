@@ -26,7 +26,7 @@ const useCombConfigSelectors = async function (combination, config) {
 // Same for a single combination
 export const useConfigSelectors = async function (combination, config) {
   return await normalizeConfig(config, RULES, {
-    context: { combination },
+    all: { context: { combination } },
   })
 }
 
