@@ -6,19 +6,11 @@ import { handleError } from './error.js'
 //  - This is because `test()` is called before definition function, which might
 //    return `undefined`, i.e. might skip the keyword
 //  - Inputs must be validated in `main()` instead
-export const callTest = async function ({
-  test,
-  testSync,
-  input,
-  info,
-  keyword,
-}) {
+export const callTest = async function ({ test, testSync, ...params }) {
   return await callFunc({
+    ...params,
     func: test,
-    input,
-    info,
     hasInput: true,
-    keyword,
     sync: testSync,
     errorType: 'keyword',
     bugType: 'keyword',
@@ -28,24 +20,10 @@ export const callTest = async function ({
 // Call definition function.
 // Exceptions starting with "must" can be thrown for invalid input.
 // Other exceptions are considered invalid definitions.
-export const callDefinition = async function ({
-  definition,
-  input,
-  info,
-  hasInput,
-  test,
-  keyword,
-  exampleDefinition,
-  sync,
-}) {
+export const callDefinition = async function ({ definition, sync, ...params }) {
   return await callFunc({
+    ...params,
     func: definition,
-    input,
-    info,
-    hasInput,
-    test,
-    keyword,
-    exampleDefinition,
     sync,
     errorType: 'input',
     bugType: 'definition',
@@ -59,16 +37,12 @@ export const callNormalize = async function ({
   normalize,
   normalizeSync,
   definition,
-  info,
-  keyword,
-  exampleDefinition,
+  ...params
 }) {
   return await callFunc({
+    ...params,
     func: () => normalize(definition),
-    info,
-    keyword,
     definition,
-    exampleDefinition,
     sync: normalizeSync,
     hasInput: false,
     errorType: 'definition',
@@ -83,21 +57,11 @@ export const callMain = async function ({
   main,
   mainSync,
   normalizedDefinition,
-  definition,
-  input,
-  info,
-  hasInput,
-  test,
-  keyword,
+  ...params
 }) {
   return await callFunc({
+    ...params,
     func: main.bind(undefined, normalizedDefinition),
-    input,
-    info,
-    hasInput,
-    test,
-    keyword,
-    definition,
     sync: mainSync,
     errorType: 'input',
     bugType: 'keyword',
