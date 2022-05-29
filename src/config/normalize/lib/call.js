@@ -21,9 +21,9 @@ export const callFunc = async function ({ func, input, info, hasInput, test }) {
 // Most rule methods follow the same patterns:
 //  - Called with `input` and `info`
 //  - Optionally async
-export const callInputFunc = async function (userFunc, input, info) {
+export const callInputFunc = async function (func, input, info) {
   try {
-    return await callUserFunc(userFunc.bind(undefined, input), info)
+    return await callUserFunc(func.bind(undefined, input), info)
   } catch (error) {
     const errorA = handleError(error, info)
     const errorB = addCurrentValue(errorA, input)
@@ -33,9 +33,9 @@ export const callInputFunc = async function (userFunc, input, info) {
 
 // Some methods are not called with any `input` but their logic requires knowing
 // whether it is undefined
-const callConstraintFunc = async function (userFunc, info) {
+const callConstraintFunc = async function (func, info) {
   try {
-    return await callUserFunc(userFunc, info)
+    return await callUserFunc(func, info)
   } catch (error) {
     const errorA = handleError(error, info)
     throw addExampleValue(errorA, info)
@@ -43,9 +43,9 @@ const callConstraintFunc = async function (userFunc, info) {
 }
 
 // Some methods are not called with any input
-const callNoInputFunc = async function (userFunc, info) {
+const callNoInputFunc = async function (func, info) {
   try {
-    return await callUserFunc(userFunc, info)
+    return await callUserFunc(func, info)
   } catch (error) {
     throw handleError(error, info)
   }
@@ -80,6 +80,6 @@ const serializeValue = function (value) {
 }
 
 // eslint-disable-next-line no-unused-vars
-const callUserFunc = async function (userFunc, { example, prefix, ...info }) {
-  return await maybeFunction(userFunc, info)
+const callUserFunc = async function (func, { example, prefix, ...info }) {
+  return await maybeFunction(func, info)
 }
