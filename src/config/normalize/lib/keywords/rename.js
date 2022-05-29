@@ -36,6 +36,9 @@ export const applyRename = function ({
   }
 }
 
+// `keyword.normalize()` should apply `normalizePath()` when possible, for
+// performance reasons, and so that this is reported as a `DefinitionError`
+// instead of `KeywordError`. But we do it again, to check for keyword bugs.
 const safeNormalizePath = function (rename) {
   try {
     return normalizePath(rename)
