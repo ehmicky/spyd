@@ -21,8 +21,8 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all, keywords } = normalizeOpts(opts)
-  const rulesA = normalizeRules(rules, all)
+  const { soft, all, keywords, ruleProps } = normalizeOpts(opts)
+  const rulesA = normalizeRules(rules, all, ruleProps)
 
   try {
     const { inputs: inputsA, warnings } = await pReduce(

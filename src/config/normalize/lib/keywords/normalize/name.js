@@ -2,6 +2,7 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
+import { CORE_PROPS_SET } from '../../rule.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 
 // Validate `keyword.name` and `keyword.aliases[*]`
@@ -33,6 +34,10 @@ const NAME_REGEXP = /^[a-z]+$/u
 export const validateNotBuiltin = function ({ name }) {
   if (BUILTIN_NAMES.has(name)) {
     throw new TypeError('must not be a builtin keyword.')
+  }
+
+  if (CORE_PROPS_SET.has(name)) {
+    throw new TypeError('must not be a core property.')
   }
 }
 

@@ -4,6 +4,7 @@ import filterObj from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 
 import { normalizeKeywords } from './keywords/normalize/main.js'
+import { getRuleProps, validateRuleProps } from './rule.js'
 
 // Normalize `options`
 export const normalizeOpts = function (options = {}) {
@@ -13,9 +14,10 @@ export const normalizeOpts = function (options = {}) {
 
   const { soft = false, all, keywords } = options
   validateSoft(soft)
-  const allA = normalizeAll(all)
   const keywordsA = normalizeKeywords(keywords)
-  return { soft, all: allA, keywords: keywordsA }
+  const ruleProps = getRuleProps(keywordsA)
+  const allA = normalizeAll(all, ruleProps)
+  return { soft, all: allA, keywords: keywordsA, ruleProps }
 }
 
 const validateSoft = function (soft) {
@@ -24,7 +26,7 @@ const validateSoft = function (soft) {
   }
 }
 
-const normalizeAll = function (all) {
+const normalizeAll = function (all, ruleProps) {
   if (all === undefined) {
     return
   }
@@ -33,7 +35,9 @@ const normalizeAll = function (all) {
     throw new TypeError(`Option "all" must be a plain object: ${inspect(all)}`)
   }
 
-  return filterObj(all, isDefined)
+  const allA = filterObj(all, isDefined)
+  validateRuleProps(allA, ruleProps, 'Option "all"')
+  return allA
 }
 
 const isDefined = function (key, value) {
