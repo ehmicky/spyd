@@ -1,3 +1,4 @@
+import filterObj from 'filter-obj'
 import { normalizeQuery } from 'wild-wild-parser'
 
 import { wrapError } from '../../../error/wrap.js'
@@ -15,11 +16,11 @@ const mergeRulesAll = function (rules, all) {
     return rules
   }
 
-  const allA = Object.fromEntries(Object.entries(all).filter(isDefined))
+  const allA = filterObj(all, isDefined)
   return rules.map((rule) => ({ ...allA, ...rule }))
 }
 
-const isDefined = function ([, value]) {
+const isDefined = function (key, value) {
   return value !== undefined
 }
 
