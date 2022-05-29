@@ -8,3 +8,6 @@ export const DefinitionError = createErrorType('DefinitionError')
 export const KeywordError = createErrorType('KeywordError')
 // Bug in the library itself
 export const CoreError = createErrorType('CoreError')
+
+// All error types, with first being default type
+export const ErrorTypes = [CoreError, InputError, DefinitionError, KeywordError]

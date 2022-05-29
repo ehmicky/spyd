@@ -1,9 +1,10 @@
 import pReduce from 'p-reduce'
 import { list } from 'wild-wild-path'
 
+import { allowErrorTypes } from '../../../error/types.js'
 import { cleanObject } from '../../../utils/clean.js'
 
-import { InputError } from './error.js'
+import { InputError, ErrorTypes } from './error.js'
 import { getInfo } from './info.js'
 import { applyKeywords } from './keywords/main.js'
 import { normalizeRules } from './normalize.js'
@@ -35,8 +36,7 @@ export const normalizeInputs = async function (inputs, rules, opts) {
     logWarnings(warnings, soft)
     return { inputs: inputsB, warnings }
   } catch (error) {
-    handleError(error, soft)
-    return { error, warnings: [] }
+    return handleError(error, soft)
   }
 }
 
@@ -79,7 +79,11 @@ const applyEntryRule = async function (
 // When in `sort` mode, user errors are returned instead of being thrown.
 // System errors are always propagated.
 const handleError = function (error, soft) {
-  if (!soft || !(error instanceof InputError)) {
-    throw error
+  const errorA = allowErrorTypes(error, ErrorTypes)
+
+  if (!soft || !(errorA instanceof InputError)) {
+    throw errorA
   }
+
+  return { error: errorA, warnings: [] }
 }
