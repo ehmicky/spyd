@@ -1,3 +1,5 @@
+import { remove } from 'wild-wild-path'
+
 import {
   callValueFunc,
   callNoValueFunc,
@@ -6,7 +8,7 @@ import {
 import { validateAndModify } from './modify.js'
 
 // Apply a rule on a specific property
-
+// eslint-disable-next-line max-lines-per-function
 export const applyRule = async function ({
   rule: {
     pick,
@@ -29,17 +31,18 @@ export const applyRule = async function ({
   opts,
 }) {
   if (await againstPick(value, pick, opts)) {
-    return { value: undefined, warnings, moves }
+    const configA = remove(config, opts.funcOpts.path)
+    return { config: configA, warnings, moves }
   }
 
   if (await againstCondition(value, condition, opts)) {
-    return { value, warnings, moves }
+    return { config, warnings, moves }
   }
 
   const valueA = await computeValue(value, compute, opts)
   const valueB = await addDefaultValue(valueA, defaultValue, opts)
   const {
-    config: configA,
+    config: configB,
     warnings: warningsA,
     moves: movesA,
   } = await validateAndModify({
@@ -57,7 +60,7 @@ export const applyRule = async function ({
     warnings,
     opts,
   })
-  return { config: configA, warnings: warningsA, moves: movesA }
+  return { config: configB, warnings: warningsA, moves: movesA }
 }
 
 // Apply `pick[(value, opts)]` which omits the current value if `false` is
