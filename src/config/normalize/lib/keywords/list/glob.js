@@ -3,23 +3,30 @@ import { basename } from 'path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { create, call } from '../../../../../utils/async_sync.js'
 import { validateDefinedString, normalizeBoolean } from '../normalize/common.js'
 
-// eslint-disable-next-line max-params
-const mainSyncAsync = function (sync, definition, input, { cwd }) {
+const main = function (definition, input, { cwd }) {
   if (!definition) {
     return
   }
 
   validateDefinedString(input)
-  return call(
-    sync,
-    fastGlob.sync,
-    fastGlob,
-    [input, { cwd, absolute: true, unique: true, onlyFiles: true }],
-    returnFilePaths,
-  )
+  const filePaths = fastGlob.sync(input, getFastGlobOpts(cwd))
+  return returnFilePaths(filePaths)
+}
+
+const mainAsync = async function (definition, input, { cwd }) {
+  if (!definition) {
+    return
+  }
+
+  validateDefinedString(input)
+  const filePaths = await fastGlob(input, getFastGlobOpts(cwd))
+  return returnFilePaths(filePaths)
+}
+
+const getFastGlobOpts = function (cwd) {
+  return { cwd, absolute: true, unique: true, onlyFiles: true }
 }
 
 const returnFilePaths = function (filePaths) {
@@ -30,8 +37,6 @@ const returnFilePaths = function (filePaths) {
 const shouldKeepFilePath = function (filePath) {
   return isNotJunk(basename(filePath))
 }
-
-const [main, mainAsync] = create(mainSyncAsync)
 
 // Apply `glob[(input, info)]` which resolves the input as a globbing pattern
 // when `true` (default: `false`).
