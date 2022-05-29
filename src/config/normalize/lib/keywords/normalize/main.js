@@ -47,6 +47,7 @@ const DEFAULT_VALUES = {
 
 // `keyword.normalize()` must be a pure function, because it is memoized for
 // performance reasons.
+// Due to `isPromise`, async methods should always return promises.
 const memoizeNormalize = function ({ normalize, normalizeSync }) {
   return normalize === undefined
     ? normalize
