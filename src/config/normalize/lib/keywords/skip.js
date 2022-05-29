@@ -1,4 +1,4 @@
-import { callFunc } from '../call.js'
+import { callInputFunc } from '../call.js'
 
 // `undefined` definitions are always skipped because:
 //  - It allows any keyword to be disabled by setting `definition` to
@@ -20,7 +20,7 @@ export const shouldSkipKeyword = async function ({
   return (
     definition === undefined ||
     (!undefinedInput && input === undefined) ||
-    (await hasSkippedTest({ test, input, info, undefinedInput }))
+    (await hasSkippedTest(test, input, info))
   )
 }
 
@@ -34,11 +34,8 @@ export const shouldSkipKeyword = async function ({
 //    specific value (e.g. `undefined` for `required|default` keywords), i.e.
 //    need to check the input during `test()` but should not pass it during
 //    `main()` nor the definition function
-const hasSkippedTest = async function ({ test, input, info }) {
-  return (
-    test !== undefined &&
-    !(await callFunc({ func: test, input, info, hasInput: true }))
-  )
+const hasSkippedTest = async function (test, input, info) {
+  return test !== undefined && !(await callInputFunc(test, input, info))
 }
 
 // Function definitions returning `undefined` are skipped, unless

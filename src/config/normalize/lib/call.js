@@ -21,7 +21,7 @@ export const callFunc = async function ({ func, input, info, hasInput, test }) {
 // Most rule methods follow the same patterns:
 //  - Called with `input` and `info`
 //  - Optionally async
-const callInputFunc = async function (userFunc, input, info) {
+export const callInputFunc = async function (userFunc, input, info) {
   try {
     return await callUserFunc(userFunc.bind(undefined, input), info)
   } catch (error) {
