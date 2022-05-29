@@ -12,23 +12,10 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //  - `main` `function`: main function
 //  - `hasInput` `boolean` (default: false): pass `input` to `main()`
 //    as a second argument
-//  - `undefinedInput` `boolean`: skip the keyword if:
-//     - `false` (default): `input` is `undefined`
-//     - `null`: `input` is not `undefined`
-//     - `true`: never skip
-//  - `undefinedDefinition` `boolean` (default: false):
-//     - Skip the keyword if the `definition` is a function returning
-//       `undefined`
-//     - The keyword is always skipped if the `definition` is not a function and
-//       is `undefined` because:
-//        - It allows any keyword to be disabled by setting `definition` to
-//          `undefined`
-//        - Usually `undefinedDefinition` is only useful when `definition` is
-//          a function (e.g. in `compute|transform`)
-//        - The consumer might accidentally set `definition` to `undefined`,
-//          e.g. when mapping the `definition` object, and not expect any
-//          behavior change
-//        - This allows any keyword to have default values
+//  - `undefinedInput` `boolean | null`: whether to skip the keyword if the
+//    `input` is `undefined` or not
+//  - `undefinedDefinition` `boolean` (default: false): skip the keyword if the
+//    `definition` is a function returning `undefined`
 // `main(definition[, input], opts)` arguments are:
 //  - `definition`
 //  - `input`: only if `keyword.hasInput` is `true`
