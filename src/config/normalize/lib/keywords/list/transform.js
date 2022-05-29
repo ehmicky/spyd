@@ -1,10 +1,4 @@
-export const name = 'transform'
-export const hasInput = true
-export const undefinedDefinition = true
-
-// Apply `transform(input, info)` which transforms the input.
-// If can also delete it by returning `undefined`.
-export const main = function (definition, input) {
+const main = function (definition, input) {
   const { value, newProp } = isTransformMove(definition)
     ? definition
     : {
@@ -63,3 +57,13 @@ const COMMON_MOVES = [
     },
   },
 ]
+
+// Apply `transform(input, info)` which transforms the input.
+// If can also delete it by returning `undefined`.
+// eslint-disable-next-line import/no-default-export
+export default {
+  name: 'transform',
+  hasInput: true,
+  undefinedDefinition: true,
+  main,
+}

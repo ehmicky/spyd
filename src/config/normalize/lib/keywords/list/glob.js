@@ -5,18 +5,7 @@ import { isNotJunk } from 'junk'
 
 import { validateDefinedString } from '../../type.js'
 
-export const name = 'glob'
-export const hasInput = true
-
-// Apply `glob[(input, info)]` which resolves the input as a globbing pattern
-// when `true` (default: `false`).
-// Duplicates and temporary files are also removed.
-// Only returns regular files, not directories.
-// This is performed before `transform()` and `validate()`.
-//  - This allows using `validate()` to validate parent directories, timestamps,
-//    file types, etc.
-// This is performed before `path` in cases both are `true`.
-export const main = async function (definition, input, { cwd }) {
+const main = async function (definition, input, { cwd }) {
   if (!definition) {
     return
   }
@@ -32,4 +21,19 @@ export const main = async function (definition, input, { cwd }) {
     isNotJunk(basename(filePath)),
   )
   return { input: filePathsA }
+}
+
+// Apply `glob[(input, info)]` which resolves the input as a globbing pattern
+// when `true` (default: `false`).
+// Duplicates and temporary files are also removed.
+// Only returns regular files, not directories.
+// This is performed before `transform()` and `validate()`.
+//  - This allows using `validate()` to validate parent directories, timestamps,
+//    file types, etc.
+// This is performed before `path` in cases both are `true`.
+// eslint-disable-next-line import/no-default-export
+export default {
+  name: 'glob',
+  hasInput: true,
+  main,
 }

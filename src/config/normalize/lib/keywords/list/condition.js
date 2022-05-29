@@ -1,9 +1,13 @@
-export const name = 'condition'
-export const hasInput = true
-export const undefinedInput = true
+const main = function (definition) {
+  return definition ? undefined : { skip: true }
+}
 
 // Apply `condition[(input, info)]` which skips the current rule if `false`
 // is returned.
-export const main = function (definition) {
-  return definition ? undefined : { skip: true }
+// eslint-disable-next-line import/no-default-export
+export default {
+  name: 'condition',
+  hasInput: true,
+  undefinedInput: true,
+  main,
 }

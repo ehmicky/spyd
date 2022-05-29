@@ -1,9 +1,13 @@
-export const name = 'compute'
-export const undefinedInput = true
-export const undefinedDefinition = true
+const main = function (definition) {
+  return { input: definition }
+}
 
 // Apply `compute[(info)]` which sets an input from the system, instead of the
 // user
-export const main = function (definition) {
-  return { input: definition }
+// eslint-disable-next-line import/no-default-export
+export default {
+  name: 'compute',
+  undefinedInput: true,
+  undefinedDefinition: true,
+  main,
 }

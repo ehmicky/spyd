@@ -1,11 +1,16 @@
-export const name = 'default'
-export const undefinedInput = true
-
-export const test = function (input) {
+const test = function (input) {
   return input === undefined
 }
 
-// Apply `default[(info)]` which assigns a default value
-export const main = function (definition) {
+const main = function (definition) {
   return { input: definition }
+}
+
+// Apply `default[(info)]` which assigns a default value
+// eslint-disable-next-line import/no-default-export
+export default {
+  name: 'default',
+  undefinedInput: true,
+  test,
+  main,
 }

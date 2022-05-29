@@ -6,11 +6,7 @@ import { decodePointer } from 'json-ptr'
 
 import { wrapError } from '../../../../../error/wrap.js'
 
-export const name = 'schema'
-export const hasInput = true
-
-// Apply `schema[(input, info)]` which throws on JSON schema validation errors
-export const main = async function (definition, input) {
+const main = async function (definition, input) {
   const validate = compileSchema(definition)
 
   if (!validate(input)) {
@@ -60,4 +56,12 @@ const serializeAjvError = function ({ instancePath, message }) {
   const propPath = decodePointer(instancePath).join('.')
   const propPathA = propPath === '' ? propPath : `${propPath} `
   return `${propPathA}${message}`
+}
+
+// Apply `schema[(input, info)]` which throws on JSON schema validation errors
+// eslint-disable-next-line import/no-default-export
+export default {
+  name: 'schema',
+  hasInput: true,
+  main,
 }
