@@ -19,11 +19,8 @@ import { logWarnings } from './warn.js'
 //  - Removes the possibility of cycles
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
-export const normalizeInputs = async function (
-  inputs,
-  rules,
-  { soft = false, all = {}, context, cwd, prefix, parent } = {},
-) {
+export const normalizeInputs = async function (inputs, rules, opts) {
+  const { soft, all, context, cwd, prefix, parent } = normalizeOpts(opts)
   const rulesA = normalizeRules(rules, all)
 
   try {
@@ -40,6 +37,17 @@ export const normalizeInputs = async function (
     handleError(error, soft)
     return { error, warnings: [] }
   }
+}
+
+const normalizeOpts = function ({
+  soft = false,
+  all = {},
+  context,
+  cwd,
+  prefix,
+  parent,
+} = {}) {
+  return { soft, all, context, cwd, prefix, parent }
 }
 
 const applyRuleDeep = async function (
