@@ -71,7 +71,7 @@ const applyRuleDeep = async function (
 // Apply rule for a specific entry
 const applyEntryRule = async function (
   { config, moves, warnings },
-  { input, namePath, rule, rule: { example }, context, cwd, prefix, parent },
+  { input, namePath, rule, context, cwd, prefix, parent },
 ) {
   const opts = await getOpts({
     namePath,
@@ -80,7 +80,7 @@ const applyEntryRule = async function (
     cwd,
     prefix,
     parent,
-    example,
+    rule,
     moves,
   })
   return await applyKeywords({ rule, input, config, moves, warnings, opts })

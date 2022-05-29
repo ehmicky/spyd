@@ -18,7 +18,7 @@ export const getOpts = async function ({
   cwd,
   prefix,
   parent,
-  example,
+  rule: { example },
   moves,
 }) {
   const name = serializePath(namePath)
