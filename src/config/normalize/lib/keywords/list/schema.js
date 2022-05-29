@@ -6,11 +6,14 @@ import { decodePointer } from 'json-ptr'
 
 import { wrapError } from '../../../../../error/wrap.js'
 
-const main = async function (definition, input) {
-  const validate = compileSchema(definition)
-
-  if (!validate(input)) {
-    await throwValidationError(validate.errors)
+const normalize = function (definition) {
+  try {
+    return AJV.compile(definition)
+  } catch (error) {
+    throw wrapError(
+      error,
+      '"schema" value is invalid JSON schema (version 2020).\n',
+    )
   }
 }
 
@@ -32,14 +35,9 @@ const AJV_OPTIONS = {
 
 const AJV = getAjv()
 
-const compileSchema = function (schema) {
-  try {
-    return AJV.compile(schema)
-  } catch (error) {
-    throw wrapError(
-      error,
-      '"schema" value is invalid JSON schema (version 2020).\n',
-    )
+const main = function (validate, input) {
+  if (!validate(input)) {
+    throwValidationError(validate.errors)
   }
 }
 
@@ -63,5 +61,6 @@ const serializeAjvError = function ({ instancePath, message }) {
 export default {
   name: 'schema',
   hasInput: true,
+  normalize,
   main,
 }
