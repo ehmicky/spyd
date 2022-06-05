@@ -7,9 +7,9 @@ export const createErrorType = function (
 ) {
   validateErrorName(errorName)
   const ErrorType = class extends Error {
-    // eslint-disable-next-line no-unused-vars
-    constructor(message, { cause, name, ...opts } = {}) {
-      const errorOpts = cause === undefined ? {} : { cause }
+    constructor(message, opts = {}) {
+      validateOpts(opts)
+      const errorOpts = opts.cause === undefined ? {} : { cause: opts.cause }
       super(message, errorOpts)
       // eslint-disable-next-line fp/no-this
       onCreate(this, opts)
@@ -48,6 +48,14 @@ const validateErrorNamePattern = function (errorName) {
 
 const ERROR_NAME_END = 'Error'
 const ERROR_NAME_REGEXP = /[A-Z][a-zA-Z]*Error$/u
+
+const validateOpts = function (opts) {
+  if (typeof opts !== 'object' || opts === null) {
+    throw new TypeError(
+      `Error's second argument must be a plain object: ${opts}`,
+    )
+  }
+}
 
 // `onCreate()` allows custom logic at initialization time.
 // The construction arguments are passed.
