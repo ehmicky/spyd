@@ -25,7 +25,7 @@ const isStackLine = function (line) {
   return STACK_LINE_REGEXP.test(line)
 }
 
-const STACK_LINE_REGEXP = /^\s*at\s/u
+const STACK_LINE_REGEXP = /^\s*at /u
 
 // Generate a new stack trace
 const getStackTrace = function () {
