@@ -4,17 +4,21 @@ import { normalizeError } from '../error/normalize/main.js'
 import { addPadding } from '../report/utils/indent.js'
 
 // Print CLI errors and exit, depending on the error type
-// TODO: allow error types to not print anything
 export const handleCliError = function (error) {
   const errorA = normalizeError(error)
   const {
     exitCode,
     stack = true,
     indented = false,
+    silent = false,
   } = ERROR_PROPS[getErrorName(errorA)]
   const errorMessage = stack ? errorA.stack : errorA.message
   const errorMessageA = indented ? addPadding(errorMessage) : errorMessage
-  console.error(errorMessageA)
+
+  if (!silent) {
+    console.error(errorMessageA)
+  }
+
   process.exitCode = exitCode
 }
 
