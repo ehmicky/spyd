@@ -1,4 +1,4 @@
-export const config = [
+export const config = new Set([
   // Hide the abscissa with the `min`, `median` and `max` labels
   {
     name: 'mini',
@@ -13,4 +13,4 @@ export const config = [
     default: true,
     schema: { type: 'boolean' },
   },
-]
+])

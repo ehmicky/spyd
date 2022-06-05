@@ -4,7 +4,7 @@ import {
   EXAMPLE_STAT_NAME,
 } from './stats.js'
 
-export const config = [
+export const config = new Set([
   // Make table more compact, hiding columns separators
   {
     name: 'mini',
@@ -26,20 +26,22 @@ export const config = [
   // List of stats to show.
   // By default, all stats are shown.
   // Order is significant as it is displayed in that order.
-  {
-    name: 'stats',
-    default: ALL_STAT_NAMES,
-    schema: { type: 'array' },
-    example: EXAMPLE_STAT_NAMES,
-  },
-  {
-    name: 'stats.*',
-    required: true,
-    schema: {
-      type: 'string',
-      enum: ALL_STAT_NAMES,
-      errorMessage: { enum: `must be one of: ${ALL_STAT_NAMES.join(', ')}` },
+  [
+    {
+      name: 'stats',
+      default: ALL_STAT_NAMES,
+      schema: { type: 'array' },
+      example: EXAMPLE_STAT_NAMES,
     },
-    example: EXAMPLE_STAT_NAME,
-  },
-]
+    {
+      name: 'stats.*',
+      required: true,
+      schema: {
+        type: 'string',
+        enum: ALL_STAT_NAMES,
+        errorMessage: { enum: `must be one of: ${ALL_STAT_NAMES.join(', ')}` },
+      },
+      example: EXAMPLE_STAT_NAME,
+    },
+  ],
+])
