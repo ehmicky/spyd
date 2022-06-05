@@ -196,22 +196,9 @@ const mergeAggregate = function (mergedError, parentErrors, child) {
 }
 
 const getAggregateErrors = function (error) {
-  const { errors } = error
-  return hasAggregateErrors(error, errors)
-    ? errors.map(mergeErrorCause)
+  return Array.isArray(error.errors)
+    ? error.errors.map(mergeErrorCause)
     : undefined
-}
-
-const hasAggregateErrors = function (error, errors) {
-  return (
-    errors !== undefined &&
-    Array.isArray(errors) &&
-    (error instanceof AggregateError || errors.some(isErrorInstance))
-  )
-}
-
-const isErrorInstance = function (error) {
-  return error instanceof Error
 }
 
 const getMergedErrors = function (parentErrors, childErrors) {
