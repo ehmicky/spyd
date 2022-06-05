@@ -1,6 +1,5 @@
 import { createErrorType } from '../../error/create.js'
-import { mergeErrorCause } from '../../error/merge/main.js'
-import { allowErrorTypes } from '../../error/types.js'
+import { onError } from '../../error/handler.js'
 
 // Error from the library itself
 export const CoreError = createErrorType('CoreError')
@@ -27,7 +26,6 @@ const ErrorTypes = [
 
 // Serialize an error to send to parent
 export const serializeError = function (error) {
-  const errorA = mergeErrorCause(error)
-  const { name, message, stack } = allowErrorTypes(errorA, ErrorTypes)
+  const { name, message, stack } = onError(error, ErrorTypes)
   return { name, message, stack }
 }

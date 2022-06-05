@@ -4,9 +4,8 @@ import 'error-cause/auto'
 import { listCombinations } from './combination/list.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
+import { onError } from './error/handler.js'
 import { ErrorTypes } from './error/main.js'
-import { mergeErrorCause } from './error/merge/main.js'
-import { allowErrorTypes } from './error/types.js'
 import { checkLimits } from './history/compare/limit.js'
 import { getFromHistory, removeFromHistory } from './history/data/main.js'
 import { getTargetRawResults } from './history/merge/results.js'
@@ -32,7 +31,7 @@ export const run = async function (configFlags) {
     checkLimits(programmaticResult)
     return programmaticResult
   } catch (error) {
-    throw allowErrorTypes(mergeErrorCause(error), ErrorTypes)
+    throw onError(error, ErrorTypes)
   }
 }
 
@@ -45,7 +44,7 @@ export const show = async function (configFlags) {
     checkLimits(programmaticResult)
     return programmaticResult
   } catch (error) {
-    throw allowErrorTypes(mergeErrorCause(error), ErrorTypes)
+    throw onError(error, ErrorTypes)
   }
 }
 
@@ -59,7 +58,7 @@ export const remove = async function (configFlags) {
     await removeFromHistory(targetRawResults, config)
     return programmaticResult
   } catch (error) {
-    throw allowErrorTypes(mergeErrorCause(error), ErrorTypes)
+    throw onError(error, ErrorTypes)
   }
 }
 
@@ -70,6 +69,6 @@ export const dev = async function (configFlags) {
     const combinations = await listCombinations(config)
     await performDev(combinations, config)
   } catch (error) {
-    throw allowErrorTypes(mergeErrorCause(error), ErrorTypes)
+    throw onError(error, ErrorTypes)
   }
 }

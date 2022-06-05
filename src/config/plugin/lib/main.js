@@ -1,5 +1,4 @@
-import { mergeErrorCause } from '../../../error/merge/main.js'
-import { allowErrorTypes } from '../../../error/types.js'
+import { onError } from '../../../error/handler.js'
 
 import { validateDuplicatePlugins } from './duplicates.js'
 import { UserError, ErrorTypes } from './error.js'
@@ -33,8 +32,7 @@ export const getPlugins = async function (pluginConfigs, opts) {
     validateDuplicatePlugins(pluginInfos, optsA)
     return pluginInfos
   } catch (error) {
-    const errorA = mergeErrorCause(error)
-    throw allowErrorTypes(errorA, ErrorTypes)
+    throw onError(error, ErrorTypes)
   }
 }
 
@@ -59,7 +57,7 @@ export const getPlugin = async function (pluginConfig, opts) {
     const plugin = await getPluginInfo(pluginConfig, optsA)
     return plugin
   } catch (error) {
-    throw allowErrorTypes(error, ErrorTypes)
+    throw onError(error, ErrorTypes)
   }
 }
 
