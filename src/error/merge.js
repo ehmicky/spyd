@@ -33,7 +33,6 @@ import { setErrorProperty } from './normalize/set.js'
 //    applied along the stack trace
 // `normalizeError()` is called again to ensure the new `name|message` is
 // reflected in `error.stack`.
-// eslint-disable-next-line max-statements
 export const mergeErrorCause = function (error) {
   const parent = normalizeError(error)
   const parentErrors = getAggregateErrors(parent)
@@ -43,6 +42,10 @@ export const mergeErrorCause = function (error) {
     return parent
   }
 
+  return mergeCause(parent, parentErrors)
+}
+
+const mergeCause = function (parent, parentErrors) {
   const child = mergeErrorCause(parent.cause)
   const message = mergeMessage(parent.message, child.message)
   const mergedError = createError(parent, child, message)
