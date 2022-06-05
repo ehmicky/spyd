@@ -1,4 +1,11 @@
+import { createRequire } from 'module'
+
 import { modernErrors } from './modern/main.js'
+
+// TODO: replace with JSON imports after dropping support for Node <16.14.0
+const {
+  bugs: { url: bugsUrl },
+} = createRequire(import.meta.url)('../../../package.json')
 
 const {
   PluginError,
@@ -7,13 +14,10 @@ const {
   LimitError,
   StopError,
   onError,
-} = modernErrors([
-  'PluginError',
-  'UserCodeError',
-  'UserError',
-  'LimitError',
-  'StopError',
-])
+} = modernErrors(
+  ['PluginError', 'UserCodeError', 'UserError', 'LimitError', 'StopError'],
+  { bugsUrl },
+)
 
 export {
   // Bug in a plugin (reporter|runner)
