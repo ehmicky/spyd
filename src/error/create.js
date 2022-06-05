@@ -5,6 +5,7 @@ export const createErrorType = function (
   errorName,
   onCreate = defaultOnCreate,
 ) {
+  validateErrorName(errorName)
   const ErrorType = class extends Error {
     // eslint-disable-next-line no-unused-vars
     constructor(message, { cause, name, ...opts } = {}) {
@@ -17,6 +18,36 @@ export const createErrorType = function (
   setErrorName(ErrorType, errorName)
   return ErrorType
 }
+
+// Validate `error.name` looks like `ExampleError`.
+const validateErrorName = function (errorName) {
+  if (typeof errorName !== 'string') {
+    throw new TypeError(`Error name must be a string: ${errorName}`)
+  }
+
+  if (!errorName.endsWith(ERROR_NAME_END) || errorName === ERROR_NAME_END) {
+    throw new Error(
+      `Error name "${errorName}" must end with "${ERROR_NAME_END}"`,
+    )
+  }
+
+  validateErrorNamePattern(errorName)
+}
+
+const validateErrorNamePattern = function (errorName) {
+  if (errorName[0] !== errorName.toUpperCase()[0]) {
+    throw new Error(
+      `Error name "${errorName}" must start with an uppercase letter.`,
+    )
+  }
+
+  if (!ERROR_NAME_REGEXP.test(errorName)) {
+    throw new Error(`Error name "${errorName}" must only contain letters.`)
+  }
+}
+
+const ERROR_NAME_END = 'Error'
+const ERROR_NAME_REGEXP = /[A-Z][a-zA-Z]*Error$/u
 
 // `onCreate()` allows custom logic at initialization time.
 // The construction arguments are passed.
