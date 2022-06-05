@@ -78,10 +78,19 @@ const normalizeAggregate = function (error, parents) {
       .map((aggregateError) => normalizeError(aggregateError, parents))
       .filter(Boolean)
     setErrorProperty(error, 'errors', aggregateErrors)
-  } else if (error instanceof AggregateError) {
+  } else if (isAggregateError(error)) {
     setErrorProperty(error, 'errors', [])
   } else if (error.errors !== undefined) {
     // eslint-disable-next-line fp/no-delete
     delete error.errors
+  }
+}
+
+// `AggregateError` is not available in Node <15.0.0 and in some browsers
+const isAggregateError = function (error) {
+  try {
+    return error instanceof AggregateError
+  } catch {
+    return false
   }
 }
