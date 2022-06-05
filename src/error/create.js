@@ -2,7 +2,6 @@
 // The constructor allows setting either `error.cause` or any properties:
 // `new ErrorType('message', { anyProp: true })`
 export const createErrorType = function (name, onCreate = defaultOnCreate) {
-  validateErrorName(name)
   const ErrorType = class extends Error {
     constructor(message, opts = {}) {
       validateOpts(opts)
@@ -12,6 +11,7 @@ export const createErrorType = function (name, onCreate = defaultOnCreate) {
       onCreate(this, getOnCreateOpts(this, opts))
     }
   }
+  validateErrorName(name)
   setErrorName(ErrorType, name)
   return ErrorType
 }
