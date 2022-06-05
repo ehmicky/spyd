@@ -3,7 +3,7 @@ const SHELL_VALUES = ['none', 'sh', 'bash']
 // Shells have a performance impact and are less portable, so they are opt-in
 const DEFAULT_SHELL = 'none'
 
-export const config = [
+export const config = new Set([
   {
     name: 'shell',
     default: DEFAULT_SHELL,
@@ -13,4 +13,4 @@ export const config = [
       errorMessage: { enum: `must be one of: ${SHELL_VALUES.join(', ')}` },
     },
   },
-]
+])
