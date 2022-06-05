@@ -1,7 +1,6 @@
 import process from 'process'
 
 import { normalizeError } from '../error/normalize/main.js'
-import { addPadding } from '../report/utils/indent.js'
 
 // Print CLI errors and exit, depending on the error type
 export const handleCliError = function (error) {
@@ -9,14 +8,12 @@ export const handleCliError = function (error) {
   const {
     exitCode,
     stack = true,
-    indented = false,
     silent = false,
   } = ERROR_PROPS[getErrorName(errorA)]
-  const errorMessage = stack ? errorA.stack : errorA.message
-  const errorMessageA = indented ? addPadding(errorMessage) : errorMessage
 
   if (!silent) {
-    console.error(errorMessageA)
+    const errorMessage = stack ? errorA.stack : errorA.message
+    console.error(errorMessage)
   }
 
   process.exitCode = exitCode
@@ -33,7 +30,7 @@ const ERROR_PROPS = {
   UserCodeError: { exitCode: 3 },
   UserError: { exitCode: 2, stack: false },
   LimitError: { exitCode: 1, stack: false },
-  StopError: { exitCode: 0, stack: false, indented: true },
+  StopError: { exitCode: 0, stack: false },
 }
 
 const DEFAULT_ERROR_NAME = 'CoreError'
