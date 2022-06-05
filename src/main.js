@@ -1,3 +1,6 @@
+// eslint-disable-next-line n/file-extension-in-import, import/no-unassigned-import
+import 'error-cause/auto'
+
 import { listCombinations } from './combination/list.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
