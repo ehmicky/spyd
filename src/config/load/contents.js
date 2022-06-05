@@ -4,7 +4,6 @@ import { inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 import { importJsDefault } from '../../utils/import.js'
 import { loadYamlFile } from '../../utils/yaml.js'
 
@@ -32,8 +31,8 @@ export const loadConfigContents = async function (configPath) {
 const loadContents = async function (loadFunc, configPath) {
   try {
     return await loadFunc(configPath)
-  } catch (error) {
-    throw wrapError(error, 'File cannot be loaded:', UserError)
+  } catch (cause) {
+    throw new UserError('File cannot be loaded.', { cause })
   }
 }
 

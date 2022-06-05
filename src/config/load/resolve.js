@@ -1,7 +1,5 @@
 import { createRequire } from 'module'
 
-import { wrapError } from '../../error/wrap.js'
-
 // The `config` can be:
 //  - a Node module name starting with "[@scope/]spyd-config-"
 //  - a file path
@@ -19,10 +17,10 @@ const resolveNpm = function (configOpt, cwd) {
   try {
     return createRequire(`${cwd}/`).resolve(configOpt)
   } catch (error) {
-    throw wrapError(
-      error,
+    throw new Error(
       `must be a valid package name.
-This Node module was not found, please ensure it is installed.\n`,
+This Node module was not found, please ensure it is installed:\n`,
+      { cause: error },
     )
   }
 }

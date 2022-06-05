@@ -1,6 +1,5 @@
 import { getCombinationPrefix } from '../../combination/ids/name.js'
 import { useConfigSelectors } from '../../config/select/use.js'
-import { wrapError } from '../../error/wrap.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -15,7 +14,6 @@ import {
 } from '../process/runner.js'
 import { throwIfStopped } from '../stop/error.js'
 
-// eslint-disable-next-line import/max-dependencies
 import { runEvents } from './events.js'
 
 // Measure a single combination
@@ -99,6 +97,7 @@ const handleError = async function ({ onTaskExit, noDimensions, ...args }) {
   try {
     return await Promise.race([onTaskExit, runEvents(args)])
   } catch (error) {
-    throw wrapError(error, getCombinationPrefix(args.combination, noDimensions))
+    const prefix = getCombinationPrefix(args.combination, noDimensions)
+    throw prefix === undefined ? error : new Error(prefix, { cause: error })
   }
 }

@@ -4,7 +4,6 @@ import { pathExists } from 'path-exists'
 import { isDirectory, isFile } from 'path-type'
 
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 
 // Find all filenames of the history directory
 export const listFilenames = async function (historyDir) {
@@ -15,8 +14,8 @@ export const listFilenames = async function (historyDir) {
 export const readRawResult = async function (path) {
   try {
     return await readFile(path, 'utf8')
-  } catch (error) {
-    throw wrapError(error, 'History file could not be read:', UserError)
+  } catch (cause) {
+    throw new UserError('History file could not be read.', { cause })
   }
 }
 
@@ -24,8 +23,8 @@ export const readRawResult = async function (path) {
 export const writeRawResult = async function (path, rawResultStr) {
   try {
     return await writeFile(path, rawResultStr)
-  } catch (error) {
-    throw wrapError(error, 'History file could not be written:', UserError)
+  } catch (cause) {
+    throw new UserError('History file could not be written.', { cause })
   }
 }
 
@@ -33,8 +32,8 @@ export const writeRawResult = async function (path, rawResultStr) {
 export const deleteRawResult = async function (path) {
   try {
     await unlink(path)
-  } catch (error) {
-    throw wrapError(error, 'History file could not be deleted:', UserError)
+  } catch (cause) {
+    throw new UserError('History file could not be deleted.', { cause })
   }
 }
 
@@ -51,12 +50,10 @@ export const ensureHistoryDir = async function (historyDir) {
 
   try {
     await mkdir(historyDir, { recursive: true })
-  } catch (error) {
-    throw wrapError(
-      error,
-      `Could not create history directory "${historyDir}"\n`,
-      UserError,
-    )
+  } catch (cause) {
+    throw new UserError(`Could not create history directory "${historyDir}"`, {
+      cause,
+    })
   }
 }
 

@@ -1,4 +1,3 @@
-import { wrapError } from '../../error/wrap.js'
 import { findValue } from '../../utils/find.js'
 
 import { getDeltaTypeMessage } from './error.js'
@@ -30,8 +29,8 @@ const parseDelta = function ({ parse, type }, deltaOriginal) {
   try {
     const value = parse(deltaOriginal)
     return value === undefined ? undefined : { type, value }
-  } catch (error) {
-    throw wrapError(error, `\nType: ${getDeltaTypeMessage(type)}`)
+  } catch (cause) {
+    throw new Error(`must be a valid ${getDeltaTypeMessage(type)}.`, { cause })
   }
 }
 

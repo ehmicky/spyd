@@ -1,7 +1,6 @@
 import { dirname } from 'path'
 
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 import { addBases } from '../cwd.js'
 import { deepMerge } from '../merge.js'
 
@@ -120,12 +119,10 @@ const getParentConfigWithBases = async function (configPath, childConfigPaths) {
       childConfigPathsA,
     )
     return configWithBases
-  } catch (error) {
-    throw wrapError(
-      error,
-      `Invalid configuration file '${configPath}':\n`,
-      UserError,
-    )
+  } catch (cause) {
+    throw new UserError(`Invalid configuration file '${configPath}'.`, {
+      cause,
+    })
   }
 }
 

@@ -6,7 +6,6 @@ import stripFinalNewline from 'strip-final-newline'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 
 // By default, the `output` configuration property overwrites the file.
 // However, contents can be inserted instead between any two lines with the
@@ -34,8 +33,8 @@ export const detectInsert = async function (output) {
 const getFileContent = async function (output) {
   try {
     return await readFile(output, 'utf8')
-  } catch (error) {
-    throw wrapError(error, `Could not read "output" "${output}"\n`, UserError)
+  } catch (cause) {
+    throw new UserError(`Could not read "output" "${output}"`, { cause })
   }
 }
 
@@ -89,7 +88,7 @@ const END_LINE_TOKEN = 'spyd-end'
 const writeFileContent = async function (output, fileContent) {
   try {
     await writeFileAtomic(output, fileContent)
-  } catch {
-    throw wrapError(`Could not write to file "${output}"\n`, UserError)
+  } catch (cause) {
+    throw new UserError(`Could not write to file "${output}"`, { cause })
   }
 }

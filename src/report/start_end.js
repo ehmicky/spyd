@@ -1,5 +1,4 @@
 import { PluginError } from '../error/main.js'
-import { wrapError } from '../error/wrap.js'
 
 // Call all `reporter.start()`
 export const startReporters = async function (config) {
@@ -15,12 +14,10 @@ const startReporter = async function (reporter) {
   try {
     const startData = await reporter.start()
     return { ...reporter, startData }
-  } catch (error) {
-    throw wrapError(
-      error,
-      `When starting reporter "${reporter.id}":`,
-      PluginError,
-    )
+  } catch (cause) {
+    throw new PluginError(`Could not start reporter "${reporter.id}".`, {
+      cause,
+    })
   }
 }
 
@@ -36,7 +33,7 @@ const endReporter = async function ({ end, startData, id }) {
 
   try {
     await end(startData)
-  } catch (error) {
-    throw wrapError(error, `When ending reporter "${id}":`, PluginError)
+  } catch (cause) {
+    throw new PluginError(`Could not end reporter "${id}".`, { cause })
   }
 }

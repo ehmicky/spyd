@@ -14,7 +14,7 @@ export const getAdditionalMessage = function (taskLogs) {
     return ''
   }
 
-  return `${additionalMessage.message}\n`
+  return `${additionalMessage.message}\n\n`
 }
 
 const ADDITIONAL_MESSAGES = [

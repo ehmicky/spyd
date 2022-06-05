@@ -4,7 +4,6 @@ import { dirname } from 'path'
 import writeFileAtomic from 'write-file-atomic'
 
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 import { printToStdout } from '../tty.js'
 
 import { detectInsert, insertContents } from './insert.js'
@@ -47,11 +46,7 @@ const overwriteContents = async function (output, content) {
 
   try {
     await writeFileAtomic(output, content)
-  } catch (error) {
-    throw wrapError(
-      error,
-      `Could not write to "output" "${output}"\n`,
-      UserError,
-    )
+  } catch (cause) {
+    throw new UserError(`Could not write to "output" "${output}"`, { cause })
   }
 }

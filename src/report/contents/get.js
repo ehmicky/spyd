@@ -1,7 +1,6 @@
 import omit from 'omit.js'
 
 import { PluginError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 import { FORMATS } from '../formats/list.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
@@ -40,8 +39,8 @@ const callReportFunc = async function ({
       startData,
     ])
     return { content, result, format, footerString, output, colors }
-  } catch (error) {
-    throw wrapError(error, `When calling reporter "${id}":`, PluginError)
+  } catch (cause) {
+    throw new PluginError(`Could not call reporter "${id}".`, { cause })
   }
 }
 

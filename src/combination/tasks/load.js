@@ -1,5 +1,4 @@
 import { PluginError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 import { computeRunnerVersions } from '../../top/system/versions/compute.js'
 
 // Select the runners and retrieve their related spawn options using
@@ -30,7 +29,7 @@ export const loadRunner = async function (
 const launchRunner = async function ({ id, config, launch }) {
   try {
     return await launch(config)
-  } catch (error) {
-    throw wrapError(error, `In runner '${id}':`, PluginError)
+  } catch (cause) {
+    throw new PluginError(`Could not launch runner "${id}"`, { cause })
   }
 }

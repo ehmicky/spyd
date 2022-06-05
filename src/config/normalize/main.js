@@ -1,5 +1,4 @@
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 
 import { normalizeInputs } from './lib/main.js'
 
@@ -13,7 +12,7 @@ export const normalizeConfig = async function (config, rules, opts) {
   })
 
   if (error) {
-    throw wrapError(error, '', UserError)
+    throw new UserError('', { cause: error })
   }
 
   return inputs

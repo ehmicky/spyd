@@ -1,5 +1,4 @@
 import { noUnhandledRejection } from '../../error/unhandled_rejection.js'
-import { wrapError } from '../../error/wrap.js'
 import { spawnProcess } from '../../utils/spawn.js'
 
 import { throwOnSpawnExit, throwOnTaskExit } from './error.js'
@@ -61,8 +60,8 @@ export const spawnRunnerProcess = async function ({
     await waitForIpcSetup(childProcess, server)
     const onTaskExit = noUnhandledRejection(throwOnTaskExit(childProcess))
     return { childProcess, onTaskExit }
-  } catch (error) {
-    throw wrapError(error, `In runner "${id}":`)
+  } catch (cause) {
+    throw new Error(`Could not start runner "${id}".`, { cause })
   }
 }
 

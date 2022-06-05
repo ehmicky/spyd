@@ -1,5 +1,4 @@
 import { PluginError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 import { measureCombinations } from '../../run/measure/main.js'
 
 // Each combination has its own process, in order to prevent them from
@@ -27,8 +26,8 @@ export const findTasks = async function ({
     )
     validateDuplicateTaskIds(ids)
     return ids.map((id) => ({ id, taskPath, runner }))
-  } catch (error) {
-    throw wrapError(error, `In tasks file "${taskPath}":\n`)
+  } catch (cause) {
+    throw new Error(`Tasks file: "${taskPath}"`, { cause })
   }
 }
 

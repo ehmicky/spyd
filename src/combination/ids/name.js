@@ -6,7 +6,7 @@ import { getCombDimensionsIds } from './get.js'
 // Retrieve error message prefix showing a combination's dimension ids
 export const getCombinationPrefix = function (combination, noDimensions) {
   const combinationName = getCombinationName(combination, noDimensions)
-  return combinationName === '' ? '' : `In ${combinationName}:\n`
+  return combinationName === '' ? undefined : `In ${combinationName}.`
 }
 
 // Retrieve string with each combination's dimension id.

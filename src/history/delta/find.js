@@ -1,5 +1,4 @@
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 
 import { getDeltaError } from './error.js'
 import { findFormat } from './formats/main.js'
@@ -107,7 +106,7 @@ const findByDelta = async function ({ metadataGroups, delta, cwd, name }) {
 
   try {
     return await format.find(metadataGroups, delta.value, cwd)
-  } catch (error) {
-    throw wrapError(error, getDeltaError(delta, name))
+  } catch (cause) {
+    throw new UserError(`${getDeltaError(delta, name)}:`, { cause })
   }
 }

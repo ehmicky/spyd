@@ -1,5 +1,4 @@
 import { UserError } from '../../error/main.js'
-import { wrapError } from '../../error/wrap.js'
 
 // Parse the contents of a rawResult.
 // Parsing/serializing rawResults is abstracted away from the main store logic,
@@ -7,8 +6,8 @@ import { wrapError } from '../../error/wrap.js'
 export const parseRawResult = function (rawResultStr) {
   try {
     return JSON.parse(rawResultStr)
-  } catch (error) {
-    throw wrapError(error, 'History files is invalid JSON:', UserError)
+  } catch (cause) {
+    throw new UserError('History file is invalid JSON.', { cause })
   }
 }
 

@@ -1,8 +1,6 @@
 import { Buffer } from 'buffer'
 import { open } from 'fs/promises'
 
-import { wrapError } from '../../error/wrap.js'
-
 import { getAdditionalMessage } from './additional.js'
 import { normalizeLogs } from './normalize.js'
 
@@ -21,7 +19,9 @@ export const addErrorTaskLogs = async function (error, logsPath) {
   }
 
   const additionalMessage = getAdditionalMessage(taskLogsA)
-  return wrapError(error, `\n${additionalMessage}\nTask logs:\n${taskLogsA}`)
+  return new Error(`${additionalMessage}Task logs:\n${taskLogsA}`, {
+    cause: error,
+  })
 }
 
 // Read the last lines from the logs file
