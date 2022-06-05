@@ -1,11 +1,5 @@
-import { createRequire } from 'module'
-
 import { modernErrors } from '../../error/modern/main.js'
-
-// TODO: replace with JSON imports after dropping support for Node <16.14.0
-const {
-  bugs: { url: bugsUrl },
-} = createRequire(import.meta.url)('../../../../package.json')
+import { packageJson } from '../../utils/package.js'
 
 const {
   IpcSerializationError,
@@ -22,7 +16,7 @@ const {
     'TasksRunError',
     'ConfigError',
   ],
-  { bugsUrl },
+  { bugsUrl: packageJson.bugs.url },
 )
 
 export {
