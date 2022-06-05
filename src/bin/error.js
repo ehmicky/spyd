@@ -94,6 +94,7 @@ const handleOptsError = function (message, value) {
   return value
 }
 
+// Print the error message and|or stack trace
 const printError = function (error, silent, short) {
   if (silent) {
     return
