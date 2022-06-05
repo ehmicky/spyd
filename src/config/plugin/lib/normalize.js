@@ -1,7 +1,5 @@
 import { normalizeInputs } from '../../normalize/lib/main.js'
 
-import { CoreError } from './error.js'
-
 // Call `normalizeConfig` while assigning the right error types
 export const safeNormalizeConfig = async function (config, rules, opts) {
   try {
@@ -18,5 +16,5 @@ const getErrorType = function (error, { InputErrorType, DefinitionErrorType }) {
     return InputErrorType
   }
 
-  return error.name === 'DefinitionError' ? DefinitionErrorType : CoreError
+  return error.name === 'DefinitionError' ? DefinitionErrorType : Error
 }

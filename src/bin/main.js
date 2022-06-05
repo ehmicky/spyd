@@ -54,7 +54,6 @@ const COMMANDS = { run, show, remove, dev }
 // Error type-specific behavior
 const ERROR_PROPS = {
   default: { exitCode: 5 },
-  CoreError: { exitCode: 5 },
   PluginError: { exitCode: 4 },
   UserCodeError: { exitCode: 3 },
   UserError: { exitCode: 2, short: true },

@@ -1,7 +1,10 @@
 import { modernErrors } from '../../../error/modern.js'
 
-const { InputError, DefinitionError, KeywordError, CoreError, onError } =
-  modernErrors(['InputError', 'DefinitionError', 'KeywordError', 'CoreError'])
+const { InputError, DefinitionError, KeywordError, onError } = modernErrors([
+  'InputError',
+  'DefinitionError',
+  'KeywordError',
+])
 
 export {
   // Invalid `inputs`
@@ -10,8 +13,6 @@ export {
   DefinitionError,
   // Bug in a keyword|plugin
   KeywordError,
-  // Bug in the library itself
-  CoreError,
   // Top-level error handler
   onError,
 }

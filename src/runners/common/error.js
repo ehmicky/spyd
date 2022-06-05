@@ -1,7 +1,6 @@
 import { modernErrors } from '../../error/modern.js'
 
 const {
-  CoreError,
   IpcSerializationError,
   TasksLoadError,
   TasksSyntaxError,
@@ -9,7 +8,6 @@ const {
   ConfigError,
   onError,
 } = modernErrors([
-  'CoreError',
   'IpcSerializationError',
   'TasksLoadError',
   'TasksSyntaxError',
@@ -18,8 +16,6 @@ const {
 ])
 
 export {
-  // Error from the library itself
-  CoreError,
   // Could not JSON-stringify IPC payload
   IpcSerializationError,
   // Tasks file throws when loading

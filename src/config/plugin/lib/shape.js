@@ -1,6 +1,6 @@
 import { getDummyRules } from '../../normalize/dummy.js'
 
-import { PluginError, UserError, CoreError } from './error.js'
+import { PluginError, UserError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 import { normalizeRuleName, validateSharedProp } from './shared.js'
 
@@ -18,7 +18,7 @@ export const normalizeShape = async function ({
     },
     keywords,
     InputErrorType: PluginError,
-    DefinitionErrorType: CoreError,
+    DefinitionErrorType: Error,
   })
 
   if (shape === undefined) {

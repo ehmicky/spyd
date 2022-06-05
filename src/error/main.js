@@ -1,7 +1,6 @@
 import { modernErrors } from './modern.js'
 
 const {
-  CoreError,
   PluginError,
   UserCodeError,
   UserError,
@@ -9,7 +8,6 @@ const {
   StopError,
   onError,
 } = modernErrors([
-  'CoreError',
   'PluginError',
   'UserCodeError',
   'UserError',
@@ -18,8 +16,6 @@ const {
 ])
 
 export {
-  // Bug in the library itself
-  CoreError,
   // Bug in a plugin (reporter|runner)
   PluginError,
   // Invalid tasks or tasks file

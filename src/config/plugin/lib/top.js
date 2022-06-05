@@ -1,6 +1,6 @@
 import { normalizeObjectOrString } from '../../normalize/transform.js'
 
-import { CoreError, ConsumerError } from './error.js'
+import { ConsumerError } from './error.js'
 import { getExampleLocation } from './location_normalize.js'
 import { safeNormalizeConfig } from './normalize.js'
 
@@ -17,7 +17,7 @@ export const normalizePluginConfigTop = async function (
       all: { cwd, prefix, parent: name, context: { pluginProp, builtins } },
       keywords,
       InputErrorType: ConsumerError,
-      DefinitionErrorType: CoreError,
+      DefinitionErrorType: Error,
     })
   return { originalLocation, pluginConfig: pluginConfigA, locationName }
 }

@@ -31,7 +31,7 @@ const applyErrorProps = function (name, message) {
 //  - Whether the error should be reported as caused by the user or the plugin
 //  - Prefixing the error message
 const ERROR_PROPS = {
-  CoreError: {
+  SystemError: {
     ErrorType: PluginError,
     prefix: 'Runner internal bug',
   },
@@ -57,7 +57,7 @@ const ERROR_PROPS = {
   },
 }
 
-const DEFAULT_ERROR_NAME = 'CoreError'
+const DEFAULT_ERROR_NAME = 'SystemError'
 
 // Keep the stack trace from the runner's process, but update it with the new
 // `name` and `message`

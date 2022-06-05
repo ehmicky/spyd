@@ -1,4 +1,4 @@
-import { CoreError, ConsumerError } from './error.js'
+import { ConsumerError } from './error.js'
 import { NORMALIZE_LOCATIONS } from './location_type.js'
 import { safeNormalizeConfig } from './normalize.js'
 
@@ -19,7 +19,7 @@ export const normalizeLocation = async function ({
     },
     keywords,
     InputErrorType: ConsumerError,
-    DefinitionErrorType: CoreError,
+    DefinitionErrorType: Error,
   })
 }
 
