@@ -4,13 +4,12 @@ import ajvKeywords from 'ajv-keywords'
 import Ajv from 'ajv/dist/2020.js'
 import { decodePointer } from 'json-ptr'
 
-import { wrapError } from '../../../../../error/wrap.js'
-
 const normalize = function (definition) {
   try {
     return AJV.compile(definition)
-  } catch (error) {
-    throw wrapError(error, 'must be a valid JSON schema (version 2020).\n')
+  } catch {
+    const cause = getValidationError(AJV.errors)
+    throw new Error('must be a valid JSON schema (version 2020):\n', { cause })
   }
 }
 
@@ -34,17 +33,17 @@ const AJV = getAjv()
 
 const main = function (validate, input) {
   if (!validate(input)) {
-    throwValidationError(validate.errors)
+    throw getValidationError(validate.errors)
   }
 }
 
-const throwValidationError = function (errors) {
+const getValidationError = function (errors) {
   // eslint-disable-next-line fp/no-mutating-methods
   const message = [...errors].reverse().map(serializeAjvError).join(', ')
   const messageA = message.startsWith('must')
     ? `${message}.`
     : `must be valid: ${message}.`
-  throw new Error(messageA)
+  return new Error(messageA)
 }
 
 const serializeAjvError = function ({ instancePath, message }) {

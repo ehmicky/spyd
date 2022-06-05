@@ -1,5 +1,4 @@
 import { normalizeError } from '../../../../error/normalize/main.js'
-import { wrapError } from '../../../../error/wrap.js'
 import { InputError, DefinitionError, KeywordError } from '../error.js'
 
 import {
@@ -46,7 +45,7 @@ const handleInputError = function ({
   const errorA = addInputPrefix(error, prefix, originalName)
   const errorB = addCurrentInput(errorA, input, hasInput)
   const errorC = addExampleInput({ error: errorB, example, hasInput, test })
-  return wrapError(errorC, '', InputError)
+  return new InputError('', { cause: errorC })
 }
 
 const handleDefinitionError = function ({
@@ -67,7 +66,7 @@ const handleDefinitionError = function ({
   })
   const errorB = addCurrentDefinition(errorA, definition)
   const errorC = addExampleDefinition(errorB, exampleDefinition)
-  return wrapError(errorC, '', DefinitionError)
+  return new DefinitionError('', { cause: errorC })
 }
 
 const handleKeywordError = function ({
@@ -82,7 +81,7 @@ const handleKeywordError = function ({
   const errorA = addKeywordPrefix({ error, prefix, originalName, keyword })
   const errorB = addCurrentDefinition(errorA, definition)
   const errorC = addCurrentInput(errorB, input, hasInput)
-  return wrapError(errorC, '', KeywordError)
+  return new KeywordError('', { cause: errorC })
 }
 
 const ERROR_HANDLERS = {

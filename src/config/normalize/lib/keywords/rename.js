@@ -1,7 +1,6 @@
 import { serializePath, normalizePath } from 'wild-wild-parser'
 import { remove } from 'wild-wild-path'
 
-import { wrapError } from '../../../../error/wrap.js'
 import { KeywordError } from '../error.js'
 import { addMove } from '../move.js'
 
@@ -39,7 +38,7 @@ export const applyRename = function ({
 const safeNormalizePath = function (rename) {
   try {
     return normalizePath(rename)
-  } catch (error) {
-    throw wrapError(error, 'The "rename" path is invalid:', KeywordError)
+  } catch (cause) {
+    throw new KeywordError('The "rename" path is invalid:\n', { cause })
   }
 }

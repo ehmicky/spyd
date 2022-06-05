@@ -1,6 +1,5 @@
 import { normalizePath } from 'wild-wild-parser'
 
-import { wrapError } from '../../../../error/wrap.js'
 import { KeywordError } from '../error.js'
 import { addMove } from '../move.js'
 
@@ -20,7 +19,7 @@ export const applyPath = function ({ path }, moves, { path: oldPath }) {
 const safeNormalizePath = function (path) {
   try {
     return normalizePath(path)
-  } catch (error) {
-    throw wrapError(error, 'The "path" is invalid:', KeywordError)
+  } catch (cause) {
+    throw new KeywordError('The "path" is invalid:\n', { cause })
   }
 }

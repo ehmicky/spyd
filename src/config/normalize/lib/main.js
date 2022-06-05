@@ -1,5 +1,6 @@
 import { list } from 'wild-wild-path'
 
+import { mergeErrorCause } from '../../../error/merge/main.js'
 import { allowErrorTypes } from '../../../error/types.js'
 import { cleanObject } from '../../../utils/clean.js'
 
@@ -22,10 +23,10 @@ import { logWarnings } from './warn.js'
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
 export const normalizeInputs = async function (inputs, rules, opts) {
-  const { soft, all, keywords, ruleProps, sync } = normalizeOpts(opts)
-  const rulesA = normalizeRules({ rules, all, ruleProps, sync })
+  const { soft, all, keywords, ruleProps, sync } = safeNormalizeOpts(opts)
 
   try {
+    const rulesA = normalizeRules({ rules, all, ruleProps, sync })
     const state = { inputs, moves: [], warnings: [] }
     await applyRules({ rules: rulesA, state, keywords, sync })
     const { inputs: inputsA, warnings } = state
@@ -34,6 +35,14 @@ export const normalizeInputs = async function (inputs, rules, opts) {
     return { inputs: inputsB, warnings }
   } catch (error) {
     return handleError(error, soft)
+  }
+}
+
+const safeNormalizeOpts = function (opts) {
+  try {
+    return normalizeOpts(opts)
+  } catch (error) {
+    return handleError(error, false)
   }
 }
 
@@ -111,11 +120,12 @@ const applyRule = async function ({
 // When in `sort` mode, input errors are returned instead of being thrown.
 // Other errors are always propagated.
 const handleError = function (error, soft) {
-  const errorA = allowErrorTypes(error, ErrorTypes)
+  const errorA = mergeErrorCause(error)
+  const errorB = allowErrorTypes(errorA, ErrorTypes)
 
-  if (soft && errorA instanceof InputError) {
-    return { error: errorA, warnings: [] }
+  if (soft && errorB instanceof InputError) {
+    return { error: errorB, warnings: [] }
   }
 
-  throw errorA
+  throw errorB
 }

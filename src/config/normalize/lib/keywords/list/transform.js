@@ -1,8 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 import { normalizePath } from 'wild-wild-parser'
 
-import { wrapError } from '../../../../../error/wrap.js'
-
 const normalize = function (definition) {
   if (!isTransformMove(definition)) {
     return { value: definition }
@@ -12,8 +10,8 @@ const normalize = function (definition) {
 
   try {
     return { value, newProp: normalizePath(newProp) }
-  } catch (error) {
-    throw wrapError(error, 'must return a valid "newProp":')
+  } catch (cause) {
+    throw new Error('must return a valid "newProp":\n', { cause })
   }
 }
 
@@ -30,8 +28,8 @@ const isTransformMove = function (definition) {
 
 const main = function (definition, input) {
   const { value } = definition
-  const { path = findCommonMove(value, input) } = definition
-  return { input: value, path }
+  const { newProp = findCommonMove(value, input) } = definition
+  return { input: value, path: newProp }
 }
 
 // Automatically detect some common type of moves

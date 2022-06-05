@@ -3,7 +3,6 @@ import { inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 import { normalizeQuery } from 'wild-wild-parser'
 
-import { wrapError } from '../../../../error/wrap.js'
 import { DefinitionError } from '../error.js'
 
 import { validateRuleProps } from './validate.js'
@@ -30,7 +29,7 @@ const normalizeName = function (rule) {
 
   try {
     return normalizeQuery(rule.name)
-  } catch (error) {
-    throw wrapError(error, 'Invalid "name":', DefinitionError)
+  } catch (cause) {
+    throw new DefinitionError('Invalid "name":\n', { cause })
   }
 }

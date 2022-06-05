@@ -1,7 +1,5 @@
 import { normalizePath } from 'wild-wild-parser'
 
-import { wrapError } from '../../../../../error/wrap.js'
-
 // Normalize string definition
 export const normalizeString = function (definition) {
   if (typeof definition !== 'string') {
@@ -24,8 +22,8 @@ export const normalizeBoolean = function (definition) {
 export const normalizePropertyPath = function (definition) {
   try {
     return normalizePath(definition)
-  } catch (error) {
-    throw wrapError(error, 'must be a valid path:')
+  } catch (cause) {
+    throw new Error('must be a valid path:\n', { cause })
   }
 }
 
