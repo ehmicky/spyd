@@ -1,3 +1,6 @@
+import { normalizeError } from './normalize.js'
+
 export const mergeErrorCause = function (error) {
-  return error
+  const errorA = normalizeError(error)
+  return errorA
 }
