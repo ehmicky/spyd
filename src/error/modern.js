@@ -11,6 +11,10 @@ import { allowErrorTypes } from './types.js'
 // Custom error `onCreate()` logic can be specified
 //  - To make it type-specific, an object of functions should be used, then
 //    `object[error.name]` should be used inside `onCreate()`
+// There is no source maps support: instead users can use:
+//  - Node.js: `--enable-source-maps` flag
+//  - Chrome: `node-source-map-support`
+//  - Any browsers: `stacktrace.js`
 export const modernErrors = function (errorNames, onCreate) {
   const ErrorTypes = Object.fromEntries(
     errorNames.map((errorName) => [
