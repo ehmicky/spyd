@@ -1,4 +1,4 @@
-import { modernErrors } from './modern.js'
+import { modernErrors } from './modern/main.js'
 
 const {
   PluginError,

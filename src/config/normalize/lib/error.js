@@ -1,4 +1,4 @@
-import { modernErrors } from '../../../error/modern.js'
+import { modernErrors } from '../../../error/modern/main.js'
 
 const { InputError, DefinitionError, KeywordError, onError } = modernErrors([
   'InputError',
