@@ -1,6 +1,5 @@
+import mergeErrorCause from 'merge-error-cause'
 import normalizeException from 'normalize-exception'
-
-import { mergeErrorCause } from './merge/main.js'
 
 // Ensure an error is among a specific set of error types.
 // Otherwise, assign a default error type (`errorTypes[0]`).

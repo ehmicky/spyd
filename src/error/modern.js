@@ -1,8 +1,8 @@
 // eslint-disable-next-line n/file-extension-in-import, import/no-unassigned-import
 import 'error-cause/auto'
 import errorType from 'error-type'
+import mergeErrorCause from 'merge-error-cause'
 
-import { mergeErrorCause } from './merge/main.js'
 import { allowErrorTypes } from './types.js'
 
 // Create error types by passing an array of error names.
