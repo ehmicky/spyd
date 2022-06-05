@@ -21,13 +21,13 @@ import {
 //  - Any browsers: `stacktrace.js`
 export const modernErrors = function (errorNames, opts) {
   validateErrorNames(errorNames)
-  const { onCreate } = getOpts(opts)
+  const { onCreate, bugsUrl } = getOpts(opts)
   const SystemError = createSystemError()
   const ErrorTypes = createErrorTypes(errorNames, onCreate)
-  const onError = onErrorHandler.bind(
-    undefined,
-    Object.values(ErrorTypes),
+  const onError = onErrorHandler.bind(undefined, {
+    ErrorTypes: Object.values(ErrorTypes),
     SystemError,
-  )
+    bugsUrl,
+  })
   return { ...ErrorTypes, onError }
 }
