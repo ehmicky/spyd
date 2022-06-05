@@ -13,7 +13,7 @@ export const normalizePluginConfigTop = async function (
   const locationName =
     typeof pluginConfig === 'string' ? name : `${name}.${pluginProp}`
   const { [pluginProp]: originalLocation, ...pluginConfigA } =
-    await safeNormalizeConfig(pluginConfig, [normalizeTop], {
+    await safeNormalizeConfig(pluginConfig, topRules, {
       all: { cwd, prefix, parent: name, context: { pluginProp, builtins } },
       keywords,
       InputErrorType: ConsumerError,
@@ -22,15 +22,17 @@ export const normalizePluginConfigTop = async function (
   return { originalLocation, pluginConfig: pluginConfigA, locationName }
 }
 
-const normalizeTop = {
-  name: '.',
-  required: true,
-  schema: {
-    type: ['string', 'object'],
-    errorMessage: 'must be a string or a plain object',
+const topRules = [
+  {
+    name: '.',
+    required: true,
+    schema: {
+      type: ['string', 'object'],
+      errorMessage: 'must be a string or a plain object',
+    },
+    example: getExampleLocation,
+    transform(value, { context: { pluginProp } }) {
+      return normalizeObjectOrString(value, pluginProp)
+    },
   },
-  example: getExampleLocation,
-  transform(value, { context: { pluginProp } }) {
-    return normalizeObjectOrString(value, pluginProp)
-  },
-}
+]
