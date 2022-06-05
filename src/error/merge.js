@@ -85,6 +85,8 @@ const createSimpleErrorType = function (error, cause, message) {
     : new Error(message)
 }
 
+// Only show the inner error's stack trace since the outer one contains mostly
+// the same lines
 const fixStack = function (mergedError, cause) {
   setErrorProperty(mergedError, 'stack', cause.stack)
 }
