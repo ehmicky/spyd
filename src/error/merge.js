@@ -1,6 +1,32 @@
 import { normalizeError } from './normalize/main.js'
 import { setErrorProperty } from './normalize/set.js'
 
+// Merge `error.cause` recursively to a single error.
+// This allows consumers to conveniently wrap errors using:
+//   try {
+//     ...
+//   } catch (error) {
+//     throw new ErrorType('message', { cause: error })
+//   }
+// While still working around the following issues with `error.cause`:
+//  - The consumer needs to traverse `error.cause`
+//     - to retrieve both error class and properties
+//     - traversing is especially tricky since:
+//        - exceptions might not be error instances
+//        - the recursion might be infinite
+//  - The stack trace shows the innermost error message last, even though it is
+//    the most relevant one
+//  - The stack trace of each error is most likely a duplicate of the others
+//     - This is because, in most cases, `try/catch` blocks follow the stack
+//       trace
+//     - This might not be the case if:
+//        - `Error.stackTraceLimit` is too low, in which case it should be
+//          increased
+//        - Using callbacks, in which case `async`/`await` should be used
+//  - When printed, each error cause is indented and prints its own stack trace,
+///   which is very verbose and hard to read
+// In Node <16.9.0 and in some browsers, `error.cause` requires a polyfill like
+// `error-cause`.
 export const mergeErrorCause = function (error) {
   const errorA = normalizeError(error)
   return mergeCause(errorA)
@@ -9,6 +35,8 @@ export const mergeErrorCause = function (error) {
 // The recursion is applied pair by pair, as opposed to all errors at once.
 //  - This ensures the same result no matter how many times this function
 //    applied along the stack trace
+// `normalizeError()` is called again to ensure the new `name|message` is
+// reflected in `error.stack`.
 const mergeCause = function (parent) {
   if (parent.cause === undefined) {
     return parent
@@ -22,6 +50,15 @@ const mergeCause = function (parent) {
   return normalizeError(mergedError)
 }
 
+// Merge parent and child error messages.
+// By default, parent messages are appended
+//  - This is because the innermost message is the most relevant one which
+//    should be read first by users
+//  - However, the parent can opt-in to being prepended instead by ending
+//    with `:`, optionally followed by a newline.
+// Each error message is on its own line, for clarity.
+// Empty messages are ignored
+//  - This is useful when wrapping an error properties, but not message
 const mergeMessage = function (rawParentMessage, rawChildMessage) {
   const parentMessage = rawParentMessage.trim()
   const childMessage = rawChildMessage.trim()
@@ -56,7 +93,14 @@ const PREPEND_NEWLINE_CHAR = '\n'
 
 // Ensure both the prototype and `error.name` are correct, by creating a new
 // instance with the right constructor.
-// The
+// The parent error's type has priority unless:
+//  - It is Error|AggregateError, which allows wrapping an error message or
+//    properties without changing its type
+//  - Its constructor throws
+// If both parent and child constructors throw, we default to Error.
+// If both parent and child are Error|AggregateError, we privilege
+// AggregateError if any is an instance, since the `errors` property should only
+// be used on AggregateError.
 const createError = function (parent, child, message) {
   if (isSimpleErrorType(parent)) {
     return createCauseError(parent, child, message)
