@@ -3,13 +3,18 @@ import { setErrorProperty } from './set.js'
 import { setFullStack, getStackHeader, fixStack } from './stack.js'
 
 // Ensure we are using an Error instance
-export const normalizeError = function (error) {
+export const normalizeError = function (error, parents = []) {
+  if (parents.includes(error)) {
+    return
+  }
+
+  const parentsA = [...parents, error]
   const errorA = error instanceof Error ? error : createError(error)
   normalizeName(errorA)
   normalizeMessage(errorA)
   normalizeStack(errorA)
-  normalizeCause(errorA)
-  normalizeAggregate(errorA)
+  normalizeCause(errorA, parentsA)
+  normalizeAggregate(errorA, parentsA)
   return errorA
 }
 
@@ -48,17 +53,29 @@ const isDefinedString = function (value) {
 }
 
 // Recurse over `error.cause`
-const normalizeCause = function (error) {
-  if (error.cause !== undefined) {
-    setErrorProperty(error, 'cause', normalizeError(error.cause))
+const normalizeCause = function (error, parents) {
+  if (error.cause === undefined) {
+    return
+  }
+
+  const cause = normalizeError(error.cause, parents)
+
+  if (cause === undefined) {
+    // eslint-disable-next-line fp/no-delete
+    delete error.cause
+  } else {
+    setErrorProperty(error, 'cause', cause)
   }
 }
 
 // Recurse over `error.errors`.
 // Also ensure `AggregateError` instance have an `errors` property.
-const normalizeAggregate = function (error) {
+const normalizeAggregate = function (error, parents) {
   if (Array.isArray(error.errors)) {
-    setErrorProperty(error, 'errors', error.errors.map(normalizeError))
+    const aggregateErrors = error.errors
+      .map((aggregateError) => normalizeError(aggregateError, parents))
+      .filter(Boolean)
+    setErrorProperty(error, 'errors', aggregateErrors)
   } else if (error instanceof AggregateError) {
     setErrorProperty(error, 'errors', [])
   } else if (error.errors !== undefined) {
