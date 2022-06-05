@@ -111,7 +111,7 @@ const exitProcess = function (exitCode) {
   setTimeout(() => {
     // eslint-disable-next-line unicorn/no-process-exit, n/no-process-exit
     process.exit(exitCode)
-  }, EXIT_TIMEOUT)
+  }, EXIT_TIMEOUT).unref()
 }
 
 const EXIT_TIMEOUT = 5e3
