@@ -102,12 +102,7 @@ const applyRule = async function ({
   keywords,
   sync,
 }) {
-  const entries = list(inputs, rule.name, {
-    childFirst: true,
-    sort: true,
-    missing: true,
-    entries: true,
-  })
+  const entries = list(inputs, rule.name, LIST_OPTS)
 
   // eslint-disable-next-line fp/no-loops
   for (const { value: input, path } of entries) {
@@ -116,6 +111,8 @@ const applyRule = async function ({
     await applyKeywords({ rule, input, state, info, keywords, sync })
   }
 }
+
+const LIST_OPTS = { childFirst: true, sort: true, missing: true, entries: true }
 
 // When in `sort` mode, input errors are returned instead of being thrown.
 // Other errors are always propagated.
