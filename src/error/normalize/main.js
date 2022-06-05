@@ -52,7 +52,8 @@ const isDefinedString = function (value) {
   return typeof value === 'string' && value !== ''
 }
 
-// Recurse over `error.cause`
+// Recurse over `error.cause`.
+// Skip `error.cause` if infinitely recursive.
 const normalizeCause = function (error, parents) {
   if (error.cause === undefined) {
     return
@@ -70,6 +71,7 @@ const normalizeCause = function (error, parents) {
 
 // Recurse over `error.errors`.
 // Also ensure `AggregateError` instance have an `errors` property.
+// Skip `error.errors` that are infinitely recursive.
 const normalizeAggregate = function (error, parents) {
   if (Array.isArray(error.errors)) {
     const aggregateErrors = error.errors
