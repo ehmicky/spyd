@@ -1,10 +1,16 @@
+import { createRequire } from 'module'
+
 import { modernErrors } from '../../../error/modern/main.js'
 
-const { InputError, DefinitionError, KeywordError, onError } = modernErrors([
-  'InputError',
-  'DefinitionError',
-  'KeywordError',
-])
+// TODO: replace with JSON imports after dropping support for Node <16.14.0
+const {
+  bugs: { url: bugsUrl },
+} = createRequire(import.meta.url)('../../../../../package.json')
+
+const { InputError, DefinitionError, KeywordError, onError } = modernErrors(
+  ['InputError', 'DefinitionError', 'KeywordError'],
+  { bugsUrl },
+)
 
 export {
   // Invalid `inputs`

@@ -1,4 +1,11 @@
+import { createRequire } from 'module'
+
 import { modernErrors } from '../../error/modern/main.js'
+
+// TODO: replace with JSON imports after dropping support for Node <16.14.0
+const {
+  bugs: { url: bugsUrl },
+} = createRequire(import.meta.url)('../../../../package.json')
 
 const {
   IpcSerializationError,
@@ -7,13 +14,16 @@ const {
   TasksRunError,
   ConfigError,
   onError,
-} = modernErrors([
-  'IpcSerializationError',
-  'TasksLoadError',
-  'TasksSyntaxError',
-  'TasksRunError',
-  'ConfigError',
-])
+} = modernErrors(
+  [
+    'IpcSerializationError',
+    'TasksLoadError',
+    'TasksSyntaxError',
+    'TasksRunError',
+    'ConfigError',
+  ],
+  { bugsUrl },
+)
 
 export {
   // Could not JSON-stringify IPC payload
