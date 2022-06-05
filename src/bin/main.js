@@ -6,13 +6,11 @@ import { fileURLToPath } from 'url'
 import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
-import { onError } from '../error/handler.js'
-import { ErrorTypes, ERROR_PROPS } from '../error/main.js'
+import { ERROR_PROPS } from '../error/main.js'
 import { run, show, remove, dev } from '../main.js'
 import { addPadding } from '../report/utils/indent.js'
 
 import { parseCliFlags } from './parse.js'
-// eslint-disable-next-line import/max-dependencies
 import { defineCli } from './top.js'
 
 // Parse CLI flags then execute commands.
@@ -56,10 +54,11 @@ const checkUpdate = async function () {
 const COMMANDS = { run, show, remove, dev }
 
 // Print CLI errors and exit, depending on the error type
+// TODO: error normalization?
+// TODO: enforce error types for bugs inside the CLI logic?
 const handleCliError = function (error) {
-  const errorA = onError(error, ErrorTypes)
-  const { exitCode, printStack, indented } = ERROR_PROPS[errorA.name]
-  const errorMessage = printStack ? errorA.stack : errorA.message
+  const { exitCode, printStack, indented } = ERROR_PROPS[error.name]
+  const errorMessage = printStack ? error.stack : error.message
   const errorMessageA = indented ? addPadding(errorMessage) : errorMessage
   console.error(errorMessageA)
   process.exitCode = exitCode

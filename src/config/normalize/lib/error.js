@@ -1,13 +1,17 @@
-import { createErrorType } from '../../../error/create.js'
+import { modernErrors } from '../../../error/modern.js'
 
-// Invalid `inputs`
-export const InputError = createErrorType('InputError')
-// Invalid `rules` or `options`
-export const DefinitionError = createErrorType('DefinitionError')
-// Bug in a keyword|plugin
-export const KeywordError = createErrorType('KeywordError')
-// Bug in the library itself
-export const CoreError = createErrorType('CoreError')
+const { InputError, DefinitionError, KeywordError, CoreError, onError } =
+  modernErrors(['InputError', 'DefinitionError', 'KeywordError', 'CoreError'])
 
-// All error types, with first being default type
-export const ErrorTypes = [CoreError, InputError, DefinitionError, KeywordError]
+export {
+  // Invalid `inputs`
+  InputError,
+  // Invalid `rules` or `options`
+  DefinitionError,
+  // Bug in a keyword|plugin
+  KeywordError,
+  // Bug in the library itself
+  CoreError,
+  // Top-level error handler
+  onError,
+}

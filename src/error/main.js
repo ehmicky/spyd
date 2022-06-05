@@ -1,27 +1,38 @@
-import { createErrorType } from './create.js'
+import { modernErrors } from './modern.js'
 
-// Bug in the library itself
-export const CoreError = createErrorType('CoreError')
-// Bug in a plugin (reporter|runner)
-export const PluginError = createErrorType('PluginError')
-// Invalid tasks or tasks file
-export const UserCodeError = createErrorType('UserCodeError')
-// Invalid options
-export const UserError = createErrorType('UserError')
-// `limit` option threshold was reached
-export const LimitError = createErrorType('LimitError')
-// User aborting the benchmark
-export const StopError = createErrorType('StopError')
-
-// All error types, with first being default type
-export const ErrorTypes = [
+const {
   CoreError,
   PluginError,
   UserCodeError,
   UserError,
   LimitError,
   StopError,
-]
+  onError,
+} = modernErrors([
+  'CoreError',
+  'PluginError',
+  'UserCodeError',
+  'UserError',
+  'LimitError',
+  'StopError',
+])
+
+export {
+  // Bug in the library itself
+  CoreError,
+  // Bug in a plugin (reporter|runner)
+  PluginError,
+  // Invalid tasks or tasks file
+  UserCodeError,
+  // Invalid options
+  UserError,
+  // `limit` option threshold was reached
+  LimitError,
+  // User aborting the benchmark
+  StopError,
+  // Top-level error handler
+  onError,
+}
 
 // Error type-specific behavior
 export const ERROR_PROPS = {

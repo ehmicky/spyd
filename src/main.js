@@ -1,11 +1,7 @@
-// eslint-disable-next-line n/file-extension-in-import, import/no-unassigned-import
-import 'error-cause/auto'
-
 import { listCombinations } from './combination/list.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
-import { onError } from './error/handler.js'
-import { ErrorTypes } from './error/main.js'
+import { onError } from './error/main.js'
 import { checkLimits } from './history/compare/limit.js'
 import { getFromHistory, removeFromHistory } from './history/data/main.js'
 import { getTargetRawResults } from './history/merge/results.js'
@@ -31,7 +27,7 @@ export const run = async function (configFlags) {
     checkLimits(programmaticResult)
     return programmaticResult
   } catch (error) {
-    throw onError(error, ErrorTypes)
+    throw onError(error)
   }
 }
 
@@ -44,7 +40,7 @@ export const show = async function (configFlags) {
     checkLimits(programmaticResult)
     return programmaticResult
   } catch (error) {
-    throw onError(error, ErrorTypes)
+    throw onError(error)
   }
 }
 
@@ -58,7 +54,7 @@ export const remove = async function (configFlags) {
     await removeFromHistory(targetRawResults, config)
     return programmaticResult
   } catch (error) {
-    throw onError(error, ErrorTypes)
+    throw onError(error)
   }
 }
 
@@ -69,6 +65,6 @@ export const dev = async function (configFlags) {
     const combinations = await listCombinations(config)
     await performDev(combinations, config)
   } catch (error) {
-    throw onError(error, ErrorTypes)
+    throw onError(error)
   }
 }

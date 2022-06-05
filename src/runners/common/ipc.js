@@ -2,7 +2,7 @@ import { argv } from 'process'
 
 import got from 'got'
 
-import { serializeError, IpcSerializationError } from './error.js'
+import { IpcSerializationError, onError } from './error.js'
 
 // Handles IPC communication with the parent process
 export const handleEvents = async function (handlers) {
@@ -53,4 +53,10 @@ const safeSerializeBody = function (returnValue = {}) {
 
 const serializeBody = function (returnValue) {
   return JSON.stringify(returnValue)
+}
+
+// Serialize an error to send to parent
+const serializeError = function (error) {
+  const { name, message, stack } = onError(error)
+  return { name, message, stack }
 }

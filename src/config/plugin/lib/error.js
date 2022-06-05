@@ -1,13 +1,17 @@
-import { createErrorType } from '../../../error/create.js'
+import { modernErrors } from '../../../error/modern.js'
 
-// Error from the library
-export const CoreError = createErrorType('CoreError')
-// Error from the library's user, who defines available plugin types
-export const UserError = createErrorType('UserError')
-// Error from a plugin author, who defines a specific plugin
-export const PluginError = createErrorType('PluginError')
-// Error from a plugin user
-export const ConsumerError = createErrorType('ConsumerError')
+const { CoreError, UserError, PluginError, ConsumerError, onError } =
+  modernErrors(['CoreError', 'UserError', 'PluginError', 'ConsumerError'])
 
-// All error types, with first being default type
-export const ErrorTypes = [CoreError, UserError, PluginError, ConsumerError]
+export {
+  // Error from the library
+  CoreError,
+  // Error from the library's user, who defines available plugin types
+  UserError,
+  // Error from a plugin author, who defines a specific plugin
+  PluginError,
+  // Error from a plugin user
+  ConsumerError,
+  // Top-level error handler
+  onError,
+}

@@ -1,7 +1,5 @@
-import { onError } from '../../../error/handler.js'
-
 import { validateDuplicatePlugins } from './duplicates.js'
-import { UserError, ErrorTypes } from './error.js'
+import { UserError, onError } from './error.js'
 import { getPluginInfo } from './info.js'
 import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 
@@ -32,7 +30,7 @@ export const getPlugins = async function (pluginConfigs, opts) {
     validateDuplicatePlugins(pluginInfos, optsA)
     return pluginInfos
   } catch (error) {
-    throw onError(error, ErrorTypes)
+    throw onError(error)
   }
 }
 
@@ -57,7 +55,7 @@ export const getPlugin = async function (pluginConfig, opts) {
     const plugin = await getPluginInfo(pluginConfig, optsA)
     return plugin
   } catch (error) {
-    throw onError(error, ErrorTypes)
+    throw onError(error)
   }
 }
 

@@ -1,9 +1,8 @@
 import { list } from 'wild-wild-path'
 
-import { onError } from '../../../error/handler.js'
 import { cleanObject } from '../../../utils/clean.js'
 
-import { InputError, ErrorTypes } from './error.js'
+import { InputError, onError } from './error.js'
 import { getInfo } from './info.js'
 import { applyKeywords } from './keywords/main.js'
 import { normalizeOpts } from './options.js'
@@ -116,7 +115,7 @@ const LIST_OPTS = { childFirst: true, sort: true, missing: true, entries: true }
 // When in `sort` mode, input errors are returned instead of being thrown.
 // Other errors are always propagated.
 const handleError = function (error, soft) {
-  const errorA = onError(error, ErrorTypes)
+  const errorA = onError(error)
 
   if (soft && errorA instanceof InputError) {
     return { error: errorA, warnings: [] }
