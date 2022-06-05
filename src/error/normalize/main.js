@@ -1,30 +1,16 @@
+import { createError } from './create.js'
 import { setErrorProperty } from './set.js'
 import { setFullStack, getStackHeader, fixStack } from './stack.js'
 
 // Ensure we are using an Error instance
 export const normalizeError = function (error) {
-  if (!(error instanceof Error)) {
-    return createError(error)
-  }
-
-  normalizeName(error)
-  normalizeMessage(error)
-  normalizeStack(error)
-  normalizeCause(error)
-  normalizeAggregate(error)
-  return error
-}
-
-// If an exception is not an Error instance, create one.
-// `String()` might throw due to `value.toString()`, so we handle it.
-const createError = function (value) {
-  try {
-    const error = new Error(String(value))
-    setFullStack(error)
-    return error
-  } catch (error_) {
-    return error_
-  }
+  const errorA = error instanceof Error ? error : createError(error)
+  normalizeName(errorA)
+  normalizeMessage(errorA)
+  normalizeStack(errorA)
+  normalizeCause(errorA)
+  normalizeAggregate(errorA)
+  return errorA
 }
 
 // Ensure `error.name` is a string
