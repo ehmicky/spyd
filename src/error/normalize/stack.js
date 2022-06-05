@@ -1,7 +1,10 @@
+import { setErrorProperty } from './set.js'
+
 // Ensure `error.stack` reflects `error.name` and `error.message`
 // Also create stack trace if missing.
 export const setFullStack = function (error) {
-  error.stack = `${getStackHeader(error)}\n${getStackTrace()}`
+  const stack = `${getStackHeader(error)}\n${getStackTrace()}`
+  setErrorProperty(error, 'stack', stack)
 }
 
 // Expected first line of `error.stack`
@@ -14,7 +17,8 @@ export const fixStack = function (error, header) {
   const lines = error.stack.split('\n')
   const index = lines.findIndex(isStackLine)
   const linesA = index === -1 ? [getStackTrace()] : lines.slice(index)
-  error.stack = [header, ...linesA].join('\n')
+  const stack = [header, ...linesA].join('\n')
+  setErrorProperty(error, 'stack', stack)
 }
 
 const isStackLine = function (line) {

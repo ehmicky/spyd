@@ -1,3 +1,4 @@
+import { setErrorProperty } from './set.js'
 import { setFullStack, getStackHeader, fixStack } from './stack.js'
 
 // Ensure we are using an Error instance
@@ -29,20 +30,17 @@ const createError = function (value) {
 // Ensure `error.name` is a string
 const normalizeName = function (error) {
   if (!isDefinedString(error.name)) {
-    setErrorProperty(
-      error,
-      'name',
-      isDefinedString(error.constructor.name)
-        ? error.constructor.name
-        : 'Error',
-    )
+    const name = isDefinedString(error.constructor.name)
+      ? error.constructor.name
+      : 'Error'
+    setErrorProperty(error, 'name', name)
   }
 }
 
 // Ensure `error.message` is a string
 const normalizeMessage = function (error) {
   if (!isDefinedString(error.message)) {
-    error.message = ''
+    setErrorProperty(error, 'message', '')
   }
 }
 
@@ -66,7 +64,7 @@ const isDefinedString = function (value) {
 // Recurse over `error.cause`
 const normalizeCause = function (error) {
   if (error.cause !== undefined) {
-    error.cause = normalizeError(error.cause)
+    setErrorProperty(error, 'cause', normalizeError(error.cause))
   }
 }
 
@@ -76,26 +74,16 @@ const normalizeAggregate = function (error) {
   if (Array.isArray(error.errors)) {
     normalizeAggregateErrors(error)
   } else if (error instanceof AggregateError) {
-    error.errors = []
+    setErrorProperty(error, 'errors', [])
   }
 }
 
 const normalizeAggregateErrors = function (error) {
   if (error instanceof AggregateError || error.errors.some(isErrorInstance)) {
-    error.errors = error.errors.map(normalizeError)
+    setErrorProperty(error, 'errors', error.errors.map(normalizeError))
   }
 }
 
 const isErrorInstance = function (error) {
   return error instanceof Error
-}
-
-// Error properties are non-enumerable
-const setErrorProperty = function (error, propName, value) {
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'name', {
-    value,
-    writable: true,
-    enumerable: false,
-  })
 }
