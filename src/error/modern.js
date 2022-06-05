@@ -15,12 +15,17 @@ import { allowErrorTypes } from './types.js'
 //  - Node.js: `--enable-source-maps` flag
 //  - Chrome: `node-source-map-support`
 //  - Any browsers: `stacktrace.js`
-export const modernErrors = function (errorNames, onCreate) {
+export const modernErrors = function (errorNames, opts) {
+  const { onCreate } = getOpts(opts)
   const ErrorTypes = Object.fromEntries(
     errorNames.map((errorName) => [errorName, errorType(errorName, onCreate)]),
   )
   const onErrorHandler = onError.bind(undefined, Object.values(ErrorTypes))
   return { ...ErrorTypes, onError: onErrorHandler }
+}
+
+const getOpts = function ({ onCreate } = {}) {
+  return { onCreate }
 }
 
 // Error handler that normalizes an error, merge its `error.cause` and ensure
