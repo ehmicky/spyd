@@ -1,7 +1,7 @@
 // eslint-disable-next-line n/file-extension-in-import, import/no-unassigned-import
 import 'error-cause/auto'
+import errorType from 'error-type'
 
-import { createErrorType } from './create.js'
 import { mergeErrorCause } from './merge/main.js'
 import { allowErrorTypes } from './types.js'
 
@@ -17,10 +17,7 @@ import { allowErrorTypes } from './types.js'
 //  - Any browsers: `stacktrace.js`
 export const modernErrors = function (errorNames, onCreate) {
   const ErrorTypes = Object.fromEntries(
-    errorNames.map((errorName) => [
-      errorName,
-      createErrorType(errorName, onCreate),
-    ]),
+    errorNames.map((errorName) => [errorName, errorType(errorName, onCreate)]),
   )
   const onErrorHandler = onError.bind(undefined, Object.values(ErrorTypes))
   return { ...ErrorTypes, onError: onErrorHandler }
