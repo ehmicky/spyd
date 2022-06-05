@@ -14,7 +14,7 @@ const mergeCause = function (error) {
   const cause = mergeCause(error.cause)
   const message = mergeMessage(error.message, cause.message)
   const mergedError = createError(error, cause, message)
-  fixStack(mergedError)
+  fixStack(mergedError, cause)
   copyProps(mergedError, error, cause)
   return normalizeError(mergedError)
 }
@@ -48,30 +48,38 @@ const PREPEND_CHAR = ':'
 const PREPEND_NEWLINE_CHAR = '\n'
 
 const createError = function (error, cause, message) {
-  if (error.constructor === Error || error.constructor === AggregateError) {
-    return createCauseError(message)
+  if (isSimpleErrorType(error)) {
+    return createCauseError(error, cause, message)
   }
 
   try {
-    return newError(error, message)
+    return new error.constructor(message)
   } catch {
-    return createCauseError(message)
+    return createCauseError(error, cause, message)
   }
 }
 
-const createCauseError = function (cause, message) {
+const createCauseError = function (error, cause, message) {
+  if (isSimpleErrorType(cause)) {
+    return createSimpleErrorType(error, cause, message)
+  }
+
   try {
-    return newError(cause, message)
+    return new cause.constructor(message)
   } catch {
-    return new Error(message)
+    return createSimpleErrorType(error, cause, message)
   }
 }
 
-const newError = function (error, message) {
-  const ErrorType = error.constructor
-  return ErrorType === AggregateError
-    ? new ErrorType([], message)
-    : new ErrorType(message)
+const isSimpleErrorType = function (error) {
+  return error.constructor === Error || error.constructor === AggregateError
+}
+
+const createSimpleErrorType = function (error, cause, message) {
+  return error.constructor === AggregateError ||
+    cause.constructor === AggregateError
+    ? new AggregateError([], message)
+    : new Error(message)
 }
 
 const fixStack = function (mergedError, cause) {
@@ -84,17 +92,26 @@ const copyProps = function (mergedError, error, cause) {
   mergeProps(mergedError, error)
 }
 
-// Do not merge inherited properties nor non-enumerable properties
+// Do not merge inherited properties nor non-enumerable properties.
+// Works with symbol properties.
 const mergeProps = function (mergedError, error) {
   // eslint-disable-next-line guard-for-in, fp/no-loops
   for (const propName in error) {
-    const descriptor = Object.getOwnPropertyDescriptor(error, propName)
+    mergeProp(mergedError, error, propName)
+  }
 
-    // eslint-disable-next-line max-depth
-    if (descriptor === undefined && !CORE_ERROR_PROPS.has(propName)) {
-      // eslint-disable-next-line fp/no-mutating-methods
-      Object.defineProperty(mergedError, propName, descriptor)
-    }
+  // eslint-disable-next-line fp/no-loops
+  for (const propName of Object.getOwnPropertySymbols(error)) {
+    mergeProp(mergedError, error, propName)
+  }
+}
+
+const mergeProp = function (mergedError, error, propName) {
+  const descriptor = Object.getOwnPropertyDescriptor(error, propName)
+
+  if (descriptor !== undefined && !CORE_ERROR_PROPS.has(propName)) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    Object.defineProperty(mergedError, propName, descriptor)
   }
 }
 
