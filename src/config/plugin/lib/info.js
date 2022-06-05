@@ -1,5 +1,3 @@
-import { wrapError } from '../../../error/wrap.js'
-
 import { normalizePluginConfig } from './config.js'
 import { PluginError } from './error.js'
 import { importPlugin } from './import.js'
@@ -45,6 +43,6 @@ export const getPluginInfo = async function (pluginConfig, opts) {
 
 const handlePluginError = function (error, originalLocation) {
   return error instanceof PluginError
-    ? wrapError(error, `Invalid plugin "${originalLocation}":`)
+    ? new Error(`Invalid plugin "${originalLocation}".`, { cause: error })
     : error
 }

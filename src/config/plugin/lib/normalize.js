@@ -1,4 +1,3 @@
-import { wrapError } from '../../../error/wrap.js'
 import { normalizeInputs } from '../../normalize/lib/main.js'
 
 import { CoreError } from './error.js'
@@ -9,7 +8,8 @@ export const safeNormalizeConfig = async function (config, rules, opts) {
     const { inputs } = await normalizeInputs(config, rules, opts)
     return inputs
   } catch (error) {
-    throw wrapError(error, '', getErrorType(error, opts))
+    const ErrorType = getErrorType(error, opts)
+    throw new ErrorType('', { cause: error })
   }
 }
 

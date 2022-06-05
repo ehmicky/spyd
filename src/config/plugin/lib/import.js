@@ -2,8 +2,6 @@ import { pathToFileURL } from 'url'
 
 import isPlainObj from 'is-plain-obj'
 
-import { wrapError } from '../../../error/wrap.js'
-
 import { PluginError } from './error.js'
 
 // Builtin modules are lazy loaded for performance reasons.
@@ -19,8 +17,8 @@ export const importPlugin = async function (
     const { plugin, path } = await IMPORTERS[locationType](location, builtins)
     const pluginA = isPlainObj(plugin) ? { ...plugin } : plugin
     return { plugin: pluginA, path }
-  } catch (error) {
-    throw wrapError(error, `Could not load "${name}"\n`, PluginError)
+  } catch (cause) {
+    throw new PluginError(`Could not load "${name}".`, { cause })
   }
 }
 
