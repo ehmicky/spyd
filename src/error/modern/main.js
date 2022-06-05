@@ -4,6 +4,7 @@ import errorType from 'error-type'
 import mergeErrorCause from 'merge-error-cause'
 
 import { getOpts } from './opts.js'
+import { createSystemError } from './system.js'
 import { allowErrorTypes } from './types.js'
 
 // Create error types by passing an array of error names.
@@ -30,27 +31,6 @@ export const modernErrors = function (errorNames, opts) {
   )
   return { ...ErrorTypes, onError: onErrorHandler }
 }
-
-// Create the SystemError type used for unknown error types.
-// We purposely do not export this type nor expose it except through
-// `error.name` because:
-//  - Users do not need it throw system errors since any uncaught error will be
-//    converted to it
-//  - This ensures instantiating a system error never throws
-//  - This makes the API simpler, stricter and more consistent
-const createSystemError = function (errorNames) {
-  validateSystemName(errorNames)
-  return errorType(SYSTEM_ERROR_NAME)
-}
-
-const validateSystemName = function (errorNames) {
-  if (errorNames.includes(SYSTEM_ERROR_NAME)) {
-    throw new Error(`Error type must not be named "${SYSTEM_ERROR_NAME}".
-"${SYSTEM_ERROR_NAME}" is reserved for exceptions matching none of the error types.`)
-  }
-}
-
-const SYSTEM_ERROR_NAME = 'SystemError'
 
 const getErrorTypes = function (errorNames, onCreate) {
   return Object.fromEntries(
