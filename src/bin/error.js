@@ -1,16 +1,20 @@
 import process from 'process'
 
+import { normalizeError } from '../error/normalize/main.js'
 import { addPadding } from '../report/utils/indent.js'
 
 // Print CLI errors and exit, depending on the error type
-// TODO: error normalization?
-// TODO: enforce error types for bugs inside the CLI logic?
 export const handleCliError = function (error) {
-  const { exitCode, printStack, indented } = ERROR_PROPS[error.name]
-  const errorMessage = printStack ? error.stack : error.message
+  const errorA = normalizeError(error)
+  const { exitCode, printStack, indented } = ERROR_PROPS[getErrorName(errorA)]
+  const errorMessage = printStack ? errorA.stack : errorA.message
   const errorMessageA = indented ? addPadding(errorMessage) : errorMessage
   console.error(errorMessageA)
   process.exitCode = exitCode
+}
+
+const getErrorName = function ({ name }) {
+  return name in ERROR_PROPS ? name : DEFAULT_ERROR_NAME
 }
 
 // Error type-specific behavior
@@ -22,3 +26,5 @@ const ERROR_PROPS = {
   LimitError: { exitCode: 1, printStack: false, indented: false },
   StopError: { exitCode: 0, printStack: false, indented: true },
 }
+
+const DEFAULT_ERROR_NAME = 'CoreError'
