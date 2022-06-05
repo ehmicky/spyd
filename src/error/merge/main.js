@@ -1,6 +1,10 @@
 import { normalizeError } from '../normalize/main.js'
-import { setErrorProperty } from '../normalize/set.js'
 
+import {
+  setAggregate,
+  getAggregateErrors,
+  mergeAggregate,
+} from './aggregate.js'
 import { createError } from './create.js'
 import { mergeMessage } from './message.js'
 import { copyProps } from './props.js'
@@ -40,7 +44,7 @@ import { hasStack, fixStack } from './stack.js'
 export const mergeErrorCause = function (error) {
   const hasChildStack = hasStack(error.cause)
   const parent = normalizeError(error)
-  const parentErrors = getAggregateErrors(parent)
+  const parentErrors = getAggregateErrors(parent, mergeErrorCause)
 
   if (parent.cause === undefined) {
     setAggregate(parent, parentErrors)
@@ -55,53 +59,7 @@ const mergeCause = function (parent, parentErrors, hasChildStack) {
   const message = mergeMessage(parent.message, child.message)
   const mergedError = createError(parent, child, message)
   fixStack({ mergedError, parent, child, hasChildStack })
-  mergeAggregate(mergedError, parentErrors, child)
+  mergeAggregate({ mergedError, parentErrors, child, mergeErrorCause })
   copyProps(mergedError, parent, child)
   return normalizeError(mergedError)
-}
-
-// Keep `error.errors` when merging errors.
-// If multiple errors have `errors`, the parent's errors are prepended.
-// `error.errors[*].cause` are recursed.
-// We do not merge `error.errors` into a single error:
-// - Because:
-//    - Unlike `error.cause`, those are separate errors, which should remain so
-//    - Each error's message and stack trace should be kept as is, otherwise:
-//       - Those could be very long if `error.errors` is large
-//       - Those could lead to confusing stack traces
-// - I.e. it is the responsibility of the consumers to recurse and handle
-//   `error.errors`
-const setAggregate = function (parent, parentErrors) {
-  if (parentErrors !== undefined) {
-    setErrorProperty(parent, 'errors', parentErrors)
-  }
-}
-
-const mergeAggregate = function (mergedError, parentErrors, child) {
-  const childErrors = getAggregateErrors(child)
-
-  if (parentErrors === undefined && childErrors === undefined) {
-    return
-  }
-
-  const errors = getMergedErrors(parentErrors, childErrors)
-  setErrorProperty(mergedError, 'errors', errors)
-}
-
-const getAggregateErrors = function (error) {
-  return Array.isArray(error.errors)
-    ? error.errors.map(mergeErrorCause)
-    : undefined
-}
-
-const getMergedErrors = function (parentErrors, childErrors) {
-  if (parentErrors === undefined) {
-    return childErrors
-  }
-
-  if (childErrors === undefined) {
-    return parentErrors
-  }
-
-  return [...childErrors, ...parentErrors]
 }
