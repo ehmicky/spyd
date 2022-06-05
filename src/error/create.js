@@ -11,7 +11,8 @@ export const createErrorType = function (
       validateOpts(opts)
       const errorOpts = opts.cause === undefined ? {} : { cause: opts.cause }
       super(message, errorOpts)
-      const onCreateOpts = getOnCreateOpts(opts)
+      // eslint-disable-next-line fp/no-this
+      const onCreateOpts = getOnCreateOpts(this, opts)
       // eslint-disable-next-line fp/no-this
       onCreate(this, onCreateOpts)
     }
@@ -58,21 +59,35 @@ const validateOpts = function (opts) {
   }
 }
 
-const getOnCreateOpts = function ({
-  // eslint-disable-next-line no-unused-vars
-  name,
-  // eslint-disable-next-line no-unused-vars
-  message,
-  // eslint-disable-next-line no-unused-vars
-  stack,
-  // eslint-disable-next-line no-unused-vars
-  cause,
-  // eslint-disable-next-line no-unused-vars
-  errors,
-  ...opts
-}) {
-  return opts
+// When passing options to `onCreate()`, ignore keys that:
+//  - Would override `Object` prototype (`hasOwnProperty`, etc.) or `Error`
+//    prototype (`toString`)
+//  - Are prototype-specific (`__proto__`, `prototype`, `constructor`)
+//  - Are core error properties (`name`, `message`, `stack`, `cause`, `errors`)
+//  - Are inherited
+//  - Are not enumerable
+const getOnCreateOpts = function (error, opts) {
+  const onCreateOpts = {}
+
+  // eslint-disable-next-line fp/no-loops
+  for (const key in opts) {
+    // eslint-disable-next-line max-depth
+    if (isEnum.call(opts, key) && !shouldIgnoreKey(error, key)) {
+      // eslint-disable-next-line fp/no-mutation
+      onCreateOpts[key] = opts[key]
+    }
+  }
+
+  return onCreateOpts
 }
+
+const { propertyIsEnumerable: isEnum } = Object.prototype
+
+const shouldIgnoreKey = function (error, key) {
+  return key in error || IGNORED_KEYS.has(key)
+}
+
+const IGNORED_KEYS = new Set(['errors', 'prototype'])
 
 // `onCreate()` allows custom logic at initialization time.
 // The construction arguments are passed.
