@@ -70,18 +70,20 @@ const normalizeCause = function (error) {
   }
 }
 
-// Recurse over `error.errors`
+// Recurse over `error.errors`.
+// Also ensure `AggregateError` instance have an `errors` property.
 const normalizeAggregate = function (error) {
-  if (hasAggregate(error)) {
-    error.errors = error.errors.map(normalizeError)
+  if (Array.isArray(error.errors)) {
+    normalizeAggregateErrors(error)
+  } else if (error instanceof AggregateError) {
+    error.errors = []
   }
 }
 
-const hasAggregate = function (error) {
-  return (
-    Array.isArray(error.errors) &&
-    (error instanceof AggregateError || error.errors.some(isErrorInstance))
-  )
+const normalizeAggregateErrors = function (error) {
+  if (error instanceof AggregateError || error.errors.some(isErrorInstance)) {
+    error.errors = error.errors.map(normalizeError)
+  }
 }
 
 const isErrorInstance = function (error) {
