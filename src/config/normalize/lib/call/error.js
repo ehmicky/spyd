@@ -1,4 +1,4 @@
-import { normalizeError } from '../../../../error/normalize.js'
+import { normalizeError } from '../../../../error/normalize/main.js'
 import { wrapError } from '../../../../error/wrap.js'
 import { InputError, DefinitionError, KeywordError } from '../error.js'
 

@@ -1,6 +1,6 @@
 import omit from 'omit.js'
 
-import { normalizeError } from './utils.js'
+import { normalizeError } from './normalize/main.js'
 
 // Wrap a child error with a new message and type
 export const wrapError = function (error, prefix, ErrorType) {

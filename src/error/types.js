@@ -1,4 +1,4 @@
-import { normalizeError } from './utils.js'
+import { normalizeError } from './normalize/main.js'
 import { wrapError } from './wrap.js'
 
 // Ensure an error is among a specific set of error types.
