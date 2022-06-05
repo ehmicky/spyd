@@ -14,7 +14,7 @@ const isObject = function (value) {
 }
 
 const validateOnCreate = function (onCreate) {
-  if (typeof onCreate !== 'function') {
+  if (onCreate !== undefined && typeof onCreate !== 'function') {
     throw new TypeError(`"onCreate" option must be a function: ${onCreate}`)
   }
 }
