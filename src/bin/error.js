@@ -7,7 +7,7 @@ export const handleCliError = function (error, opts) {
   const errorA = normalizeError(error)
   const { silent, short, exitCode } = getOpts(errorA, opts)
   printError(errorA, silent, short)
-  process.exitCode = exitCode
+  exitProcess(exitCode)
 }
 
 const getOpts = function (error, opts = {}) {
@@ -102,3 +102,15 @@ const printError = function (error, silent, short) {
   const errorMessage = short ? error.message : error.stack
   console.error(errorMessage)
 }
+
+// We use `process.exitCode` instead of `process.exit()` to let any pending
+// tasks complete, with a timeout
+const exitProcess = function (exitCode) {
+  process.exitCode = exitCode
+  setTimeout(() => {
+    // eslint-disable-next-line unicorn/no-process-exit, n/no-process-exit
+    process.exit(exitCode)
+  }, EXIT_TIMEOUT)
+}
+
+const EXIT_TIMEOUT = 5e3
