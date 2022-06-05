@@ -18,6 +18,10 @@ export const onErrorHandler = function (
   return mergeErrorCause(systemError)
 }
 
+// If defined, the "bugsUrl" option prints a line recommend the error to report
+// any SystemError.
+// The option value can be the `bugs.url` field of `package.json`, which is
+// easier to retrieve with JSON imports (Node >=16.14.0)
 const getSystemErrorMessage = function (bugsUrl) {
   return bugsUrl === undefined ? '' : `Please report this bug at: ${bugsUrl}`
 }
