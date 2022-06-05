@@ -3,6 +3,7 @@ import { normalizeError } from '../normalize/main.js'
 import { setErrorProperty } from '../normalize/set.js'
 
 import { copyProps } from './props.js'
+import { hasStack, fixStack } from './stack.js'
 
 // Merge `error.cause` recursively to a single error.
 // This allows consumers to conveniently wrap errors using:
@@ -142,31 +143,6 @@ const createSimpleErrorType = function (parent, child, message) {
     child.constructor === AggregateError
     ? new AggregateError([], message)
     : new Error(message)
-}
-
-// This needs to be performed before `child` is normalized by either
-// `mergeErrorCause(parent.cause)` or `normalizeError(parent)`
-const hasStack = function (child) {
-  return (
-    typeof child === 'object' &&
-    child !== null &&
-    (isStackProp(child.stack) || hasStack(child.cause))
-  )
-}
-
-const isStackProp = function (stack) {
-  return typeof stack === 'string' && stack.includes(STACK_LINE_START)
-}
-
-const STACK_LINE_START = 'at '
-
-// Only show the child error's stack trace since the parent one contains mostly
-// the same lines.
-// Do not do it if the child error is missing a proper stack trace.
-//  - Unless it has a `cause` which has one
-const fixStack = function ({ mergedError, parent, child, hasChildStack }) {
-  const { stack } = hasChildStack ? child : parent
-  setErrorProperty(mergedError, 'stack', stack)
 }
 
 // Keep `error.errors` when merging errors.
