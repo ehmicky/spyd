@@ -14,17 +14,16 @@ export const normalizeConfigProp = async function (configOpt, base) {
   return configPaths
 }
 
-const configProp = {
-  name: 'config',
-  default: getDefaultConfig,
-  transform: normalizeArray,
-}
-
-const configPropAny = {
-  name: 'config.*',
-  required: true,
-  path: normalizeConfigFilePath,
-  transform: resolveConfig,
-}
-
-export const CONFIG_RULES = [configProp, configPropAny]
+export const CONFIG_RULES = [
+  {
+    name: 'config',
+    default: getDefaultConfig,
+    transform: normalizeArray,
+  },
+  {
+    name: 'config.*',
+    required: true,
+    path: normalizeConfigFilePath,
+    transform: resolveConfig,
+  },
+]
