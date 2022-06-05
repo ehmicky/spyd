@@ -58,18 +58,11 @@ const normalizeCause = function (error) {
 // Also ensure `AggregateError` instance have an `errors` property.
 const normalizeAggregate = function (error) {
   if (Array.isArray(error.errors)) {
-    normalizeAggregateErrors(error)
+    setErrorProperty(error, 'errors', error.errors.map(normalizeError))
   } else if (error instanceof AggregateError) {
     setErrorProperty(error, 'errors', [])
+  } else if (error.errors !== undefined) {
+    // eslint-disable-next-line fp/no-delete
+    delete error.errors
   }
-}
-
-const normalizeAggregateErrors = function (error) {
-  if (error instanceof AggregateError || error.errors.some(isErrorInstance)) {
-    setErrorProperty(error, 'errors', error.errors.map(normalizeError))
-  }
-}
-
-const isErrorInstance = function (error) {
-  return error instanceof Error
 }
