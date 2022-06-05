@@ -9,9 +9,6 @@ import { createSystemError } from './system.js'
 // Create error types by passing an array of error names.
 // Also returns an `onError(error) => error` function to use as a top-level
 // error handler.
-// Custom error `onCreate()` logic can be specified
-//  - To make it type-specific, an object of functions should be used, then
-//    `object[error.name]` should be used inside `onCreate()`
 // Consumers should check for `error.name`
 //  - As opposed to using `instanceof`
 //  - This removes the need to import/export error types
@@ -31,6 +28,9 @@ export const modernErrors = function (errorNames, opts) {
   return { ...ErrorTypes, onError: onErrorHandler }
 }
 
+// Custom error `onCreate()` logic can be specified
+//  - To make it type-specific, an object of functions should be used, then
+//    `object[error.name]` should be used inside `onCreate()`
 const getErrorTypes = function (errorNames, onCreate) {
   return Object.fromEntries(
     errorNames.map((errorName) => [errorName, errorType(errorName, onCreate)]),
