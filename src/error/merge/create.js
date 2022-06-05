@@ -33,12 +33,20 @@ const createCauseError = function (parent, child, message) {
 }
 
 const isSimpleErrorType = function (error) {
-  return error.constructor === Error || error.constructor === AggregateError
+  return error.constructor === Error || isAggregateError(error)
 }
 
 const createSimpleErrorType = function (parent, child, message) {
-  return parent.constructor === AggregateError ||
-    child.constructor === AggregateError
+  return isAggregateError(parent) || isAggregateError(child)
     ? new AggregateError([], message)
     : new Error(message)
+}
+
+// `AggregateError` is not available in Node <15.0.0 and in some browsers
+const isAggregateError = function (error) {
+  try {
+    return error.constructor === AggregateError
+  } catch {
+    return false
+  }
 }
