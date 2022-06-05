@@ -52,7 +52,7 @@ const applyRules = async function ({
 // mutated.
 const applyParallelRules = async function ({ items, state, keywords, sync }) {
   const resolutions = await Promise.allSettled(
-    items.map((rule) => applyRuleDeep({ state, rule, keywords, sync })),
+    items.map((item) => applyRulesOrRule({ state, item, keywords, sync })),
   )
   handleFailedRule(resolutions)
 }
@@ -74,13 +74,19 @@ const isFailedRule = function ({ status }) {
 
 const applySerialRules = async function ({ items, state, keywords, sync }) {
   // eslint-disable-next-line fp/no-loops
-  for (const rule of items) {
+  for (const item of items) {
     // eslint-disable-next-line no-await-in-loop
-    await applyRuleDeep({ state, rule, keywords, sync })
+    await applyRulesOrRule({ state, item, keywords, sync })
   }
 }
 
-const applyRuleDeep = async function ({
+const applyRulesOrRule = async function ({ state, item, keywords, sync }) {
+  await (item.name === undefined
+    ? applyRules({ state, rules: item, keywords, sync })
+    : applyRule({ state, rule: item, keywords, sync }))
+}
+
+const applyRule = async function ({
   state,
   state: { inputs },
   rule,
