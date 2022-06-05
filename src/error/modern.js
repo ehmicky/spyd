@@ -11,6 +11,9 @@ import { allowErrorTypes } from './types.js'
 // Custom error `onCreate()` logic can be specified
 //  - To make it type-specific, an object of functions should be used, then
 //    `object[error.name]` should be used inside `onCreate()`
+// Consumers should check for `error.name`
+//  - As opposed to using `instanceof`
+//  - This removes the need to import/export error types
 // There is no source maps support: instead users can use:
 //  - Node.js: `--enable-source-maps` flag
 //  - Chrome: `node-source-map-support`
