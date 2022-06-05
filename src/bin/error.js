@@ -7,7 +7,11 @@ import { addPadding } from '../report/utils/indent.js'
 // TODO: allow error types to not print anything
 export const handleCliError = function (error) {
   const errorA = normalizeError(error)
-  const { exitCode, stack, indented } = ERROR_PROPS[getErrorName(errorA)]
+  const {
+    exitCode,
+    stack = true,
+    indented = false,
+  } = ERROR_PROPS[getErrorName(errorA)]
   const errorMessage = stack ? errorA.stack : errorA.message
   const errorMessageA = indented ? addPadding(errorMessage) : errorMessage
   console.error(errorMessageA)
@@ -20,11 +24,11 @@ const getErrorName = function ({ name }) {
 
 // Error type-specific behavior
 const ERROR_PROPS = {
-  CoreError: { exitCode: 5, stack: true, indented: false },
-  PluginError: { exitCode: 4, stack: true, indented: false },
-  UserCodeError: { exitCode: 3, stack: true, indented: false },
-  UserError: { exitCode: 2, stack: false, indented: false },
-  LimitError: { exitCode: 1, stack: false, indented: false },
+  CoreError: { exitCode: 5 },
+  PluginError: { exitCode: 4 },
+  UserCodeError: { exitCode: 3 },
+  UserError: { exitCode: 2, stack: false },
+  LimitError: { exitCode: 1, stack: false },
   StopError: { exitCode: 0, stack: false, indented: true },
 }
 
