@@ -1,11 +1,10 @@
 // eslint-disable-next-line n/file-extension-in-import, import/no-unassigned-import
 import 'error-cause/auto'
 import errorType from 'error-type'
-import mergeErrorCause from 'merge-error-cause'
 
+import { onError } from './handler.js'
 import { getOpts } from './opts.js'
 import { createSystemError } from './system.js'
-import { allowErrorTypes } from './types.js'
 
 // Create error types by passing an array of error names.
 // Also returns an `onError(error) => error` function to use as a top-level
@@ -36,12 +35,4 @@ const getErrorTypes = function (errorNames, onCreate) {
   return Object.fromEntries(
     errorNames.map((errorName) => [errorName, errorType(errorName, onCreate)]),
   )
-}
-
-// Error handler that normalizes an error, merge its `error.cause` and ensure
-// its type is among an allowed list of types.
-const onError = function (ErrorTypes, SystemError, error) {
-  const errorA = mergeErrorCause(error)
-  const errorB = allowErrorTypes(errorA, ErrorTypes, SystemError)
-  return errorB
 }
