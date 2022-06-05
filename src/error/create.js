@@ -1,39 +1,32 @@
 // Create an error type with a specific `name`.
 // The constructor allows setting either `error.cause` or any properties:
 // `new ErrorType('message', { anyProp: true })`
-export const createErrorType = function (
-  errorName,
-  onCreate = defaultOnCreate,
-) {
-  validateErrorName(errorName)
+export const createErrorType = function (name, onCreate = defaultOnCreate) {
+  validateErrorName(name)
   const ErrorType = class extends Error {
     constructor(message, opts = {}) {
       validateOpts(opts)
       const errorOpts = opts.cause === undefined ? {} : { cause: opts.cause }
       super(message, errorOpts)
       // eslint-disable-next-line fp/no-this
-      const onCreateOpts = getOnCreateOpts(this, opts)
-      // eslint-disable-next-line fp/no-this
-      onCreate(this, onCreateOpts)
+      onCreate(this, getOnCreateOpts(this, opts))
     }
   }
-  setErrorName(ErrorType, errorName)
+  setErrorName(ErrorType, name)
   return ErrorType
 }
 
 // Validate `error.name` looks like `ExampleError`.
-const validateErrorName = function (errorName) {
-  if (typeof errorName !== 'string') {
-    throw new TypeError(`Error name must be a string: ${errorName}`)
+const validateErrorName = function (name) {
+  if (typeof name !== 'string') {
+    throw new TypeError(`Error name must be a string: ${name}`)
   }
 
-  if (!errorName.endsWith(ERROR_NAME_END) || errorName === ERROR_NAME_END) {
-    throw new Error(
-      `Error name "${errorName}" must end with "${ERROR_NAME_END}"`,
-    )
+  if (!name.endsWith(ERROR_NAME_END) || name === ERROR_NAME_END) {
+    throw new Error(`Error name "${name}" must end with "${ERROR_NAME_END}"`)
   }
 
-  validateErrorNamePattern(errorName)
+  validateErrorNamePattern(name)
 }
 
 const validateErrorNamePattern = function (errorName) {
