@@ -50,6 +50,8 @@ const concatMessages = function (messageA, messageB, rawMessageA) {
 const PREPEND_CHAR = ':'
 const PREPEND_NEWLINE_CHAR = '\n'
 
+// Ensure both the prototype and `error.name` are correct, by creating a new
+// instance with the right constructor.
 const createError = function (error, cause, message) {
   if (isSimpleErrorType(error)) {
     return createCauseError(error, cause, message)
