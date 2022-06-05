@@ -7,12 +7,12 @@ export const handleCliError = function (error) {
   const errorA = normalizeError(error)
   const {
     exitCode,
-    stack = true,
+    short = false,
     silent = false,
   } = ERROR_PROPS[getErrorName(errorA)]
 
   if (!silent) {
-    const errorMessage = stack ? errorA.stack : errorA.message
+    const errorMessage = short ? errorA.message : errorA.stack
     console.error(errorMessage)
   }
 
@@ -28,9 +28,9 @@ const ERROR_PROPS = {
   CoreError: { exitCode: 5 },
   PluginError: { exitCode: 4 },
   UserCodeError: { exitCode: 3 },
-  UserError: { exitCode: 2, stack: false },
-  LimitError: { exitCode: 1, stack: false },
-  StopError: { exitCode: 0, stack: false },
+  UserError: { exitCode: 2, short: true },
+  LimitError: { exitCode: 1, short: true },
+  StopError: { exitCode: 0, short: true },
 }
 
 const DEFAULT_ERROR_NAME = 'CoreError'
