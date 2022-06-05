@@ -20,13 +20,11 @@ const configProp = {
   transform: normalizeArray,
 }
 
-const configPropAny = [
-  {
-    name: 'config.*',
-    required: true,
-    path: normalizeConfigFilePath,
-    transform: resolveConfig,
-  },
-]
+const configPropAny = {
+  name: 'config.*',
+  required: true,
+  path: normalizeConfigFilePath,
+  transform: resolveConfig,
+}
 
-export const CONFIG_RULES = [configProp, ...configPropAny]
+export const CONFIG_RULES = [configProp, configPropAny]
