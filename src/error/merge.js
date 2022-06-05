@@ -9,42 +9,46 @@ export const mergeErrorCause = function (error) {
 // The recursion is applied pair by pair, as opposed to all errors at once.
 //  - This ensures the same result no matter how many times this function
 //    applied along the stack trace
-const mergeCause = function (error) {
-  if (error.cause === undefined) {
-    return error
+const mergeCause = function (parent) {
+  if (parent.cause === undefined) {
+    return parent
   }
 
-  const cause = mergeCause(error.cause)
-  const message = mergeMessage(error.message, cause.message)
-  const mergedError = createError(error, cause, message)
-  fixStack(mergedError, cause)
-  copyProps(mergedError, error, cause)
+  const child = mergeCause(parent.cause)
+  const message = mergeMessage(parent.message, child.message)
+  const mergedError = createError(parent, child, message)
+  fixStack(mergedError, child)
+  copyProps(mergedError, parent, child)
   return normalizeError(mergedError)
 }
 
-const mergeMessage = function (rawMessageA, rawMessageB) {
-  const messageA = rawMessageA.trim()
-  const messageB = rawMessageB.trim()
+const mergeMessage = function (rawParentMessage, rawChildMessage) {
+  const parentMessage = rawParentMessage.trim()
+  const childMessage = rawChildMessage.trim()
 
-  if (messageA === '') {
-    return messageB
+  if (parentMessage === '') {
+    return childMessage
   }
 
-  if (messageB === '') {
-    return messageA
+  if (childMessage === '') {
+    return parentMessage
   }
 
-  return concatMessages(messageA, messageB, rawMessageA)
+  return concatMessages(parentMessage, childMessage, rawParentMessage)
 }
 
-const concatMessages = function (messageA, messageB, rawMessageA) {
-  if (!messageA.endsWith(PREPEND_CHAR)) {
-    return `${messageB}\n${messageA}`
+const concatMessages = function (
+  parentMessage,
+  childMessage,
+  rawParentMessage,
+) {
+  if (!parentMessage.endsWith(PREPEND_CHAR)) {
+    return `${childMessage}\n${parentMessage}`
   }
 
-  return rawMessageA.endsWith(PREPEND_NEWLINE_CHAR)
-    ? `${messageA}\n${messageB}`
-    : `${messageA} ${messageB}`
+  return rawParentMessage.endsWith(PREPEND_NEWLINE_CHAR)
+    ? `${parentMessage}\n${childMessage}`
+    : `${parentMessage} ${childMessage}`
 }
 
 const PREPEND_CHAR = ':'
@@ -52,27 +56,28 @@ const PREPEND_NEWLINE_CHAR = '\n'
 
 // Ensure both the prototype and `error.name` are correct, by creating a new
 // instance with the right constructor.
-const createError = function (error, cause, message) {
-  if (isSimpleErrorType(error)) {
-    return createCauseError(error, cause, message)
+// The
+const createError = function (parent, child, message) {
+  if (isSimpleErrorType(parent)) {
+    return createCauseError(parent, child, message)
   }
 
   try {
-    return new error.constructor(message)
+    return new parent.constructor(message)
   } catch {
-    return createCauseError(error, cause, message)
+    return createCauseError(parent, child, message)
   }
 }
 
-const createCauseError = function (error, cause, message) {
-  if (isSimpleErrorType(cause)) {
-    return createSimpleErrorType(error, cause, message)
+const createCauseError = function (parent, child, message) {
+  if (isSimpleErrorType(child)) {
+    return createSimpleErrorType(parent, child, message)
   }
 
   try {
-    return new cause.constructor(message)
+    return new child.constructor(message)
   } catch {
-    return createSimpleErrorType(error, cause, message)
+    return createSimpleErrorType(parent, child, message)
   }
 }
 
@@ -80,23 +85,23 @@ const isSimpleErrorType = function (error) {
   return error.constructor === Error || error.constructor === AggregateError
 }
 
-const createSimpleErrorType = function (error, cause, message) {
-  return error.constructor === AggregateError ||
-    cause.constructor === AggregateError
+const createSimpleErrorType = function (parent, child, message) {
+  return parent.constructor === AggregateError ||
+    child.constructor === AggregateError
     ? new AggregateError([], message)
     : new Error(message)
 }
 
-// Only show the inner error's stack trace since the outer one contains mostly
+// Only show the child error's stack trace since the parent one contains mostly
 // the same lines
-const fixStack = function (mergedError, cause) {
-  setErrorProperty(mergedError, 'stack', cause.stack)
+const fixStack = function (mergedError, child) {
+  setErrorProperty(mergedError, 'stack', child.stack)
 }
 
-// Merge error properties, shallowly, with outer error having priority
-const copyProps = function (mergedError, error, cause) {
-  mergeProps(mergedError, cause)
-  mergeProps(mergedError, error)
+// Merge error properties, shallowly, with parent error having priority
+const copyProps = function (mergedError, parent, child) {
+  mergeProps(mergedError, child)
+  mergeProps(mergedError, parent)
 }
 
 // Do not merge inherited properties nor non-enumerable properties.
