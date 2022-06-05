@@ -16,6 +16,7 @@ export const applyKeywordMain = async function ({
   input,
   definition,
   info,
+  memo,
   state,
 }) {
   const normalizedDefinition = await normalizeDefinition({
@@ -37,6 +38,6 @@ export const applyKeywordMain = async function ({
     test,
     keyword,
   })
-  const stateA = applyReturnValue({ returnValue, state })
-  return stateA
+  const memoA = applyReturnValue({ returnValue, memo, state })
+  return memoA
 }

@@ -6,14 +6,15 @@ import { setInputs } from './set.js'
 export const transformInput = function ({
   returnValue,
   input,
-  inputs,
+  state,
+  state: { inputs },
   info: { path },
 }) {
   if (!('input' in returnValue) || returnValue.input === input) {
-    return { input, inputs }
+    return input
   }
 
   const { input: inputA } = returnValue
-  const inputsA = setInputs(inputs, path, inputA)
-  return { input: inputA, inputs: inputsA }
+  state.inputs = setInputs(inputs, path, inputA)
+  return inputA
 }

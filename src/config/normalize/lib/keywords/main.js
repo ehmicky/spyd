@@ -47,28 +47,24 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 export const applyKeywords = async function ({
   rule,
   input,
-  inputs,
-  moves,
-  warnings,
+  state,
   info,
   keywords,
   sync,
 }) {
   // eslint-disable-next-line fp/no-let
-  let state = { input, inputs, moves, warnings, info }
+  let memo = { input, info }
 
   // eslint-disable-next-line fp/no-loops
   for (const keyword of keywords) {
     // eslint-disable-next-line fp/no-mutation, no-await-in-loop
-    state = await applyKeyword({ keyword, state, rule, sync })
+    memo = await applyKeyword({ keyword, memo, state, rule, sync })
 
     // eslint-disable-next-line max-depth
-    if (state.skip) {
+    if (memo.skip) {
       break
     }
   }
-
-  return { inputs: state.inputs, warnings: state.warnings, moves: state.moves }
 }
 
 // TODO: fix linting
@@ -88,8 +84,9 @@ const applyKeyword = async function ({
     main,
     mainSync,
   },
+  memo,
+  memo: { input, info },
   state,
-  state: { input, info },
   rule,
   sync,
 }) {
@@ -106,7 +103,7 @@ const applyKeyword = async function ({
       keyword,
     })
   ) {
-    return state
+    return memo
   }
 
   const definitionA = await callDefinitionFunc({
@@ -121,7 +118,7 @@ const applyKeyword = async function ({
   })
 
   if (shouldSkipMain(definitionA, undefinedDefinition)) {
-    return state
+    return memo
   }
 
   return await applyKeywordMain({
@@ -136,6 +133,7 @@ const applyKeyword = async function ({
     input,
     definition: definitionA,
     info,
+    memo,
     state,
   })
 }

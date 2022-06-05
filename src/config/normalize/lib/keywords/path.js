@@ -7,17 +7,14 @@ import { addMove } from '../move.js'
 // Keywords can give a hint on where a value has moved by returning a `path`
 export const applyPath = function ({ path }, moves, { path: oldPath }) {
   if (path === undefined) {
-    return moves
+    return
   }
 
   const pathA = safeNormalizePath(path)
 
-  if (pathA.length === 0) {
-    return moves
+  if (pathA.length !== 0) {
+    addMove(moves, oldPath, [...oldPath, ...pathA])
   }
-
-  const newPath = [...oldPath, ...pathA]
-  return addMove(moves, oldPath, newPath)
 }
 
 const safeNormalizePath = function (path) {

@@ -7,41 +7,21 @@ import { transformInput } from './transform.js'
 // Apply a keyword's return value, if any
 export const applyReturnValue = function ({
   returnValue,
+  memo,
+  memo: { input, info },
   state,
-  state: { input, inputs, moves, warnings, info },
+  state: { warnings, moves },
 }) {
   if (returnValue === undefined) {
-    return state
+    return memo
   }
 
-  const warningsA = addWarning(returnValue, warnings, info)
-  const { input: inputA, inputs: inputsA } = transformInput({
-    returnValue,
-    input,
-    inputs,
-    info,
-  })
-  const movesA = applyPath(returnValue, moves, info)
-  const {
-    inputs: inputsB,
-    moves: movesB,
-    info: infoA,
-  } = applyRename({
-    returnValue,
-    inputs: inputsA,
-    moves: movesA,
-    input: inputA,
-    info,
-  })
+  addWarning(returnValue, warnings, info)
+  const inputA = transformInput({ returnValue, input, state, info })
+  applyPath(returnValue, moves, info)
+  const infoA = applyRename({ returnValue, state, input: inputA, info })
   const infoB = applyInfo(returnValue, infoA)
-  return {
-    input: inputA,
-    inputs: inputsB,
-    moves: movesB,
-    warnings: warningsA,
-    info: infoB,
-    skip: returnValue.skip,
-  }
+  return { input: inputA, info: infoB, skip: returnValue.skip }
 }
 
 // Keywords can change the `info` by returning an `info` property.

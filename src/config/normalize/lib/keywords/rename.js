@@ -10,31 +10,27 @@ import { setInputs } from './set.js'
 // Keywords can move the input by returning a `rename` property
 export const applyRename = function ({
   returnValue: { rename },
-  inputs,
-  moves,
+  state,
+  state: { inputs, moves },
   input,
   info,
   info: { name: oldName, path: oldPath },
 }) {
   if (rename === undefined) {
-    return { inputs, moves, info }
+    return info
   }
 
   const newPath = safeNormalizePath(rename)
   const newName = serializePath(newPath)
 
   if (newName === oldName) {
-    return { inputs, moves, info }
+    return info
   }
 
   const inputsA = remove(inputs, oldPath)
-  const inputsB = setInputs(inputsA, newPath, input)
-  const movesA = addMove(moves, oldPath, newPath)
-  return {
-    inputs: inputsB,
-    moves: movesA,
-    info: { ...info, path: newPath, name: newName },
-  }
+  state.inputs = setInputs(inputsA, newPath, input)
+  addMove(moves, oldPath, newPath)
+  return { ...info, path: newPath, name: newName }
 }
 
 // `keyword.normalize()` should apply `normalizePath()` when possible, for

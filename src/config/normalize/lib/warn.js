@@ -4,9 +4,10 @@ export const addWarning = function (
   warnings,
   { prefix, originalName },
 ) {
-  return warning === undefined
-    ? warnings
-    : [...warnings, `${prefix} "${originalName}" ${warning}`]
+  if (warning !== undefined) {
+    // eslint-disable-next-line fp/no-mutating-methods
+    warnings.push(`${prefix} "${originalName}" ${warning}`)
+  }
 }
 
 // Log all warnings at the end.
@@ -15,9 +16,15 @@ export const addWarning = function (
 //  - They are aggregated instead of being a single error stopping execution
 //  - Therefore, `error` and `warnings` are never returned together even in
 //    `soft` mode
+// We sort warnings so their output is predictable even when using parallel
+// rules.
 export const logWarnings = function (warnings, soft) {
-  if (!soft && warnings.length !== 0) {
-    // eslint-disable-next-line no-console, no-restricted-globals
-    console.warn(warnings.join('\n'))
+  if (soft || warnings.length === 0) {
+    return
   }
+
+  // eslint-disable-next-line fp/no-mutating-methods
+  const warningsStr = [...new Set(warnings)].sort().join('\n')
+  // eslint-disable-next-line no-console, no-restricted-globals
+  console.warn(warningsStr)
 }

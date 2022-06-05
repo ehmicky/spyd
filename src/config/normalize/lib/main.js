@@ -1,4 +1,3 @@
-import pReduce from 'p-reduce'
 import { list } from 'wild-wild-path'
 
 import { allowErrorTypes } from '../../../error/types.js'
@@ -27,11 +26,9 @@ export const normalizeInputs = async function (inputs, rules, opts) {
   const rulesA = normalizeRules({ rules, all, ruleProps, sync })
 
   try {
-    const { inputs: inputsA, warnings } = await pReduce(
-      rulesA,
-      (memo, rule) => applyRuleDeep(memo, rule, keywords),
-      { inputs, moves: [], warnings: [], sync },
-    )
+    const state = { inputs, moves: [], warnings: [] }
+    await applyRules({ rules: rulesA, state, keywords, sync })
+    const { inputs: inputsA, warnings } = state
     const inputsB = cleanObject(inputsA)
     logWarnings(warnings, soft)
     return { inputs: inputsB, warnings }
@@ -40,51 +37,79 @@ export const normalizeInputs = async function (inputs, rules, opts) {
   }
 }
 
-const applyRuleDeep = async function (
-  { inputs, moves, warnings, sync },
+const applyRules = async function ({
+  rules: { items, parallel },
+  state,
+  keywords,
+  sync,
+}) {
+  await (parallel
+    ? applyParallelRules({ items, state, keywords, sync })
+    : applySerialRules({ items, state, keywords, sync }))
+}
+
+// Parallel rules require sharing a common `state` object that is directly
+// mutated.
+const applyParallelRules = async function ({ items, state, keywords, sync }) {
+  const resolutions = await Promise.allSettled(
+    items.map((rule) => applyRuleDeep({ state, rule, keywords, sync })),
+  )
+  handleFailedRule(resolutions)
+}
+
+// Instead of using `Promise.all()`, we wait for all parallel rules to complete
+// with `Promise.allSettled()` and only throw the first failed rule, if any,
+// to ensure exceptions are predictable.
+const handleFailedRule = function (resolutions) {
+  const failedRule = resolutions.find(isFailedRule)
+
+  if (failedRule !== undefined) {
+    throw failedRule.reason
+  }
+}
+
+const isFailedRule = function ({ status }) {
+  return status === 'rejected'
+}
+
+const applySerialRules = async function ({ items, state, keywords, sync }) {
+  // eslint-disable-next-line fp/no-loops
+  for (const rule of items) {
+    // eslint-disable-next-line no-await-in-loop
+    await applyRuleDeep({ state, rule, keywords, sync })
+  }
+}
+
+const applyRuleDeep = async function ({
+  state,
+  state: { inputs },
   rule,
   keywords,
-) {
+  sync,
+}) {
   const entries = list(inputs, rule.name, {
     childFirst: true,
     sort: true,
     missing: true,
     entries: true,
   })
-  return await pReduce(
-    entries,
-    (memo, { value, path }) =>
-      applyEntryRule(memo, { input: value, path, rule, keywords, sync }),
-    { inputs, moves, warnings },
-  )
+
+  // eslint-disable-next-line fp/no-loops
+  for (const { value: input, path } of entries) {
+    const info = getInfo(path, state)
+    // eslint-disable-next-line no-await-in-loop
+    await applyKeywords({ rule, input, state, info, keywords, sync })
+  }
 }
 
-// Apply rule for a specific entry
-const applyEntryRule = async function (
-  { inputs, moves, warnings },
-  { input, path, rule, keywords, sync },
-) {
-  const info = getInfo(path, inputs, moves)
-  return await applyKeywords({
-    rule,
-    input,
-    inputs,
-    moves,
-    warnings,
-    info,
-    keywords,
-    sync,
-  })
-}
-
-// When in `sort` mode, user errors are returned instead of being thrown.
-// System errors are always propagated.
+// When in `sort` mode, input errors are returned instead of being thrown.
+// Other errors are always propagated.
 const handleError = function (error, soft) {
   const errorA = allowErrorTypes(error, ErrorTypes)
 
-  if (!soft || !(errorA instanceof InputError)) {
-    throw errorA
+  if (soft && errorA instanceof InputError) {
+    return { error: errorA, warnings: [] }
   }
 
-  return { error: errorA, warnings: [] }
+  throw errorA
 }
