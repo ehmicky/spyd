@@ -38,7 +38,7 @@ const runCli = async function () {
     const { command, configFlags } = parseCliFlags(yargs)
     await COMMANDS[command](configFlags)
   } catch (error) {
-    handleCliError(error)
+    handleCliError(error, { types: ERROR_PROPS })
   }
 }
 
@@ -50,5 +50,16 @@ const checkUpdate = async function () {
 }
 
 const COMMANDS = { run, show, remove, dev }
+
+// Error type-specific behavior
+const ERROR_PROPS = {
+  default: { exitCode: 5 },
+  CoreError: { exitCode: 5 },
+  PluginError: { exitCode: 4 },
+  UserCodeError: { exitCode: 3 },
+  UserError: { exitCode: 2, short: true },
+  LimitError: { exitCode: 1, short: true },
+  StopError: { exitCode: 0, short: true },
+}
 
 runCli()

@@ -3,33 +3,102 @@ import process from 'process'
 import { normalizeError } from '../error/normalize/main.js'
 
 // Print CLI errors and exit, depending on the error type
-export const handleCliError = function (error) {
+export const handleCliError = function (error, opts) {
   const errorA = normalizeError(error)
-  const {
-    exitCode,
-    short = false,
-    silent = false,
-  } = ERROR_PROPS[getErrorName(errorA)]
-
-  if (!silent) {
-    const errorMessage = short ? errorA.message : errorA.stack
-    console.error(errorMessage)
-  }
-
+  const { silent, short, exitCode } = getOpts(errorA, opts)
+  printError(errorA, silent, short)
   process.exitCode = exitCode
 }
 
-const getErrorName = function ({ name }) {
-  return name in ERROR_PROPS ? name : 'default'
+const getOpts = function (error, opts = {}) {
+  if (!isObject(opts)) {
+    return handleOptsError(
+      `options must be a plain object: ${opts}`,
+      DEFAULT_OPTS,
+    )
+  }
+
+  const { types = {}, ...optsA } = opts
+  const typesOpts = findTypesOpts(types, error.name)
+  const optsB = { ...DEFAULT_OPTS, ...optsA, ...typesOpts }
+  const optsC = normalizeOpts(optsB)
+  return optsC
 }
 
-// Error type-specific behavior
-const ERROR_PROPS = {
-  default: { exitCode: 5 },
-  CoreError: { exitCode: 5 },
-  PluginError: { exitCode: 4 },
-  UserCodeError: { exitCode: 3 },
-  UserError: { exitCode: 2, short: true },
-  LimitError: { exitCode: 1, short: true },
-  StopError: { exitCode: 0, short: true },
+const findTypesOpts = function (types, name) {
+  if (!isObject(types)) {
+    return handleOptsError(`options.types must be a plain object: ${types}`, {})
+  }
+
+  return getTypesOpts(types, name) || getTypesOpts(types, 'default') || {}
+}
+
+const getTypesOpts = function (types, name) {
+  const typesOpts = types[name]
+
+  if (typesOpts === undefined) {
+    return
+  }
+
+  if (!isObject(typesOpts)) {
+    return handleOptsError(
+      `options.types.${name} must be a plain object: ${typesOpts}`,
+      {},
+    )
+  }
+
+  return typesOpts
+}
+
+const DEFAULT_OPTS = { silent: false, short: false, exitCode: 1 }
+
+const isObject = function (value) {
+  return typeof value === 'object' && value !== null
+}
+
+const normalizeOpts = function ({ silent, short, exitCode }) {
+  return {
+    silent: normalizeBooleanOpt(silent, 'silent'),
+    short: normalizeBooleanOpt(short, 'short'),
+    exitCode: normalizeExitCode(exitCode),
+  }
+}
+
+const normalizeBooleanOpt = function (value, optName) {
+  return typeof value === 'boolean'
+    ? value
+    : handleOptsError(
+        `options.${optName} must be a boolean: ${value}`,
+        DEFAULT_OPTS[optName],
+      )
+}
+
+const normalizeExitCode = function (exitCode) {
+  return Number.isInteger(exitCode) &&
+    exitCode >= MIN_EXIT_CODE &&
+    exitCode <= MAX_EXIT_CODE
+    ? exitCode
+    : handleOptsError(
+        `options.exitCode must be between ${MIN_EXIT_CODE} and ${MAX_EXIT_CODE}: ${exitCode}`,
+        DEFAULT_OPTS.exitCode,
+      )
+}
+
+const MIN_EXIT_CODE = 0
+// 126-255 have special meaning in Bash
+const MAX_EXIT_CODE = 125
+
+// We do not throw since we are using the top-level error handling logic
+const handleOptsError = function (message, value) {
+  console.error(`handle-cli-error invalid usage: ${message}`)
+  return value
+}
+
+const printError = function (error, silent, short) {
+  if (silent) {
+    return
+  }
+
+  const errorMessage = short ? error.message : error.stack
+  console.error(errorMessage)
 }
