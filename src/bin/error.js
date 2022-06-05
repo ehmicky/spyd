@@ -20,11 +20,12 @@ export const handleCliError = function (error) {
 }
 
 const getErrorName = function ({ name }) {
-  return name in ERROR_PROPS ? name : DEFAULT_ERROR_NAME
+  return name in ERROR_PROPS ? name : 'default'
 }
 
 // Error type-specific behavior
 const ERROR_PROPS = {
+  default: { exitCode: 5 },
   CoreError: { exitCode: 5 },
   PluginError: { exitCode: 4 },
   UserCodeError: { exitCode: 3 },
@@ -32,5 +33,3 @@ const ERROR_PROPS = {
   LimitError: { exitCode: 1, short: true },
   StopError: { exitCode: 0, short: true },
 }
-
-const DEFAULT_ERROR_NAME = 'CoreError'
