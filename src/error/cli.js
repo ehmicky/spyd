@@ -1,6 +1,6 @@
 import process from 'process'
 
-import { normalizeError } from '../error/normalize/main.js'
+import { normalizeError } from './normalize/main.js'
 
 // Print CLI errors and exit, depending on the error type
 export const handleCliError = function (error, opts) {
@@ -90,6 +90,7 @@ const MAX_EXIT_CODE = 125
 
 // We do not throw since we are using the top-level error handling logic
 const handleOptsError = function (message, value) {
+  // eslint-disable-next-line no-restricted-globals, no-console
   console.error(`handle-cli-error invalid usage: ${message}`)
   return value
 }
@@ -101,6 +102,7 @@ const printError = function (error, silent, short) {
   }
 
   const errorMessage = short ? error.message : error.stack
+  // eslint-disable-next-line no-restricted-globals, no-console
   console.error(errorMessage)
 }
 
