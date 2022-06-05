@@ -11,8 +11,9 @@ export const createErrorType = function (
       validateOpts(opts)
       const errorOpts = opts.cause === undefined ? {} : { cause: opts.cause }
       super(message, errorOpts)
+      const onCreateOpts = getOnCreateOpts(opts)
       // eslint-disable-next-line fp/no-this
-      onCreate(this, opts)
+      onCreate(this, onCreateOpts)
     }
   }
   setErrorName(ErrorType, errorName)
@@ -55,6 +56,22 @@ const validateOpts = function (opts) {
       `Error's second argument must be a plain object: ${opts}`,
     )
   }
+}
+
+const getOnCreateOpts = function ({
+  // eslint-disable-next-line no-unused-vars
+  name,
+  // eslint-disable-next-line no-unused-vars
+  message,
+  // eslint-disable-next-line no-unused-vars
+  stack,
+  // eslint-disable-next-line no-unused-vars
+  cause,
+  // eslint-disable-next-line no-unused-vars
+  errors,
+  ...opts
+}) {
+  return opts
 }
 
 // `onCreate()` allows custom logic at initialization time.
