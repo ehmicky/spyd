@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { normalizeError } from './normalize/main.js'
 import { setErrorProperty } from './normalize/set.js'
 
@@ -32,10 +33,13 @@ import { setErrorProperty } from './normalize/set.js'
 //    applied along the stack trace
 // `normalizeError()` is called again to ensure the new `name|message` is
 // reflected in `error.stack`.
+// eslint-disable-next-line max-statements
 export const mergeErrorCause = function (error) {
   const parent = normalizeError(error)
+  const parentErrors = getAggregateErrors(parent)
 
   if (parent.cause === undefined) {
+    setAggregate(parent, parentErrors)
     return parent
   }
 
@@ -43,7 +47,7 @@ export const mergeErrorCause = function (error) {
   const message = mergeMessage(parent.message, child.message)
   const mergedError = createError(parent, child, message)
   fixStack(mergedError, child)
-  mergeAggregate(mergedError, parent, child)
+  mergeAggregate(mergedError, parentErrors, child)
   copyProps(mergedError, parent, child)
   return normalizeError(mergedError)
 }
@@ -151,8 +155,13 @@ const fixStack = function (mergedError, child) {
 //       - Those could lead to confusing stack traces
 // - I.e. it is the responsibility of the consumers to recurse and handle
 //   `error.errors`
-const mergeAggregate = function (mergedError, parent, child) {
-  const parentErrors = getAggregateErrors(parent)
+const setAggregate = function (parent, parentErrors) {
+  if (parentErrors !== undefined) {
+    setErrorProperty(parent, 'errors', parentErrors)
+  }
+}
+
+const mergeAggregate = function (mergedError, parentErrors, child) {
   const childErrors = getAggregateErrors(child)
 
   if (parentErrors === undefined && childErrors === undefined) {
@@ -164,15 +173,16 @@ const mergeAggregate = function (mergedError, parent, child) {
 }
 
 const getAggregateErrors = function (error) {
-  return hasAggregateErrors(error)
-    ? error.errors.map(mergeErrorCause)
+  const { errors } = error
+  return hasAggregateErrors(error, errors)
+    ? errors.map(mergeErrorCause)
     : undefined
 }
 
-const hasAggregateErrors = function (error) {
+const hasAggregateErrors = function (error, errors) {
   return (
-    Array.isArray(error.errors) &&
-    (error instanceof AggregateError || error.errors.some(isErrorInstance))
+    Array.isArray(errors) &&
+    (error instanceof AggregateError || errors.some(isErrorInstance))
   )
 }
 
@@ -230,3 +240,4 @@ const CORE_ERROR_PROPS = new Set([
   'cause',
   'errors',
 ])
+/* eslint-enable max-lines */
