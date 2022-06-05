@@ -61,7 +61,7 @@
     "junk": "^4.0.0",
     "map-obj": "^5.0.1",
     "moize": "^6.1.1",
-    "normalize-exception": "^1.0.0",
+    "normalize-exception": "^1.0.1",
     "nvexeca": "^8.0.0",
     "omit.js": "^2.0.2",
     "os-name": "^5.0.1",
