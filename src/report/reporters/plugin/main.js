@@ -9,26 +9,30 @@ export const REPORTER_PLUGIN_TYPE = {
   modulePrefix: 'spyd-reporter',
   duplicates: true,
   builtins: BUILTIN_REPORTERS,
-  shape: [
+  shape: new Set([
     ...getReportMethods().map((name) => ({
       name,
       schema: { typeof: 'function', errorMessage: 'must be a function' },
     })),
-    {
-      name: 'capabilities',
-      default: {},
-      schema: { type: 'object' },
-    },
-    {
-      name: 'capabilities.debugStats',
-      default: false,
-      schema: { type: 'boolean' },
-    },
-    {
-      name: 'capabilities.history',
-      default: false,
-      schema: { type: 'boolean' },
-    },
+    [
+      {
+        name: 'capabilities',
+        default: {},
+        schema: { type: 'object' },
+      },
+      new Set([
+        {
+          name: 'capabilities.debugStats',
+          default: false,
+          schema: { type: 'boolean' },
+        },
+        {
+          name: 'capabilities.history',
+          default: false,
+          schema: { type: 'boolean' },
+        },
+      ]),
+    ],
     {
       name: 'defaultOutput',
       default: DEFAULT_REPORTER_OUTPUT,
@@ -38,6 +42,6 @@ export const REPORTER_PLUGIN_TYPE = {
         errorMessage: { minLength: 'must not be an empty string' },
       },
     },
-  ],
+  ]),
   shared,
 }

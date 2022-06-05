@@ -17,13 +17,13 @@ export const RUNNER_PLUGIN_TYPE = {
   builtins: BUILTIN_RUNNERS,
   // Configuration rule for the plugin itself
   // Default: empty array
-  shape: [
+  shape: new Set([
     {
       name: 'launch',
       required: true,
       schema: { typeof: 'function', errorMessage: 'must be a function' },
     },
-  ],
+  ]),
   // Plugin configuration properties shared by all plugins
   // Default: empty array
   shared,
