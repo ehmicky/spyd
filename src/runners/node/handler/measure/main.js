@@ -1,4 +1,3 @@
-import { wrapError } from '../../../../error/wrap.js'
 import { TasksRunError } from '../../../common/error.js'
 
 import { performLoopsAsync } from './async.js'
@@ -32,7 +31,7 @@ export const measure = async function (
           maxLoops,
         })
     return { measures }
-  } catch (error) {
-    throw wrapError(error, '', TasksRunError)
+  } catch (cause) {
+    throw new TasksRunError('', { cause })
   }
 }

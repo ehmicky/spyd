@@ -1,4 +1,3 @@
-import { wrapError } from '../../../../error/wrap.js'
 import { loadYamlFile } from '../../../../utils/yaml.js'
 import { TasksLoadError } from '../../../common/error.js'
 
@@ -27,8 +26,8 @@ export const start = async function (
 const importFile = async function (taskPath) {
   try {
     return await loadYamlFile(taskPath)
-  } catch (error) {
-    throw wrapError(error, '', TasksLoadError)
+  } catch (cause) {
+    throw new TasksLoadError('', { cause })
   }
 }
 

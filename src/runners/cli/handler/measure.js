@@ -1,7 +1,6 @@
 import { execa, execaCommand } from 'execa'
 import now from 'precise-now'
 
-import { wrapError } from '../../../error/wrap.js'
 import { TasksRunError } from '../../common/error.js'
 
 // `beforeAll` and `afterAll`
@@ -87,8 +86,8 @@ const spawnProcess = async function (command, { env, shell }) {
     return shell === 'none'
       ? await execaCommand(command, { ...EXECA_OPTIONS, env })
       : await execa(command, { ...EXECA_OPTIONS, env, shell })
-  } catch (error) {
-    throw wrapError(error, '', TasksRunError)
+  } catch (cause) {
+    throw new TasksRunError('', { cause })
   }
 }
 

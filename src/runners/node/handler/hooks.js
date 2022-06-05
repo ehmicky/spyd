@@ -1,4 +1,3 @@
-import { wrapError } from '../../../error/wrap.js'
 import { TasksRunError } from '../../common/error.js'
 
 // Perform `beforeAll`, if defined
@@ -9,8 +8,8 @@ export const before = async function ({ task: { beforeAll }, inputs }) {
 
   try {
     await beforeAll(inputs)
-  } catch (error) {
-    throw wrapError(error, '', TasksRunError)
+  } catch (cause) {
+    throw new TasksRunError('', { cause })
   }
 }
 
@@ -22,7 +21,7 @@ export const after = async function ({ task: { afterAll }, inputs }) {
 
   try {
     await afterAll(inputs)
-  } catch (error) {
-    throw wrapError(error, '', TasksRunError)
+  } catch (cause) {
+    throw new TasksRunError('', { cause })
   }
 }

@@ -2,8 +2,6 @@ import { argv } from 'process'
 
 import got from 'got'
 
-import { wrapError } from '../../error/wrap.js'
-
 import { serializeError, IpcSerializationError } from './error.js'
 
 // Handles IPC communication with the parent process
@@ -48,8 +46,8 @@ const handlePayload = async function (payload, handlers, state) {
 const safeSerializeBody = function (returnValue = {}) {
   try {
     return serializeBody(returnValue)
-  } catch (error) {
-    throw wrapError(error, '', IpcSerializationError)
+  } catch (cause) {
+    throw new IpcSerializationError('', { cause })
   }
 }
 

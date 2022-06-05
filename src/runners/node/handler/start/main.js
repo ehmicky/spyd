@@ -1,4 +1,3 @@
-import { wrapError } from '../../../../error/wrap.js'
 import { importJsNamed } from '../../../../utils/import.js'
 import { TasksLoadError } from '../../../common/error.js'
 
@@ -27,12 +26,10 @@ export const start = async function (
 const importFile = async function (taskPath) {
   try {
     return await importJsNamed(taskPath)
-  } catch (error) {
-    throw wrapError(
-      error,
-      `Could not import the tasks file ${taskPath}\n`,
-      TasksLoadError,
-    )
+  } catch (cause) {
+    throw new TasksLoadError(`Could not import the tasks file "${taskPath}"`, {
+      cause,
+    })
   }
 }
 

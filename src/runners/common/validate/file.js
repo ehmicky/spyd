@@ -2,7 +2,6 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
-import { wrapError } from '../../../error/wrap.js'
 import { mapValues } from '../../../utils/map.js'
 import { TasksSyntaxError } from '../error.js'
 
@@ -22,8 +21,8 @@ export const validateTasks = function ({ tasks, validators, normalizeTask }) {
 const validateTask = function ({ taskId, task, validators, normalizeTask }) {
   try {
     return eValidateTask({ task, validators, normalizeTask })
-  } catch (error) {
-    throw wrapError(error, `Task "${taskId}"`)
+  } catch (cause) {
+    throw new Error(`Task "${taskId}":`, { cause })
   }
 }
 
