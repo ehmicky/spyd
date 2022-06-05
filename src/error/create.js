@@ -89,12 +89,29 @@ const shouldIgnoreKey = function (error, key) {
 
 const IGNORED_KEYS = new Set(['errors', 'prototype'])
 
-// `onCreate()` allows custom logic at initialization time.
+// `onCreate(error, opts)` allows custom logic at initialization time.
 // The construction arguments are passed.
 //  - They can be validated, normalized, etc.
 //  - No third argument is passed. This enforces calling named parameters
 //    `new ErrorType('message', opts)` instead of positional ones, which is
 //    cleaner.
+// `onCreate()` is useful to assign error instance-specific properties.
+//  - Therefore, the default value just assign `opts`.
+// Properties that are error type-specific (i.e. same for all instances of that
+// type):
+//  - Should use a separate object where the key is the `error.name` and the
+//    value are the properties
+//  - Those should be used either:
+//     - By letting the error catcher|consumer retrieve object[error.name],
+//       which is preferred since it:
+//        - Decouples error consumption from creation
+//        - Prevents those properties from being printed on the console
+//        - Makes it harder to lose those properties as the error gets passed
+//          around, serialized, wrapped in `error.cause` or `error.errors`, etc.
+//        - Is simpler for error throwing logic
+//     - By assigning them in `onCreate()` using
+//       `Object.assign(this, object[error.name])`
+//        - This is simpler for the error catching|consuming logic
 const defaultOnCreate = function (error, opts) {
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(error, opts)
