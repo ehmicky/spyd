@@ -181,6 +181,7 @@ const getAggregateErrors = function (error) {
 
 const hasAggregateErrors = function (error, errors) {
   return (
+    errors !== undefined &&
     Array.isArray(errors) &&
     (error instanceof AggregateError || errors.some(isErrorInstance))
   )
