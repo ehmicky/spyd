@@ -44,7 +44,7 @@
     "detect-newline": "^4.0.0",
     "env-ci": "^7.1.0",
     "error-cause": "^1.0.4",
-    "error-type": "^1.0.0",
+    "error-type": "^1.0.1",
     "execa": "^6.1.0",
     "fast-glob": "^3.2.11",
     "filter-obj": "^3.0.0",
