@@ -46,6 +46,7 @@ const mergeCause = function (parent) {
   const message = mergeMessage(parent.message, child.message)
   const mergedError = createError(parent, child, message)
   fixStack(mergedError, child)
+  mergeAggregate(mergedError, parent, child)
   copyProps(mergedError, parent, child)
   return normalizeError(mergedError)
 }
@@ -140,6 +141,56 @@ const createSimpleErrorType = function (parent, child, message) {
 // the same lines
 const fixStack = function (mergedError, child) {
   setErrorProperty(mergedError, 'stack', child.stack)
+}
+
+// Keep `error.errors` when merging errors.
+// If multiple errors have `errors`, the parent's errors are prepended.
+// `error.errors[*].cause` are recursed.
+// We do not merge `error.errors` into a single error:
+// - Because:
+//    - Unlike `error.cause`, those are separate errors, which should remain so
+//    - Each error's message and stack trace should be kept as is, otherwise:
+//       - Those could be very long if `error.errors` is large
+//       - Those could lead to confusing stack traces
+// - I.e. it is the responsibility of the consumers to recurse and handle
+//   `error.errors`
+const mergeAggregate = function (mergedError, parent, child) {
+  const parentErrors = getAggregateErrors(parent)
+  const childErrors = getAggregateErrors(child)
+
+  if (parentErrors === undefined && childErrors === undefined) {
+    return
+  }
+
+  const errors = getMergedErrors(parentErrors, childErrors)
+  setErrorProperty(mergedError, 'errors', errors)
+}
+
+const getAggregateErrors = function (error) {
+  return hasAggregateErrors(error) ? error.errors.map(mergeCause) : undefined
+}
+
+const hasAggregateErrors = function (error) {
+  return (
+    Array.isArray(error.errors) &&
+    (error instanceof AggregateError || error.errors.some(isErrorInstance))
+  )
+}
+
+const isErrorInstance = function (error) {
+  return error instanceof Error
+}
+
+const getMergedErrors = function (parentErrors, childErrors) {
+  if (parentErrors === undefined) {
+    return childErrors
+  }
+
+  if (childErrors === undefined) {
+    return parentErrors
+  }
+
+  return [...childErrors, ...parentErrors]
 }
 
 // Merge error properties, shallowly, with parent error having priority
