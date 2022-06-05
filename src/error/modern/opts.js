@@ -5,9 +5,16 @@ export const getOpts = function (opts = {}) {
   }
 
   const { onCreate } = opts
+  validateOnCreate(onCreate)
   return { onCreate }
 }
 
 const isObject = function (value) {
   return typeof value === 'object' && value !== null
+}
+
+const validateOnCreate = function (onCreate) {
+  if (typeof onCreate !== 'function') {
+    throw new TypeError(`"onCreate" option must be a function: ${onCreate}`)
+  }
 }
