@@ -1,5 +1,5 @@
 import { CoreError, PluginError, UserError } from '../../error/main.js'
-import { normalizeError } from '../../error/utils.js'
+import { normalizeError } from '../../error/normalize.js'
 import { wrapError } from '../../error/wrap.js'
 
 // Translate error classes from the plugins library to error classes from this
