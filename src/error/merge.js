@@ -27,22 +27,19 @@ import { setErrorProperty } from './normalize/set.js'
 ///   which is very verbose and hard to read
 // In Node <16.9.0 and in some browsers, `error.cause` requires a polyfill like
 // `error-cause`.
-export const mergeErrorCause = function (error) {
-  const errorA = normalizeError(error)
-  return mergeCause(errorA)
-}
-
 // The recursion is applied pair by pair, as opposed to all errors at once.
 //  - This ensures the same result no matter how many times this function
 //    applied along the stack trace
 // `normalizeError()` is called again to ensure the new `name|message` is
 // reflected in `error.stack`.
-const mergeCause = function (parent) {
+export const mergeErrorCause = function (error) {
+  const parent = normalizeError(error)
+
   if (parent.cause === undefined) {
     return parent
   }
 
-  const child = mergeCause(parent.cause)
+  const child = mergeErrorCause(parent.cause)
   const message = mergeMessage(parent.message, child.message)
   const mergedError = createError(parent, child, message)
   fixStack(mergedError, child)
@@ -167,7 +164,9 @@ const mergeAggregate = function (mergedError, parent, child) {
 }
 
 const getAggregateErrors = function (error) {
-  return hasAggregateErrors(error) ? error.errors.map(mergeCause) : undefined
+  return hasAggregateErrors(error)
+    ? error.errors.map(mergeErrorCause)
+    : undefined
 }
 
 const hasAggregateErrors = function (error) {
