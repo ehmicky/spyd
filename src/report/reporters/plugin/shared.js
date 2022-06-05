@@ -18,91 +18,98 @@ const sharedRules = [
     pick,
     validate: validateJson,
   },
-  // The reporter's output is decided by (in priority order):
-  //  - `config.reporter.output` (user-defined, reporter-specific)
-  //  - `config.output` (user-defined, any reporters): merged in a previous step
-  //  - `reporter.defaultOutput` (reporter-defined, reporter-specific)
-  //  - "stdout" (system-defined, any reporters)
-  // The reporter's output also determines the format.
-  {
-    name: 'output',
-    pick,
-    default({
-      context: {
-        plugin: { defaultOutput },
+  new Set([
+    [
+      // The reporter's output is decided by (in priority order):
+      //  - `config.reporter.output` (user-defined, reporter-specific)
+      //  - `config.output` (user-defined, any reporters): merged in a previous
+      //     step
+      //  - `reporter.defaultOutput` (reporter-defined, reporter-specific)
+      //  - "stdout" (system-defined, any reporters)
+      // The reporter's output also determines the format.
+      {
+        name: 'output',
+        pick,
+        default({
+          context: {
+            plugin: { defaultOutput },
+          },
+        }) {
+          return defaultOutput
+        },
+        path: normalizeOutputPath,
       },
-    }) {
-      return defaultOutput
+      {
+        name: 'format',
+        pick,
+        compute: computeFormat,
+      },
+      {
+        name: 'output',
+        pick,
+        validate: validateOutputFormat,
+      },
+      // `reporter.config.tty` is `true` when output is interactive terminal.
+      // Several reporter's configuration properties default to `true` only when
+      // the output is an interactive terminal.
+      {
+        name: 'tty',
+        pick,
+        compute({ inputs }) {
+          return inputs.output === 'stdout' && isTtyOutput()
+        },
+      },
+      new Set([
+        {
+          name: 'colors',
+          pick,
+          default({ inputs }) {
+            return inputs.tty
+          },
+          schema: { type: 'boolean' },
+        },
+        {
+          name: 'quiet',
+          pick: amongCommands(['run']),
+          default({ inputs }) {
+            return !inputs.tty
+          },
+          schema: { type: 'boolean' },
+        },
+        {
+          name: 'showDiff',
+          pick,
+          default({ inputs }) {
+            return inputs.tty
+          },
+          schema: { type: 'boolean' },
+        },
+      ]),
+    ],
+    {
+      name: 'showMetadata',
+      pick,
+      default: getShowMetadataDefault,
+      schema: { type: 'boolean' },
     },
-    path: normalizeOutputPath,
-  },
-  {
-    name: 'format',
-    pick,
-    compute: computeFormat,
-  },
-  {
-    name: 'output',
-    pick,
-    validate: validateOutputFormat,
-  },
-  // `reporter.config.tty` is `true` when output is interactive terminal.
-  // Several reporter's configuration properties default to `true` only when
-  // the output is an interactive terminal.
-  {
-    name: 'tty',
-    pick,
-    compute({ inputs }) {
-      return inputs.output === 'stdout' && isTtyOutput()
+    {
+      name: 'showPrecision',
+      pick,
+      default: DEFAULT_SHOW_PRECISION,
+      schema: { type: 'boolean' },
     },
-  },
-  {
-    name: 'colors',
-    pick,
-    default({ inputs }) {
-      return inputs.tty
+    {
+      name: 'showSystem',
+      pick,
+      schema: { type: 'boolean' },
     },
-    schema: { type: 'boolean' },
-  },
-  {
-    name: 'quiet',
-    pick: amongCommands(['run']),
-    default({ inputs }) {
-      return !inputs.tty
+    {
+      name: 'showTitles',
+      pick,
+      default: DEFAULT_SHOW_TITLES,
+      schema: { type: 'boolean' },
     },
-    schema: { type: 'boolean' },
-  },
-  {
-    name: 'showDiff',
-    pick,
-    default({ inputs }) {
-      return inputs.tty
-    },
-    schema: { type: 'boolean' },
-  },
-  {
-    name: 'showMetadata',
-    pick,
-    default: getShowMetadataDefault,
-    schema: { type: 'boolean' },
-  },
-  {
-    name: 'showPrecision',
-    pick,
-    default: DEFAULT_SHOW_PRECISION,
-    schema: { type: 'boolean' },
-  },
-  {
-    name: 'showSystem',
-    pick,
-    schema: { type: 'boolean' },
-  },
-  {
-    name: 'showTitles',
-    pick,
-    default: DEFAULT_SHOW_TITLES,
-    schema: { type: 'boolean' },
-  },
+  ]),
 ]
 
 export const shared = normalizeConfigSelectors(sharedRules)
