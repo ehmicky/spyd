@@ -34,6 +34,7 @@ import { setErrorProperty } from './normalize/set.js'
 // `normalizeError()` is called again to ensure the new `name|message` is
 // reflected in `error.stack`.
 export const mergeErrorCause = function (error) {
+  const hasChildStack = hasStack(error.cause)
   const parent = normalizeError(error)
   const parentErrors = getAggregateErrors(parent)
 
@@ -42,14 +43,14 @@ export const mergeErrorCause = function (error) {
     return parent
   }
 
-  return mergeCause(parent, parentErrors)
+  return mergeCause(parent, parentErrors, hasChildStack)
 }
 
-const mergeCause = function (parent, parentErrors) {
+const mergeCause = function (parent, parentErrors, hasChildStack) {
   const child = mergeErrorCause(parent.cause)
   const message = mergeMessage(parent.message, child.message)
   const mergedError = createError(parent, child, message)
-  fixStack(mergedError, child)
+  fixStack({ mergedError, parent, child, hasChildStack })
   mergeAggregate(mergedError, parentErrors, child)
   copyProps(mergedError, parent, child)
   return normalizeError(mergedError)
@@ -141,10 +142,29 @@ const createSimpleErrorType = function (parent, child, message) {
     : new Error(message)
 }
 
+// This needs to be performed before `child` is normalized by either
+// `mergeErrorCause(parent.cause)` or `normalizeError(parent)`
+const hasStack = function (child) {
+  return (
+    typeof child === 'object' &&
+    child !== null &&
+    (isStackProp(child.stack) || hasStack(child.cause))
+  )
+}
+
+const isStackProp = function (stack) {
+  return typeof stack === 'string' && stack.includes(STACK_LINE_START)
+}
+
+const STACK_LINE_START = 'at '
+
 // Only show the child error's stack trace since the parent one contains mostly
-// the same lines
-const fixStack = function (mergedError, child) {
-  setErrorProperty(mergedError, 'stack', child.stack)
+// the same lines.
+// Do not do it if the child error is missing a proper stack trace.
+//  - Unless it has a `cause` which has one
+const fixStack = function ({ mergedError, parent, child, hasChildStack }) {
+  const { stack } = hasChildStack ? child : parent
+  setErrorProperty(mergedError, 'stack', stack)
 }
 
 // Keep `error.errors` when merging errors.
