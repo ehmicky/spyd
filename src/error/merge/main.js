@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
-import { normalizeError } from './normalize/main.js'
-import { setErrorProperty } from './normalize/set.js'
+import { normalizeError } from '../normalize/main.js'
+import { setErrorProperty } from '../normalize/set.js'
 
 // Merge `error.cause` recursively to a single error.
 // This allows consumers to conveniently wrap errors using:
