@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 import { dirname } from 'path'
-import process from 'process'
 import { fileURLToPath } from 'url'
 
 import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
-import { ERROR_PROPS } from '../error/main.js'
 import { run, show, remove, dev } from '../main.js'
-import { addPadding } from '../report/utils/indent.js'
 
+import { handleCliError } from './error.js'
 import { parseCliFlags } from './parse.js'
 import { defineCli } from './top.js'
 
@@ -52,16 +50,5 @@ const checkUpdate = async function () {
 }
 
 const COMMANDS = { run, show, remove, dev }
-
-// Print CLI errors and exit, depending on the error type
-// TODO: error normalization?
-// TODO: enforce error types for bugs inside the CLI logic?
-const handleCliError = function (error) {
-  const { exitCode, printStack, indented } = ERROR_PROPS[error.name]
-  const errorMessage = printStack ? error.stack : error.message
-  const errorMessageA = indented ? addPadding(errorMessage) : errorMessage
-  console.error(errorMessageA)
-  process.exitCode = exitCode
-}
 
 runCli()
