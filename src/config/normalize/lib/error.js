@@ -1,4 +1,4 @@
-import { createErrorType } from '../../../error/utils.js'
+import { createErrorType } from '../../../error/create.js'
 
 // Invalid `inputs`
 export const InputError = createErrorType('InputError')

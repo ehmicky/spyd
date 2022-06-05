@@ -1,5 +1,5 @@
+import { createErrorType } from '../../error/create.js'
 import { allowErrorTypes } from '../../error/types.js'
-import { createErrorType } from '../../error/utils.js'
 
 // Error from the library itself
 export const CoreError = createErrorType('CoreError')

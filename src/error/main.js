@@ -1,4 +1,4 @@
-import { createErrorType } from './utils.js'
+import { createErrorType } from './create.js'
 
 // Bug in the library itself
 export const CoreError = createErrorType('CoreError')
