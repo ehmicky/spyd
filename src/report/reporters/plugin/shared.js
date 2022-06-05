@@ -114,7 +114,7 @@ const showTitles = {
 }
 
 // Reporter-specific shared configuration properties
-export const shared = [
+export const shared = normalizeConfigSelectors([
   any,
   output,
   format,
@@ -127,5 +127,5 @@ export const shared = [
   showPrecision,
   showSystem,
   showTitles,
-].flatMap(normalizeConfigSelectors)
+])
 /* eslint-enable max-lines */

@@ -19,19 +19,31 @@ export const getSharedConfig = function (sharedConfig, shared) {
 }
 
 const getSharedPropNames = function (shared = []) {
-  const sharedPropNames = shared.map(getRuleName)
+  const sharedPropNames = getRuleNames(shared, [])
   const sharedPropNamesA = [
     ...new Set(sharedPropNames.map(serializeQuery)),
   ].flatMap(parseQuery)
   return sharedPropNamesA.filter(isPropRuleName)
 }
 
+const getRuleNames = function (rulesOrRule, indices) {
+  const rulesOrRuleA =
+    rulesOrRule instanceof Set ? [...rulesOrRule] : rulesOrRule
+
+  return Array.isArray(rulesOrRuleA)
+    ? rulesOrRuleA.flatMap((rule, index) =>
+        getRuleNames(rule, [...indices, index]),
+      )
+    : getRuleName(rulesOrRuleA, indices)
+}
+
 // Parse and validate all `shared.*.name`
-const getRuleName = function ({ name }, index) {
+const getRuleName = function ({ name }, indices) {
   try {
     return normalizeQuery(name)
   } catch (error) {
-    throw new UserError(`Invalid "shared[${index}].name": ${error.message}`)
+    const indicesStr = indices.map(String).join('.')
+    throw new UserError(`Invalid "shared.${indicesStr}.name": ${error.message}`)
   }
 }
 

@@ -6,8 +6,12 @@
 //  - Specific to a plugin
 // To avoid each sets of properties to be marked as unknown, we need to add
 // dummy rules for them.
-export const getDummyRules = function (rules) {
-  return rules.map(getDummyRule)
+export const getDummyRules = function (rulesOrRule) {
+  const rulesOrRuleA =
+    rulesOrRule instanceof Set ? [...rulesOrRule] : rulesOrRule
+  return Array.isArray(rulesOrRuleA)
+    ? rulesOrRuleA.map(getDummyRules)
+    : getDummyRule(rulesOrRuleA)
 }
 
 const getDummyRule = function ({ name }) {

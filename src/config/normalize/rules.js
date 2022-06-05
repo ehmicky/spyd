@@ -43,8 +43,8 @@ import { normalizeArray } from './transform.js'
 // eslint-disable-next-line import/max-dependencies
 import { validateJson } from './validate/json.js'
 
-export const RULES = [
-  ...getDummyRules(CONFIG_RULES),
+const rules = new Set([
+  getDummyRules(CONFIG_RULES),
   {
     name: 'cwd',
     pick: amongCommands(['dev', 'remove', 'run', 'show']),
@@ -57,27 +57,39 @@ export const RULES = [
     default: DEFAULT_MAIN_DELTA,
     transform: transformDelta,
   },
-  {
-    name: 'force',
-    pick: amongCommands(['remove']),
-    default() {
-      return !isTtyInput()
+  [
+    {
+      name: 'force',
+      pick: amongCommands(['remove']),
+      default() {
+        return !isTtyInput()
+      },
+      schema: { type: 'boolean' },
     },
-    schema: { type: 'boolean' },
-  },
-  {
-    name: 'inputs',
-    pick: amongCommands(['dev', 'run']),
-    default: DEFAULT_INPUTS,
-    schema: { type: 'object' },
-    example: EXAMPLE_INPUTS,
-  },
-  {
-    name: 'inputs.*',
-    pick: amongCommands(['dev', 'run']),
-    validate: validateJson,
-    example: EXAMPLE_INPUT_VALUE,
-  },
+    {
+      name: 'reporter',
+      pick: amongCommands(['remove', 'run', 'show']),
+      default: DEFAULT_REPORTERS,
+      transform(value, { inputs: { force: forceProp } }) {
+        return forceProp ? [] : value
+      },
+    },
+  ],
+  [
+    {
+      name: 'inputs',
+      pick: amongCommands(['dev', 'run']),
+      default: DEFAULT_INPUTS,
+      schema: { type: 'object' },
+      example: EXAMPLE_INPUTS,
+    },
+    {
+      name: 'inputs.*',
+      pick: amongCommands(['dev', 'run']),
+      validate: validateJson,
+      example: EXAMPLE_INPUT_VALUE,
+    },
+  ],
   {
     name: 'limit',
     pick: amongCommands(['remove', 'run', 'show']),
@@ -118,60 +130,66 @@ export const RULES = [
     default: DEFAULT_SAVE,
     schema: { type: 'boolean' },
   },
-  {
-    name: 'select',
-    pick: amongCommands(['dev', 'remove', 'run', 'show']),
-    default: DEFAULT_SELECT,
-    transform: normalizeArray,
-    example: EXAMPLE_SELECT,
-  },
-  {
-    name: 'select.*',
-    required: true,
-    pick: amongCommands(['dev', 'remove', 'run', 'show']),
-    schema: { type: 'string' },
-    example: EXAMPLE_SELECT,
-  },
+  [
+    {
+      name: 'select',
+      pick: amongCommands(['dev', 'remove', 'run', 'show']),
+      default: DEFAULT_SELECT,
+      transform: normalizeArray,
+      example: EXAMPLE_SELECT,
+    },
+    {
+      name: 'select.*',
+      required: true,
+      pick: amongCommands(['dev', 'remove', 'run', 'show']),
+      schema: { type: 'string' },
+      example: EXAMPLE_SELECT,
+    },
+  ],
   {
     name: 'since',
     pick: amongCommands(['remove', 'run', 'show']),
     default: DEFAULT_SINCE_DELTA,
     transform: transformDelta,
   },
-  {
-    name: 'system',
-    pick: amongCommands(['dev', 'run']),
-    default: {},
-    schema: { type: 'object' },
-    example: EXAMPLE_SYSTEMS,
-  },
-  {
-    name: 'system.*',
-    pick: amongCommands(['dev', 'run']),
-    schema: {
-      type: 'string',
-      minLength: 1,
-      errorMessage: { minLength: 'must not be an empty string' },
+  [
+    {
+      name: 'system',
+      pick: amongCommands(['dev', 'run']),
+      default: {},
+      schema: { type: 'object' },
+      example: EXAMPLE_SYSTEMS,
     },
-    example: EXAMPLE_SYSTEM,
-  },
-  {
-    name: 'titles',
-    pick: amongCommands(['remove', 'run', 'show']),
-    default: DEFAULT_TITLES,
-    schema: { type: 'object' },
-    example: EXAMPLE_TITLES,
-  },
-  {
-    name: 'titles.*',
-    pick: amongCommands(['remove', 'run', 'show']),
-    schema: {
-      type: 'string',
-      minLength: 1,
-      errorMessage: { minLength: 'must not be an empty string' },
+    {
+      name: 'system.*',
+      pick: amongCommands(['dev', 'run']),
+      schema: {
+        type: 'string',
+        minLength: 1,
+        errorMessage: { minLength: 'must not be an empty string' },
+      },
+      example: EXAMPLE_SYSTEM,
     },
-    example: EXAMPLE_TITLE,
-  },
+  ],
+  [
+    {
+      name: 'titles',
+      pick: amongCommands(['remove', 'run', 'show']),
+      default: DEFAULT_TITLES,
+      schema: { type: 'object' },
+      example: EXAMPLE_TITLES,
+    },
+    {
+      name: 'titles.*',
+      pick: amongCommands(['remove', 'run', 'show']),
+      schema: {
+        type: 'string',
+        minLength: 1,
+        errorMessage: { minLength: 'must not be an empty string' },
+      },
+      example: EXAMPLE_TITLE,
+    },
+  ],
   {
     name: 'runner',
     pick: amongCommands(['dev', 'run']),
@@ -183,13 +201,7 @@ export const RULES = [
       errorMessage: 'must not be an empty array',
     },
   },
-  {
-    name: 'reporter',
-    pick: amongCommands(['remove', 'run', 'show']),
-    default: DEFAULT_REPORTERS,
-    transform(value, { inputs: { force: forceProp } }) {
-      return forceProp ? [] : value
-    },
-  },
-].flatMap(normalizeConfigSelectors)
+])
+
+export const RULES = normalizeConfigSelectors(rules)
 /* eslint-enable max-lines */

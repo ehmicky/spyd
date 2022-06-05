@@ -36,6 +36,9 @@ const tasksFlatten = {
 }
 
 // Runner-specific shared configuration properties
-export const shared = [any, tasks, tasksAny, tasksFlatten].flatMap(
-  normalizeConfigSelectors,
-)
+export const shared = normalizeConfigSelectors([
+  any,
+  tasks,
+  tasksAny,
+  tasksFlatten,
+])

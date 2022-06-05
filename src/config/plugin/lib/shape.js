@@ -27,7 +27,7 @@ export const normalizeShape = async function ({
 
   return await safeNormalizeConfig(
     pluginA,
-    [...getDummyRules(COMMON_SHAPE_RULES), ...shape],
+    new Set([getDummyRules(COMMON_SHAPE_RULES), shape]),
     {
       all: { prefix: PLUGIN_PREFIX, context },
       keywords,
@@ -49,49 +49,8 @@ const PLUGIN_PREFIX = 'Plugin property'
 // This is purposely not applied to shared configs.
 const PLUGIN_ID_REGEXP = /^[a-z]?[a-z\d]*$/u
 
-// When using a Node module, the exported `id` must match the `location`
-// specified by the user
-const validateModuleLocation = function (
-  id,
-  { context: { locationType, originalLocation } },
-) {
-  if (MODULE_LOCATION_TYPES.has(locationType) && originalLocation !== id) {
-    throw new Error(`must be "${originalLocation}" to match the package name.`)
-  }
-}
-
 // Those types must have the same `plugin.id` as the user-specified `location`
 const MODULE_LOCATION_TYPES = new Set(['builtin', 'module'])
-
-const idProp = {
-  name: 'id',
-  required: true,
-  schema: {
-    type: 'string',
-    minLength: 1,
-    regexp: String(PLUGIN_ID_REGEXP),
-    errorMessage: {
-      minLength: 'must not be an empty string',
-      regexp: 'must only contain lowercase letters and digits',
-    },
-  },
-  validate: validateModuleLocation,
-  example({ context: { locationType, originalLocation } }) {
-    return MODULE_LOCATION_TYPES.has(locationType)
-      ? originalLocation
-      : 'module-name'
-  },
-}
-
-const configPropName = {
-  name: 'config.*.name',
-  transform(name, { context: { sharedPropNames } }) {
-    const nameA = transformConfigPropName(name)
-    validateSharedProp(nameA, sharedPropNames)
-    return nameA
-  },
-  example: 'propertyName',
-}
 
 const transformConfigPropName = function (name) {
   try {
@@ -102,4 +61,41 @@ const transformConfigPropName = function (name) {
 }
 
 // Rules shared by all plugins
-const COMMON_SHAPE_RULES = [idProp, configPropName]
+const COMMON_SHAPE_RULES = new Set([
+  {
+    name: 'id',
+    required: true,
+    schema: {
+      type: 'string',
+      minLength: 1,
+      regexp: String(PLUGIN_ID_REGEXP),
+      errorMessage: {
+        minLength: 'must not be an empty string',
+        regexp: 'must only contain lowercase letters and digits',
+      },
+    },
+    // When using a Node module, the exported `id` must match the `location`
+    // specified by the user
+    validate(id, { context: { locationType, originalLocation } }) {
+      if (MODULE_LOCATION_TYPES.has(locationType) && originalLocation !== id) {
+        throw new Error(
+          `must be "${originalLocation}" to match the package name.`,
+        )
+      }
+    },
+    example({ context: { locationType, originalLocation } }) {
+      return MODULE_LOCATION_TYPES.has(locationType)
+        ? originalLocation
+        : 'module-name'
+    },
+  },
+  {
+    name: 'config.*.name',
+    transform(name, { context: { sharedPropNames } }) {
+      const nameA = transformConfigPropName(name)
+      validateSharedProp(nameA, sharedPropNames)
+      return nameA
+    },
+    example: 'propertyName',
+  },
+])

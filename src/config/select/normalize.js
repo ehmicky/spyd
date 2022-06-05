@@ -11,7 +11,19 @@ import isPlainObj from 'is-plain-obj'
 //  - For example, using a "default" selector when no selectors are used
 //  - Because configuration properties get added later on by some internal logic
 //     - It is simpler to specify those without selectors
-export const normalizeConfigSelectors = function (rule) {
+export const normalizeConfigSelectors = function (rulesOrRule) {
+  if (rulesOrRule instanceof Set) {
+    return new Set([...rulesOrRule].map(normalizeConfigSelectors))
+  }
+
+  if (Array.isArray(rulesOrRule)) {
+    return rulesOrRule.map(normalizeConfigSelectors)
+  }
+
+  return normalizeRule(rulesOrRule)
+}
+
+const normalizeRule = function (rule) {
   const { name, condition } = rule
 
   if (!SELECTABLE_PROPS.includes(name)) {
