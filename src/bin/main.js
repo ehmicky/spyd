@@ -7,6 +7,7 @@ import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
 import { ErrorTypes, ERROR_PROPS } from '../error/main.js'
+import { mergeErrorCause } from '../error/merge/main.js'
 import { allowErrorTypes } from '../error/types.js'
 import { run, show, remove, dev } from '../main.js'
 import { addPadding } from '../report/utils/indent.js'
@@ -57,7 +58,7 @@ const COMMANDS = { run, show, remove, dev }
 
 // Print CLI errors and exit, depending on the error type
 const handleCliError = function (error) {
-  const errorA = allowErrorTypes(error, ErrorTypes)
+  const errorA = allowErrorTypes(mergeErrorCause(error), ErrorTypes)
   const { exitCode, printStack, indented } = ERROR_PROPS[errorA.name]
   const errorMessage = printStack ? errorA.stack : errorA.message
   const errorMessageA = indented ? addPadding(errorMessage) : errorMessage
