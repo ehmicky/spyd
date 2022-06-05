@@ -6,6 +6,9 @@ export const mergeErrorCause = function (error) {
   return mergeCause(errorA)
 }
 
+// The recursion is applied pair by pair, as opposed to all errors at once.
+//  - This ensures the same result no matter how many times this function
+//    applied along the stack trace
 const mergeCause = function (error) {
   if (error.cause === undefined) {
     return error
