@@ -1,7 +1,7 @@
 // eslint-disable-next-line n/file-extension-in-import, import/no-unassigned-import
 import 'error-cause/auto'
 
-import { onError } from './handler.js'
+import { onErrorHandler } from './handler.js'
 import { getOpts } from './opts.js'
 import {
   validateErrorNames,
@@ -24,10 +24,10 @@ export const modernErrors = function (errorNames, opts) {
   const { onCreate } = getOpts(opts)
   const SystemError = createSystemError()
   const ErrorTypes = createErrorTypes(errorNames, onCreate)
-  const onErrorHandler = onError.bind(
+  const onError = onErrorHandler.bind(
     undefined,
     Object.values(ErrorTypes),
     SystemError,
   )
-  return { ...ErrorTypes, onError: onErrorHandler }
+  return { ...ErrorTypes, onError }
 }
