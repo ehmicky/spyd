@@ -3,6 +3,7 @@ import 'error-cause/auto'
 import errorType from 'error-type'
 import mergeErrorCause from 'merge-error-cause'
 
+import { getOpts } from './opts.js'
 import { allowErrorTypes } from './types.js'
 
 // Create error types by passing an array of error names.
@@ -28,10 +29,6 @@ export const modernErrors = function (errorNames, opts) {
     SystemError,
   )
   return { ...ErrorTypes, onError: onErrorHandler }
-}
-
-const getOpts = function ({ onCreate } = {}) {
-  return { onCreate }
 }
 
 // Create the SystemError type used for unknown error types.
