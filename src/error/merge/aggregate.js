@@ -1,4 +1,4 @@
-import { setErrorProperty } from '../normalize/set.js'
+import { setErrorProperty } from './set.js'
 
 // Keep `error.errors` when merging errors.
 // If multiple errors have `errors`, the parent's errors are prepended.

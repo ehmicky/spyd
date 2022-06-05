@@ -1,4 +1,4 @@
-import { normalizeError } from '../normalize/main.js'
+import normalizeException from 'normalize-exception'
 
 import {
   setAggregate,
@@ -43,7 +43,7 @@ import { hasStack, fixStack } from './stack.js'
 // reflected in `error.stack`.
 export const mergeErrorCause = function (error) {
   const hasChildStack = hasStack(error.cause)
-  const parent = normalizeError(error)
+  const parent = normalizeException(error)
   const parentErrors = getAggregateErrors(parent, mergeErrorCause)
 
   if (parent.cause === undefined) {
@@ -61,5 +61,5 @@ const mergeCause = function (parent, parentErrors, hasChildStack) {
   fixStack({ mergedError, parent, child, hasChildStack })
   mergeAggregate({ mergedError, parentErrors, child, mergeErrorCause })
   copyProps(mergedError, parent, child)
-  return normalizeError(mergedError)
+  return normalizeException(mergedError)
 }

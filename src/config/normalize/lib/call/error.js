@@ -1,4 +1,5 @@
-import { normalizeError } from '../../../../error/normalize/main.js'
+import normalizeException from 'normalize-exception'
+
 import { InputError, DefinitionError, KeywordError } from '../error.js'
 
 import {
@@ -18,7 +19,7 @@ import {
 //  - Otherwise, a failed property might be used by another property, which
 //    would also appear as failed, even if it has no issues
 export const handleError = function ({ error, errorType, bugType, ...params }) {
-  const errorA = normalizeError(error)
+  const errorA = normalizeException(error)
   const isValidation = isValidateError(errorA)
   const type = isValidation ? errorType : bugType
   return ERROR_HANDLERS[type]({ ...params, error: errorA, isValidation })

@@ -1,10 +1,10 @@
 import process from 'process'
 
-import { normalizeError } from './normalize/main.js'
+import normalizeException from 'normalize-exception'
 
 // Print CLI errors and exit, depending on the error type
 export const handleCliError = function (error, opts) {
-  const errorA = normalizeError(error)
+  const errorA = normalizeException(error)
   const { silent, short, exitCode } = getOpts(errorA, opts)
   printError(errorA, silent, short)
   exitProcess(exitCode)

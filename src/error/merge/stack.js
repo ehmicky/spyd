@@ -1,7 +1,7 @@
-import { setErrorProperty } from '../normalize/set.js'
+import { setErrorProperty } from './set.js'
 
 // This needs to be performed before `child` is normalized by either
-// `mergeErrorCause(parent.cause)` or `normalizeError(parent)`
+// `mergeErrorCause(parent.cause)` or `normalizeException(parent)`
 export const hasStack = function (child) {
   return (
     typeof child === 'object' &&
