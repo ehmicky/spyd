@@ -73,7 +73,12 @@ const setErrorStack = function (error, { name, message, stack }) {
   const newStackStart = getStackHeader(error)
   const stackB = `${newStackStart}${stackA}`
   // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'stack', { value: stackB, enumerable: false })
+  Object.defineProperty(error, 'stack', {
+    value: stackB,
+    enumerable: false,
+    configurable: true,
+    writable: true,
+  })
 }
 
 const getStackHeader = function ({ name, message }) {
