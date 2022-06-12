@@ -1,12 +1,8 @@
-import { modernErrors } from '../../../error/modern/main.js'
+import modernErrors from 'modern-errors'
+
 import { packageJson } from '../../../utils/package.js'
 
-const { InputError, DefinitionError, KeywordError, onError } = modernErrors(
-  ['InputError', 'DefinitionError', 'KeywordError'],
-  { bugsUrl: packageJson.bugs.url },
-)
-
-export {
+export const {
   // Invalid `inputs`
   InputError,
   // Invalid `rules` or `options`
@@ -14,5 +10,5 @@ export {
   // Bug in a keyword|plugin
   KeywordError,
   // Top-level error handler
-  onError,
-}
+  errorHandler,
+} = modernErrors({ bugsUrl: packageJson.bugs.url })

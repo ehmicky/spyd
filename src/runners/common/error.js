@@ -1,25 +1,8 @@
-import { modernErrors } from '../../error/modern/main.js'
+import modernErrors from 'modern-errors'
+
 import { packageJson } from '../../utils/package.js'
 
-const {
-  IpcSerializationError,
-  TasksLoadError,
-  TasksSyntaxError,
-  TasksRunError,
-  ConfigError,
-  onError,
-} = modernErrors(
-  [
-    'IpcSerializationError',
-    'TasksLoadError',
-    'TasksSyntaxError',
-    'TasksRunError',
-    'ConfigError',
-  ],
-  { bugsUrl: packageJson.bugs.url },
-)
-
-export {
+export const {
   // Could not JSON-stringify IPC payload
   IpcSerializationError,
   // Tasks file throws when loading
@@ -31,5 +14,5 @@ export {
   // Invalid runner config
   ConfigError,
   // Top-level error handler
-  onError,
-}
+  errorHandler,
+} = modernErrors({ bugsUrl: packageJson.bugs.url })

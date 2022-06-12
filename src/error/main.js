@@ -1,20 +1,8 @@
+import modernErrors from 'modern-errors'
+
 import { packageJson } from '../utils/package.js'
 
-import { modernErrors } from './modern/main.js'
-
-const {
-  PluginError,
-  UserCodeError,
-  UserError,
-  LimitError,
-  StopError,
-  onError,
-} = modernErrors(
-  ['PluginError', 'UserCodeError', 'UserError', 'LimitError', 'StopError'],
-  { bugsUrl: packageJson.bugs.url },
-)
-
-export {
+export const {
   // Bug in a plugin (reporter|runner)
   PluginError,
   // Invalid tasks or tasks file
@@ -26,5 +14,5 @@ export {
   // User aborting the benchmark
   StopError,
   // Top-level error handler
-  onError,
-}
+  errorHandler,
+} = modernErrors({ bugsUrl: packageJson.bugs.url })

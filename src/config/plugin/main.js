@@ -1,10 +1,10 @@
+import { PluginError, UserError } from '../../error/main.js'
 import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
 import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
 import { cleanObject } from '../../utils/clean.js'
 import { PREFIX } from '../normalize/main.js'
 
-import { handlePluginsError } from './error.js'
 import { getPlugins } from './lib/main.js'
 
 // Handle the configuration plugins: runners and reporters
@@ -51,11 +51,25 @@ const normalizePluginConfigs = async function ({
     })
     const pluginInfosA = pluginInfos.map(normalizePluginInfo)
     return { [name]: pluginInfosA }
-  } catch (error) {
-    throw handlePluginsError(error)
+  } catch (cause) {
+    throw handlePluginsError(cause)
   }
 }
 
 const normalizePluginInfo = function ({ plugin, config }) {
   return cleanObject({ ...plugin, config })
+}
+
+// Translate error classes from the plugins library to error classes from this
+// library
+const handlePluginsError = function (cause) {
+  const ErrorType = cause.name in ERROR_MAP ? ERROR_MAP[cause.name] : Error
+  return new ErrorType('', { cause })
+}
+
+const ERROR_MAP = {
+  SystemError: Error,
+  UserError: Error,
+  PluginError,
+  ConsumerError: UserError,
 }
