@@ -68,7 +68,7 @@ const handlePluginsError = function (cause) {
 }
 
 const ERROR_MAP = {
-  SystemError: Error,
+  InternalError: Error,
   UserError: Error,
   PluginError,
   ConsumerError: UserError,
