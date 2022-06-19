@@ -5,9 +5,9 @@ import normalizeException from 'normalize-exception'
 // Print CLI errors and exit, depending on the error type
 export const handleCliError = function (error, opts) {
   const errorA = normalizeException(error)
-  const { silent, short, exitCode } = getOpts(errorA, opts)
+  const { silent, short, exitCode, timeout } = getOpts(errorA, opts)
   printError(errorA, silent, short)
-  exitProcess(exitCode)
+  exitProcess(exitCode, timeout)
 }
 
 const getOpts = function (error, opts = {}) {
@@ -50,17 +50,18 @@ const getTypesOpts = function (types, name) {
   return typesOpts
 }
 
-const DEFAULT_OPTS = { silent: false, short: false, exitCode: 1 }
+const DEFAULT_OPTS = { silent: false, short: false, exitCode: 1, timeout: 5e3 }
 
 const isObject = function (value) {
   return typeof value === 'object' && value !== null
 }
 
-const normalizeOpts = function ({ silent, short, exitCode }) {
+const normalizeOpts = function ({ silent, short, exitCode, timeout }) {
   return {
     silent: normalizeBooleanOpt(silent, 'silent'),
     short: normalizeBooleanOpt(short, 'short'),
     exitCode: normalizeExitCode(exitCode),
+    timeout: normalizeTimeout(timeout),
   }
 }
 
@@ -88,6 +89,16 @@ const MIN_EXIT_CODE = 0
 // 126-255 have special meaning in Bash
 const MAX_EXIT_CODE = 125
 
+const normalizeTimeout = function (timeout) {
+  return (Number.isInteger(timeout) && timeout >= 0) ||
+    timeout === Number.POSITIVE_INFINITY
+    ? timeout
+    : handleOptsError(
+        `options.timeout must be 0, a positive integer or Infinity: ${timeout}`,
+        DEFAULT_OPTS.timeout,
+      )
+}
+
 // We do not throw since we are using the top-level error handling logic
 const handleOptsError = function (message, value) {
   // eslint-disable-next-line no-restricted-globals, no-console
@@ -108,12 +119,20 @@ const printError = function (error, silent, short) {
 
 // We use `process.exitCode` instead of `process.exit()` to let any pending
 // tasks complete, with a timeout
-const exitProcess = function (exitCode) {
+const exitProcess = function (exitCode, timeout) {
+  if (timeout === 0) {
+    process.exit(exitCode)
+    return
+  }
+
   process.exitCode = exitCode
+
+  if (timeout === Number.POSITIVE_INFINITY) {
+    return
+  }
+
   setTimeout(() => {
     // eslint-disable-next-line unicorn/no-process-exit, n/no-process-exit
     process.exit(exitCode)
-  }, EXIT_TIMEOUT).unref()
+  }, timeout).unref()
 }
-
-const EXIT_TIMEOUT = 5e3
