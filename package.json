@@ -57,7 +57,7 @@
     "js-yaml": "^4.0.0",
     "json-ptr": "^3.1.0",
     "junk": "^4.0.0",
-    "map-obj": "^5.0.1",
+    "map-obj": "^5.0.2",
     "modern-errors": "^1.1.2",
     "moize": "^6.1.1",
     "normalize-exception": "^1.1.5",
