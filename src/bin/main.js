@@ -2,10 +2,10 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
+import handleCliError from 'handle-cli-error'
 import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
-import { handleCliError } from '../error/cli/main.js'
 import { run, show, remove, dev } from '../main.js'
 
 import { parseCliFlags } from './parse.js'
