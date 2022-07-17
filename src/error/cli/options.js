@@ -1,6 +1,9 @@
+import { excludeKeys } from 'filter-obj'
+import isPlainObj from 'is-plain-obj'
+
 // Normalize options
 export const getOpts = function (error, opts = {}) {
-  if (!isObject(opts)) {
+  if (!isPlainObj(opts)) {
     return handleOptsError(
       `options must be a plain object: ${opts}`,
       DEFAULT_OPTS,
@@ -9,13 +12,17 @@ export const getOpts = function (error, opts = {}) {
 
   const { types = {}, ...optsA } = opts
   const typesOpts = findTypesOpts(types, error.name)
-  const optsB = { ...DEFAULT_OPTS, ...optsA, ...typesOpts }
+  const optsB = {
+    ...DEFAULT_OPTS,
+    ...removeUndefined(optsA),
+    ...removeUndefined(typesOpts),
+  }
   const optsC = normalizeOpts(optsB)
   return optsC
 }
 
 const findTypesOpts = function (types, name) {
-  if (!isObject(types)) {
+  if (!isPlainObj(types)) {
     return handleOptsError(`options.types must be a plain object: ${types}`, {})
   }
 
@@ -29,7 +36,7 @@ const getTypesOpts = function (types, name) {
     return
   }
 
-  if (!isObject(typesOpts)) {
+  if (!isPlainObj(typesOpts)) {
     return handleOptsError(
       `options.types.${name} must be a plain object: ${typesOpts}`,
       {},
@@ -41,8 +48,12 @@ const getTypesOpts = function (types, name) {
 
 const DEFAULT_OPTS = { silent: false, short: false, exitCode: 1, timeout: 5e3 }
 
-const isObject = function (value) {
-  return typeof value === 'object' && value !== null
+const removeUndefined = function (object) {
+  return excludeKeys(object, isUndefined)
+}
+
+const isUndefined = function (key, value) {
+  return value === undefined
 }
 
 const normalizeOpts = function ({ silent, short, exitCode, timeout }) {
