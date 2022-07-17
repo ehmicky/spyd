@@ -1,4 +1,4 @@
-import omit from 'omit.js'
+import { excludeKeys } from 'filter-obj'
 import sortOn from 'sort-on'
 
 import { addDefaultIds } from '../../combination/default.js'
@@ -74,7 +74,7 @@ const mergeRawResultsGroup = function (rawResults) {
 // `subId` should be merged as an array of `subIds`. However, since it is not
 // used except for filenames at the moment, we just omit it.
 const omitUnmergedProps = function (rawResult) {
-  return omit.default(rawResult, UNMERGED_PROPS)
+  return excludeKeys(rawResult, UNMERGED_PROPS)
 }
 
 const UNMERGED_PROPS = ['subId']

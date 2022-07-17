@@ -1,4 +1,4 @@
-import omit from 'omit.js'
+import { excludeKeys } from 'filter-obj'
 
 // Some combination properties can be toggled using `showPrecision` and
 // `showDiff`.
@@ -78,7 +78,7 @@ const DEBUG_STATS_PROPS = [
 ]
 
 const maybeOmit = function (obj, showProp, propNames) {
-  return showProp ? obj : omit.default(obj, propNames)
+  return showProp ? obj : excludeKeys(obj, propNames)
 }
 
 export const DEFAULT_SHOW_PRECISION = false

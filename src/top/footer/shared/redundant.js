@@ -1,4 +1,4 @@
-import omit from 'omit.js'
+import { excludeKeys } from 'filter-obj'
 
 import { setArray } from '../../../utils/set.js'
 
@@ -42,7 +42,7 @@ const skipRedundantDimension = function (
     return dimensionsArray
   }
 
-  const dimensionsA = omit.default(dimensionsArray[index], [dimensionName])
+  const dimensionsA = excludeKeys(dimensionsArray[index], [dimensionName])
   return setArray(dimensionsArray, index, dimensionsA)
 }
 

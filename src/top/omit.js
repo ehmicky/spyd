@@ -1,5 +1,4 @@
-import { includeKeys } from 'filter-obj'
-import omit from 'omit.js'
+import { includeKeys, excludeKeys } from 'filter-obj'
 
 // We only expose specific properties to reporters.
 // For example, we do not expose subId.
@@ -32,7 +31,7 @@ const REPORTED_COMB_PROPS = ['dimensions', 'stats']
 //    display as header in time series.
 //  - The target result does not not, since the footer should be used instead
 export const omitMetadataFooterProps = function (result) {
-  return omit.default(result, METADATA_FOOTER_PROPS)
+  return excludeKeys(result, METADATA_FOOTER_PROPS)
 }
 
 // Some footer information can be toggled using `showSystem` and `showMetadata`.
@@ -70,7 +69,7 @@ const METADATA_SYSTEM_PROPS = ['git', 'ci']
 const MAIN_SYSTEM_PROPS = ['machine', 'versions']
 
 const maybeOmit = function (obj, showProp, propNames) {
-  return showProp ? obj : omit.default(obj, propNames)
+  return showProp ? obj : excludeKeys(obj, propNames)
 }
 
 export const getShowMetadataDefault = function ({ context: { command } }) {

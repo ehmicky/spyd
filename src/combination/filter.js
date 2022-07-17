@@ -1,4 +1,4 @@
-import omit from 'omit.js'
+import { excludeKeys } from 'filter-obj'
 
 // Retrieve `noDimensions`, i.e. dimensions that have the same ids across all
 // combinations.
@@ -58,6 +58,6 @@ export const omitNoDimensions = function (result, noDimensions) {
 
 // Same for a single combination
 export const omitCombNoDimensions = function (combination, noDimensions) {
-  const dimensions = omit.default(combination.dimensions, noDimensions)
+  const dimensions = excludeKeys(combination.dimensions, noDimensions)
   return { ...combination, dimensions }
 }

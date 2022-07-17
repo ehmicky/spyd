@@ -1,5 +1,5 @@
 import { format as formatBytes } from 'bytes'
-import omit from 'omit.js'
+import { excludeKeys } from 'filter-obj'
 
 import { cleanObject } from '../../utils/clean.js'
 
@@ -79,7 +79,7 @@ const getBranch = function (branch) {
 
 const serializeVersions = function ({ Spyd: spydVersion, ...versions }, props) {
   return {
-    ...omit.default(versions, Object.keys(props)),
+    ...excludeKeys(versions, Object.keys(props)),
     [SPYD_VERSION_NAME]: spydVersion,
   }
 }

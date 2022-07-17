@@ -1,4 +1,4 @@
-import omit from 'omit.js'
+import { excludeKeys } from 'filter-obj'
 
 import { PluginError } from '../../error/main.js'
 import { FORMATS } from '../formats/list.js'
@@ -27,7 +27,7 @@ const callReportFunc = async function ({
     config: { format, output, colors },
   },
 }) {
-  const reporterSpecificConfig = omit.default(
+  const reporterSpecificConfig = excludeKeys(
     reporterConfig,
     CORE_REPORTER_PROPS,
   )
