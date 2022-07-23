@@ -1,4 +1,4 @@
-import filterObj from 'filter-obj'
+import { excludeKeys } from 'filter-obj'
 import { map } from 'wild-wild-utils'
 
 import { mapValues } from '../utils/map.js'
@@ -15,7 +15,7 @@ export const parseCliFlags = function (yargs) {
     _: [command = DEFAULT_COMMAND],
     ...configFlags
   } = yargs.parse()
-  const configFlagsA = filterObj(configFlags, isUserProp)
+  const configFlagsA = excludeKeys(configFlags, isInternalProp)
   const configFlagsB = mapValues(configFlagsA, handleEmptyArr)
   const configFlagsC = transtypeCliFlags(configFlagsB)
   return { command, configFlags: configFlagsC }
@@ -26,8 +26,8 @@ const DEFAULT_COMMAND = 'run'
 // Remove `yargs`-specific properties and shortcuts.
 // We do not remove dasherized properties because user-defined identifiers can
 // use dashes and we disable yargs' `camel-case-expansion`.
-const isUserProp = function (key, value) {
-  return value !== undefined && !INTERNAL_KEYS.has(key) && key.length !== 1
+const isInternalProp = function (key, value) {
+  return value === undefined || INTERNAL_KEYS.has(key) || key.length === 1
 }
 
 const INTERNAL_KEYS = new Set(['help', 'version', '_', '$0'])

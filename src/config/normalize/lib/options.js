@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 
-import filterObj from 'filter-obj'
+import { excludeKeys } from 'filter-obj'
 import isPlainObj from 'is-plain-obj'
 
 import { DefinitionError } from './error.js'
@@ -44,7 +44,7 @@ const normalizeAll = function (all, ruleProps, sync) {
     )
   }
 
-  const allA = filterObj(all, isDefined)
+  const allA = excludeKeys(all, isUndefined)
   validateRuleProps({
     definitions: allA,
     ruleProps,
@@ -54,6 +54,6 @@ const normalizeAll = function (all, ruleProps, sync) {
   return allA
 }
 
-const isDefined = function (key, value) {
-  return value !== undefined
+const isUndefined = function (key, value) {
+  return value === undefined
 }

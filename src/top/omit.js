@@ -1,11 +1,10 @@
+import { includeKeys } from 'filter-obj'
 import omit from 'omit.js'
-
-import { pick } from '../utils/pick.js'
 
 // We only expose specific properties to reporters.
 // For example, we do not expose subId.
 export const pickTopProps = function (result) {
-  return pick(result, REPORTED_TOP_PROPS)
+  return includeKeys(result, REPORTED_TOP_PROPS)
 }
 
 const REPORTED_TOP_PROPS = [
@@ -20,7 +19,7 @@ const REPORTED_TOP_PROPS = [
 // Same as `pickToProps()` but for combinations
 export const pickCombProps = function (result) {
   const combinations = result.combinations.map((combination) =>
-    pick(combination, REPORTED_COMB_PROPS),
+    includeKeys(combination, REPORTED_COMB_PROPS),
   )
   return { ...result, combinations }
 }

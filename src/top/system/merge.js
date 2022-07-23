@@ -1,4 +1,4 @@
-import filterObj from 'filter-obj'
+import { includeKeys } from 'filter-obj'
 
 import { hasPrefix, removePrefix } from '../../combination/prefix.js'
 import { groupBy } from '../../utils/group.js'
@@ -25,7 +25,7 @@ export const mergeSystems = function ({ combinations }) {
 }
 
 const getCombinationSystem = function ({ dimensions, system, versions }) {
-  const dimensionsA = filterObj(dimensions, isSystemDimension)
+  const dimensionsA = includeKeys(dimensions, isSystemDimension)
   const dimensionsB = mapKeys(dimensionsA, removeSystemPrefix)
   const dimensionsC = mapValues(dimensionsB, useDimensionId)
   return { ...system, versions, dimensions: dimensionsC }
