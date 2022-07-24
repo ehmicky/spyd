@@ -1,18 +1,11 @@
-import { isDeepStrictEqual } from 'util'
+import isJsonValue from 'is-json-value'
 
 // Validate that a value is JSON-compatible
 export const validateJson = function (value) {
-  if (!isJson(value)) {
-    throw new Error(
-      'must only contain strings, numbers, booleans, nulls, arrays or plain objects.',
-    )
-  }
-}
+  const warnings = isJsonValue(value)
 
-const isJson = function (value) {
-  try {
-    return isDeepStrictEqual(JSON.parse(JSON.stringify(value)), value)
-  } catch {
-    return false
+  if (warnings.length !== 0) {
+    const [{ message }] = warnings
+    throw new Error(`must be valid JSON.\n${message}`)
   }
 }
