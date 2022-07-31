@@ -53,12 +53,12 @@ const COMMANDS = { run, show, remove, dev }
 
 // Error type-specific behavior
 const ERROR_PROPS = {
-  default: { exitCode: 5 },
-  PluginError: { exitCode: 4 },
-  UserCodeError: { exitCode: 3 },
-  UserError: { exitCode: 2, short: true },
-  LimitError: { exitCode: 1, short: true },
-  StopError: { exitCode: 0, short: true },
+  StopError: { exitCode: 1, short: true },
+  LimitError: { exitCode: 2, short: true },
+  UserError: { exitCode: 3, short: true },
+  UserCodeError: { exitCode: 4 },
+  PluginError: { exitCode: 5 },
+  default: { exitCode: 6 },
 }
 
 runCli()
