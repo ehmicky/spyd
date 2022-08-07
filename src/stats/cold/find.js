@@ -1,7 +1,7 @@
 // Compute the mean incrementally, measure by measure.
 // Then retrieve the `incrementalMean` that is the closest to the total `mean`,
 // within a specific range decided by `minIndex` and `maxIndex`.
-// This must be performend on unsorted `measures`.
+// This must be performed on unsorted `measures`.
 //  - Therefore, outliers are still present and must be removed using a `filter`
 //  - This also requires using two indexes: filtered and not.
 // `minIndex` is always <= `maxIndex`, i.e. a `closestMean` is always found.

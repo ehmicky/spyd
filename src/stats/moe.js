@@ -48,7 +48,7 @@ export const getAdjustedMoe = function (stdev, length, envDev) {
 //     - Distribution often have multiple modes
 //        - Due to:
 //           - Engine optimization
-//              - Ehis is because optimization is sometimes triggered at
+//              - This is because optimization is sometimes triggered at
 //                specific thresholds, as opposed to progressively
 //              - This means the earlier modes decrease in frequency as run
 //                continues
@@ -84,7 +84,7 @@ export const getMoe = function (stdev, length) {
 
 // Retrieve margin of error relative to the mean.
 // This is more useful than moe when comparing different combinations, or when
-// targetting a specific `precision`.
+// targeting a specific `precision`.
 // Confidence interval:
 //  - Unlike `moe`, `rmoe` can be impacted by the mean's inaccuracy (due to
 //    being estimated)

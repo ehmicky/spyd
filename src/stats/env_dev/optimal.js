@@ -29,11 +29,11 @@ import { SIGNIFICANCE_LEVEL } from './groups.js'
 //   - When using real data based on benchmarking tasks, `envDev` is due to
 //     environmental variation.
 //   - In that case, the "optimal" size tends to grow forever
-//      - once the number of groups is high enough it grows at the same pace as
+//      - Once the number of groups is high enough it grows at the same pace as
 //        `Math.sqrt(array.length)`
 //      - I.e. the resulting margin of error stabilizes and does not decrease
 //        anymore even with more `array` elements
-//      - ven when stable, it fluctuates up and down quite a lot over time,
+//      - Even when stable, it fluctuates up and down quite a lot over time,
 //        even though the mean over a long period of time remains stable
 //      - It also tends to change a lot each time the number of groups
 //        increments, i.e. every `CLUSTER_FACTOR ** n` elements

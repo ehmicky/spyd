@@ -3,7 +3,7 @@ import { getMean } from '../sum.js'
 import { findClosestMean, findHotIndex } from './find.js'
 
 // Tasks usually get faster as they repeat
-//  - This is due to optimization at the enginer or OS level.
+//  - This is due to optimization at the engine or OS level.
 // This means a benchmark might end too early, while the task is still getting
 // faster
 //  - This is less precise, since the next run might end at a different time.
@@ -79,7 +79,7 @@ const getCold = function (array, { mean, filter, length }) {
 //     - Therefore, at the end of the preview, the estimated duration goes
 //       abruptly to 0.
 //  - `coldLoopsTarget` is quite unstable
-// Those limitations are due to the impredictability of the task optimization.
+// Those limitations are due to the unpredictability of the task optimization.
 // However, this value is still useful because:
 //  - When cold, it indicates that the benchmark is not done yet
 //  - Most of the time, the `moeLoopsTarget` is larger than `coldLoopsTarget`

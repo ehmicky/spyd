@@ -22,8 +22,9 @@ export const computeGroups = function ({
 }
 
 // Initialize `groups`.
-// The final `clusterSize` is a performance optimization so that the actual last
-// group can assign `parentGroup.sum` without checking if it is `undefined`.
+// The final `clusterSize` 0 is a performance optimization so that the actual
+// last group can assign `parentGroup.sum` without checking if it is
+// `undefined`.
 const getInitGroups = function (clusterSizes, mean) {
   const clusterSizesA = [...clusterSizes, 0]
   return clusterSizesA.map((clusterSize) => getInitGroup(clusterSize, mean))

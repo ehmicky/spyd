@@ -56,7 +56,8 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 //    precision
 //  - Its amplitude is unbounded: it can be arbitrarily high
 //  - It continuously shifts
-// The environment also depends on some global state which can arbitrarly change
+// The environment also depends on some global state which can arbitrarily
+// change
 //  - For example: OS upgrades, different machines, etc.
 //  - This cannot be fixed with `envDev` but instead by:
 //     - Using different `system` configuration property to signify environment
