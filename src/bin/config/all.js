@@ -5,6 +5,7 @@ export const ALL_CONFIG = {
   config: {
     group: CONFIG,
     alias: 'c',
+    string: true,
     describe: `Configuration file location.
 
 This can be:
@@ -50,6 +51,7 @@ The syntax of those two features is similar but:
   cwd: {
     group: CONFIG,
     requiresArg: true,
+    string: true,
     describe: `Customize the current directory used:
   - In task files
   - When looking for the current git commit and branch

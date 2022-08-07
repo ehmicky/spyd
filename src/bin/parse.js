@@ -1,15 +1,18 @@
 import { excludeKeys } from 'filter-obj'
-import { map } from 'wild-wild-utils'
 
 import { mapValues } from '../utils/map.js'
 
-// We do not use yargs types as it conflicts with our own validation and
-// normalization logic, e.g.:
-//  - `number` parses invalid numbers as NaN
-//  - `boolean` parses strings as boolean
-//  - many configuration properties are objects or are polymorphic
-// One downside is that typing then relies on yargs' guess, which is fine:
-//  - string configuration properties cannot be "true", "false" or "1"
+// We do not use yargs types for:
+//  - `number`:
+//     - yargs parses invalid numbers as NaN, which results in a poorer error
+//       message
+//     - yargs automatic type guess is better there, since it keeps invalid
+//       numbers as strings
+//  - Properties with dynamic keys or polymorphic values
+// However, we try to use yargs types for:
+//  - `boolean`: this enables boolean flags to be followed by a command or
+//    another flag, while still allowing passing "true|false" to them
+//  - `string`: this enables values to be "true", "false" or "1"
 export const parseCliFlags = function (yargs) {
   const {
     _: [command = DEFAULT_COMMAND],
@@ -17,8 +20,7 @@ export const parseCliFlags = function (yargs) {
   } = yargs.parse()
   const configFlagsA = excludeKeys(configFlags, isInternalProp)
   const configFlagsB = mapValues(configFlagsA, handleEmptyArr)
-  const configFlagsC = transtypeCliFlags(configFlagsB)
-  return { command, configFlags: configFlagsC }
+  return { command, configFlags: configFlagsB }
 }
 
 const DEFAULT_COMMAND = 'run'
@@ -50,28 +52,3 @@ const ARRAY_PROPERTIES = new Set([
   'limit',
   'config',
 ])
-
-// Transtype CLI flags after parsing
-const transtypeCliFlags = function (configFlags) {
-  return map(configFlags, '**', transtypeBoolean, { leaves: true })
-}
-
-// Yargs interprets `--flag` and `--no-flag` with no arguments as booleans.
-// Additionally, it interprets `--flag=true|false` as booleans instead of
-// as strings when specifying the `boolean: true` option.
-// However, we minimize Yargs parsing and validation since it is imperfect and
-// does not well with:
-//  - Object with dynamic property names
-//  - Polymorphic types, such as "either boolean or array of booleans"
-// Therefore, we perform this transformation manually.
-const transtypeBoolean = function (value) {
-  if (value === 'true') {
-    return true
-  }
-
-  if (value === 'false') {
-    return false
-  }
-
-  return value
-}

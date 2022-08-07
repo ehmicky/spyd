@@ -4,8 +4,8 @@ import { TASKS, HISTORY } from './groups.js'
 export const COMBINATIONS_CONFIG = {
   tasks: {
     group: TASKS,
-    alias: 't',
     requiresArg: true,
+    string: true,
     describe: `Path to the tasks files.
 This should only specify their main files.
 
@@ -37,6 +37,7 @@ Default: "node"`,
   },
   inputs: {
     group: TASKS,
+    alias: 'i',
     describe: `Inputs passed to tasks.
 
 The key uses a dot notation and specifies the input identifier, such as

@@ -13,18 +13,21 @@ A higher level increases precision but makes the benchmark last longer.`,
   quiet: {
     group: REPORT,
     alias: 'q',
+    boolean: true,
     describe: `Preview the results and display a progress bar.
 Reporters are still used.
 Default: false if the output is an interactive terminal.`,
   },
   save: {
     group: HISTORY,
+    boolean: true,
     describe: `Save the results.
 Default: false`,
   },
   id: {
     group: HISTORY,
     requiresArg: true,
+    string: true,
     describe: `Result's identifier (UUID).
 If a result with the same identifier exists, it is merged.
 The value can be "last" to merge to the last result.
@@ -32,6 +35,7 @@ Default: random identifier`,
   },
   outliers: {
     group: TASKS,
+    boolean: true,
     describe: `Some measures can be extremely slower than others.
 Most of the times, those outliers are due to concurrent logic unrelated to
 your tasks such as garbage collection or OS background processes.

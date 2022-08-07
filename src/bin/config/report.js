@@ -29,6 +29,7 @@ Default: "debug"`,
     group: REPORT,
     alias: 'o',
     requiresArg: true,
+    string: true,
     describe: `Output the result to "stdout" or to a file path.
 
 Instead of overwriting the file, the result can be inserted between two lines
@@ -40,6 +41,7 @@ The default value depends on the reporter`,
   },
   colors: {
     group: REPORT,
+    boolean: true,
     describe: `Use colors in output.
 Default: true if the output is an interactive terminal.`,
   },
@@ -52,26 +54,31 @@ The id can be any identifier: task, runner, system, variation.`,
   },
   showTitles: {
     group: REPORT,
+    boolean: true,
     describe: `Show titles instead of identifiers.
 Default: false`,
   },
   showSystem: {
     group: REPORT,
+    boolean: true,
     describe: `Show hardware and software information.
 Default: true when the result has a "system", false otherwise`,
   },
   showMetadata: {
     group: REPORT,
+    boolean: true,
     describe: `Show metadata such as id, timestamp, commit/branch or CI build.
 Default: true for command "show" and "remove", false otherwise`,
   },
   showPrecision: {
     group: REPORT,
+    boolean: true,
     describe: `Show the results confidence interval.
 Default: false.`,
   },
   showDiff: {
     group: HISTORY,
+    boolean: true,
     describe: `Show the difference with previous results.
 Default: true if the output is an interactive terminal.`,
   },
