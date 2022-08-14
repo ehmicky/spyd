@@ -1,5 +1,4 @@
 import { normalizePluginConfig } from './config.js'
-import { PluginError } from './error.js'
 import { importPlugin } from './import.js'
 import { normalizeLocation } from './location_normalize.js'
 import { getLocationType } from './location_type.js'
@@ -37,11 +36,11 @@ export const getPluginInfo = async function (pluginConfig, opts) {
     })
     return { plugin: pluginA, path, config: pluginConfigB }
   } catch (error) {
-    throw handlePluginError(error, originalLocation)
+    throw handlePluginError(error, originalLocation, opts)
   }
 }
 
-const handlePluginError = function (error, originalLocation) {
+const handlePluginError = function (error, originalLocation, { PluginError }) {
   return error instanceof PluginError
     ? new Error(`Invalid plugin "${originalLocation}".`, { cause: error })
     : error

@@ -1,6 +1,5 @@
 import { normalizeObjectOrString } from '../../normalize/transform.js'
 
-import { ConsumerError } from './error.js'
 import { getExampleLocation } from './location_normalize.js'
 import { safeNormalizeConfig } from './normalize.js'
 
@@ -8,7 +7,7 @@ import { safeNormalizeConfig } from './normalize.js'
 // one if it uses the string shortcut syntax.
 export const normalizePluginConfigTop = async function (
   pluginConfig,
-  { name, cwd, pluginProp, builtins, prefix, keywords },
+  { name, cwd, pluginProp, builtins, prefix, keywords, ConsumerError },
 ) {
   const locationName =
     typeof pluginConfig === 'string' ? name : `${name}.${pluginProp}`

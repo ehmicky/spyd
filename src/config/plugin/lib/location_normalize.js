@@ -1,10 +1,9 @@
-import { ConsumerError } from './error.js'
 import { NORMALIZE_LOCATIONS } from './location_type.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Normalize `pluginConfig[pluginProp]`
 export const normalizeLocation = async function ({
-  opts: { cwd, builtins, modulePrefix, prefix, keywords },
+  opts: { cwd, builtins, modulePrefix, prefix, keywords, ConsumerError },
   originalLocation,
   locationName,
   locationType,
