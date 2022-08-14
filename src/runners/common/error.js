@@ -13,6 +13,14 @@ export const {
   TasksRunError,
   // Invalid runner config
   ConfigError,
-  // Top-level error handler
   errorHandler,
-} = modernErrors({ bugsUrl: packageJson.bugs.url })
+} = modernErrors(
+  [
+    'IpcSerializationError',
+    'TasksLoadError',
+    'TasksSyntaxError',
+    'TasksRunError',
+    'ConfigError',
+  ],
+  { bugsUrl: packageJson.bugs.url },
+)

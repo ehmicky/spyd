@@ -9,6 +9,7 @@ export const {
   PluginError,
   // Error from a plugin user
   ConsumerError,
-  // Top-level error handler
   errorHandler,
-} = modernErrors({ bugsUrl: packageJson.bugs.url })
+} = modernErrors(['UserError', 'PluginError', 'ConsumerError'], {
+  bugsUrl: packageJson.bugs.url,
+})

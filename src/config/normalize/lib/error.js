@@ -9,6 +9,7 @@ export const {
   DefinitionError,
   // Bug in a keyword|plugin
   KeywordError,
-  // Top-level error handler
   errorHandler,
-} = modernErrors({ bugsUrl: packageJson.bugs.url })
+} = modernErrors(['InputError', 'DefinitionError', 'KeywordError'], {
+  bugsUrl: packageJson.bugs.url,
+})

@@ -13,6 +13,8 @@ export const {
   UserCodeError,
   // Bug in a plugin (reporter|runner)
   PluginError,
-  // Top-level error handler
   errorHandler,
-} = modernErrors({ bugsUrl: packageJson.bugs.url })
+} = modernErrors(
+  ['StopError', 'LimitError', 'UserError', 'UserCodeError', 'PluginError'],
+  { bugsUrl: packageJson.bugs.url },
+)
