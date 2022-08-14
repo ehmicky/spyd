@@ -1,5 +1,6 @@
 import { argv } from 'process'
 
+import { serialize } from 'error-serializer'
 import got from 'got'
 
 import { IpcSerializationError, errorHandler } from './error.js'
@@ -38,8 +39,15 @@ const handlePayload = async function (payload, handlers, state) {
     const returnValue = await handlers[payload.event](state, payload)
     return safeSerializeBody(returnValue)
   } catch (error) {
-    return serializeBody({ error: serializeError(error) })
+    return serializeBody(getErrorPayload(error))
   }
+}
+
+// Retrieve payload to send to parent on errors
+const getErrorPayload = function (error) {
+  const errorA = errorHandler(error)
+  const errorObject = serialize(errorA)
+  return { error: errorObject }
 }
 
 // Serialize payload but also handle invalid JSON errors
@@ -53,10 +61,4 @@ const safeSerializeBody = function (returnValue = {}) {
 
 const serializeBody = function (returnValue) {
   return JSON.stringify(returnValue)
-}
-
-// Serialize an error to send to parent
-const serializeError = function (error) {
-  const { name, message, stack } = errorHandler(error)
-  return { name, message, stack }
 }

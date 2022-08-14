@@ -1,4 +1,6 @@
+import { parse } from 'error-serializer'
 import isPlainObj from 'is-plain-obj'
+import mapObj from 'map-obj'
 
 import { PluginError, UserError, UserCodeError } from '../../error/main.js'
 
@@ -7,24 +9,27 @@ import { PluginError, UserError, UserCodeError } from '../../error/main.js'
 // so we fail hard.
 // The task sends an `error` object in a format that is based on JavaScript but
 // should work for any programming language: `name`, `message`, `stack`.
-export const throwOnTaskError = function ({ error }) {
-  if (error === undefined) {
+export const throwOnTaskError = function ({ error: errorObject }) {
+  if (errorObject === undefined) {
     return
   }
 
-  const { name, message, stack } = isPlainObj(error)
-    ? error
-    : { message: error }
-  const errorA = applyErrorProps(name, message)
-  setErrorStack(errorA, { name, message, stack })
-  throw errorA
+  const error = parse(errorObject, { types: ERROR_TYPES })
+  throw addPrefix(error, errorObject)
 }
 
-const applyErrorProps = function (name, message) {
-  const nameA =
-    typeof name === 'string' && name in ERROR_PROPS ? name : DEFAULT_ERROR_NAME
-  const { ErrorType, prefix } = ERROR_PROPS[nameA]
-  return new ErrorType(`${prefix}: ${message}`)
+const addPrefix = function (error, errorObject) {
+  const name = getName(errorObject)
+  const { prefix } = ERROR_PROPS[name]
+  return new Error(prefix, { cause: error })
+}
+
+const getName = function (errorObject) {
+  return isPlainObj(errorObject) &&
+    typeof errorObject.name === 'string' &&
+    errorObject.name in ERROR_PROPS
+    ? errorObject.name
+    : DEFAULT_ERROR_NAME
 }
 
 // The `name` is among a series of possible ones, which allows abstracting:
@@ -33,54 +38,34 @@ const applyErrorProps = function (name, message) {
 const ERROR_PROPS = {
   InternalError: {
     ErrorType: PluginError,
-    prefix: 'Runner internal bug',
+    prefix: 'Runner internal bug.',
   },
   IpcSerializationError: {
     ErrorType: PluginError,
-    prefix: 'Serialization error',
+    prefix: 'Serialization error.',
   },
   TasksLoadError: {
     ErrorType: UserCodeError,
-    prefix: 'Could not load the tasks file',
+    prefix: 'Could not load the tasks file.',
   },
   TasksSyntaxError: {
     ErrorType: UserCodeError,
-    prefix: 'Syntax error in the tasks file',
+    prefix: 'Syntax error in the tasks file.',
   },
   TasksRunError: {
     ErrorType: UserCodeError,
-    prefix: 'When running the task',
+    prefix: 'Could not run the task.',
   },
   ConfigError: {
     ErrorType: UserError,
-    prefix: 'Runner configuration error',
+    prefix: 'Runner configuration error.',
   },
 }
 
 const DEFAULT_ERROR_NAME = 'InternalError'
 
-// Keep the stack trace from the runner's process, but update it with the new
-// `name` and `message`
-const setErrorStack = function (error, { name, message, stack }) {
-  if (typeof stack !== 'string' || stack.trim() === '') {
-    return
-  }
-
-  const oldStackStart = getStackHeader({ name, message })
-  const stackA = stack.startsWith(oldStackStart)
-    ? stack.slice(oldStackStart.length)
-    : stack
-  const newStackStart = getStackHeader(error)
-  const stackB = `${newStackStart}${stackA}`
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'stack', {
-    value: stackB,
-    enumerable: false,
-    configurable: true,
-    writable: true,
-  })
+const getErrorType = function (name, { ErrorType }) {
+  return [name, ErrorType]
 }
 
-const getStackHeader = function ({ name, message }) {
-  return `${name}: ${message}\n`
-}
+const ERROR_TYPES = mapObj(ERROR_PROPS, getErrorType)
