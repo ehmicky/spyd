@@ -63,7 +63,7 @@
     "modern-errors": "^1.4.0",
     "moize": "^6.1.1",
     "normalize-exception": "^1.5.0",
-    "nvexeca": "^8.1.0",
+    "nvexeca": "^8.2.0",
     "os-name": "^5.0.1",
     "p-event": "^5.0.1",
     "p-locate": "^6.0.0",
