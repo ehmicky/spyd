@@ -36,7 +36,7 @@ const getName = function (errorObject) {
 //  - Whether the error should be reported as caused by the user or the plugin
 //  - Prefixing the error message
 const ERROR_PROPS = {
-  InternalError: {
+  UnknownError: {
     ErrorType: PluginError,
     prefix: 'Runner internal bug.',
   },
@@ -62,7 +62,7 @@ const ERROR_PROPS = {
   },
 }
 
-const DEFAULT_ERROR_NAME = 'InternalError'
+const DEFAULT_ERROR_NAME = 'UnknownError'
 
 const getErrorType = function (name, { ErrorType }) {
   return [name, ErrorType]
