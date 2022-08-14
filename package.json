@@ -60,7 +60,7 @@
     "json-ptr": "^3.1.0",
     "junk": "^4.0.0",
     "map-obj": "^5.0.2",
-    "modern-errors": "^1.5.0",
+    "modern-errors": "^2.0.0",
     "moize": "^6.1.1",
     "normalize-exception": "^1.8.0",
     "nvexeca": "^8.2.0",
