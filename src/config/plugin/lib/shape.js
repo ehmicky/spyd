@@ -89,6 +89,13 @@ const COMMON_SHAPE_RULES = new Set([
     },
   },
   {
+    name: 'bugsUrl',
+    schema: { type: 'string', minLength: 1, format: 'uri' },
+    example(value, { inputs: { id } }) {
+      return `https://github.com/my-user/${id}/issues`
+    },
+  },
+  {
     name: 'config.*.name',
     transform(name, { context: { sharedPropNames, UserError } }) {
       const nameA = transformConfigPropName(name, UserError)
