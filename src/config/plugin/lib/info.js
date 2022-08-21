@@ -23,24 +23,44 @@ export const getPluginInfo = async function (pluginConfig, opts) {
       opts,
     })
     const { plugin, path } = await importPlugin(location, locationType, opts)
-    const pluginA = await normalizeCommonShape({
-      plugin,
-      locationType,
-      originalLocation,
-      opts,
-    })
-    const { config: pluginConfigRules, ...pluginB } =
-      await normalizeCustomShape(pluginA, opts)
-    const pluginConfigB = await normalizePluginConfig({
-      pluginConfig: pluginConfigA,
-      plugin: pluginB,
-      pluginConfigRules,
-      opts,
-    })
-    return { plugin: pluginB, path, config: pluginConfigB }
+    const { plugin: pluginA, config: pluginConfigB } =
+      await normalizePluginInfo({
+        pluginConfig: pluginConfigA,
+        plugin,
+        locationType,
+        originalLocation,
+        opts,
+      })
+    return { plugin: pluginA, config: pluginConfigB, path }
   } catch (error) {
     throw handlePluginError(error, originalLocation)
   }
+}
+
+const normalizePluginInfo = async function ({
+  pluginConfig,
+  plugin,
+  locationType,
+  originalLocation,
+  opts,
+}) {
+  const pluginA = await normalizeCommonShape({
+    plugin,
+    locationType,
+    originalLocation,
+    opts,
+  })
+  const { config: pluginConfigRules, ...pluginB } = await normalizeCustomShape(
+    pluginA,
+    opts,
+  )
+  const pluginConfigA = await normalizePluginConfig({
+    pluginConfig,
+    plugin: pluginB,
+    pluginConfigRules,
+    opts,
+  })
+  return { plugin: pluginB, config: pluginConfigA }
 }
 
 const handlePluginError = function (error, originalLocation) {
