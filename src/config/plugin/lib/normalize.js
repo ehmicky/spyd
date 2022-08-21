@@ -1,6 +1,6 @@
 import { normalizeInputs } from '../../normalize/lib/main.js'
 
-// Call `normalizeConfig` while assigning the right error types
+// Call `normalizeConfig` while assigning the right error classes
 export const safeNormalizeConfig = async function (config, rules, opts) {
   try {
     const { inputs } = await normalizeInputs(config, rules, opts)

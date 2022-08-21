@@ -14,7 +14,7 @@ export const throwOnTaskError = function ({ error: errorObject }) {
     return
   }
 
-  const error = parse(errorObject, { types: ERROR_TYPES })
+  const error = parse(errorObject, { classes: ERROR_CLASSES })
   throw addPrefix(error, errorObject)
 }
 
@@ -68,4 +68,4 @@ const getErrorType = function (name, { ErrorType }) {
   return [name, ErrorType]
 }
 
-const ERROR_TYPES = mapObj(ERROR_PROPS, getErrorType)
+const ERROR_CLASSES = mapObj(ERROR_PROPS, getErrorType)
