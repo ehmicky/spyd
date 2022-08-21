@@ -33,7 +33,7 @@ export const getPluginInfo = async function (pluginConfig, opts) {
       })
     return { plugin: pluginA, config: pluginConfigB, path }
   } catch (error) {
-    throw handlePluginError(error, originalLocation)
+    throw addPluginErrorLocation(error, originalLocation)
   }
 }
 
@@ -44,26 +44,37 @@ const normalizePluginInfo = async function ({
   originalLocation,
   opts,
 }) {
-  const pluginA = await normalizeCommonShape({
-    plugin,
-    locationType,
-    originalLocation,
-    opts,
-  })
-  const { config: pluginConfigRules, ...pluginB } = await normalizeCustomShape(
-    pluginA,
-    opts,
-  )
-  const pluginConfigA = await normalizePluginConfig({
-    pluginConfig,
-    plugin: pluginB,
-    pluginConfigRules,
-    opts,
-  })
-  return { plugin: pluginB, config: pluginConfigA }
+  try {
+    const pluginA = await normalizeCommonShape({
+      plugin,
+      locationType,
+      originalLocation,
+      opts,
+    })
+    const { config: pluginConfigRules, ...pluginB } =
+      await normalizeCustomShape(pluginA, opts)
+    const pluginConfigA = await normalizePluginConfig({
+      pluginConfig,
+      plugin: pluginB,
+      pluginConfigRules,
+      opts,
+    })
+    return { plugin: pluginB, config: pluginConfigA }
+  } catch (error) {
+    throw addPluginErrorBugsUrl(error, plugin)
+  }
 }
 
-const handlePluginError = function (error, originalLocation) {
+const addPluginErrorBugsUrl = function (error, { bugsUrl }) {
+  return error instanceof PluginError &&
+    typeof bugsUrl === 'string' &&
+    bugsUrl !== ''
+    ? // eslint-disable-next-line unicorn/error-message
+      new Error('', { cause: error, bugsUrl })
+    : error
+}
+
+const addPluginErrorLocation = function (error, originalLocation) {
   return error instanceof PluginError
     ? new Error(`Invalid plugin "${originalLocation}".`, { cause: error })
     : error
