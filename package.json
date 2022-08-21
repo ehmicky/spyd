@@ -49,7 +49,7 @@
     "find-up": "^6.3.0",
     "get-stream": "^6.0.0",
     "got": "^12.3.1",
-    "handle-cli-error": "^1.1.0",
+    "handle-cli-error": "^1.1.1",
     "indent-string": "^5.0.0",
     "inquirer": "^9.0.2",
     "is-interactive": "^2.0.0",
