@@ -62,7 +62,7 @@
     "map-obj": "^5.0.2",
     "modern-errors": "^3.1.1",
     "moize": "^6.1.1",
-    "normalize-exception": "^1.9.0",
+    "normalize-exception": "^2.0.0",
     "nvexeca": "^8.2.0",
     "os-name": "^5.0.1",
     "p-event": "^5.0.1",
