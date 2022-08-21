@@ -4,14 +4,15 @@ import { PluginError, UserError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 import { normalizeRuleName, validateSharedProp } from './shared.js'
 
-// Validate a plugin has the correct shape and normalize it
-export const normalizeShape = async function ({
+// Validate a plugin has the correct shape and normalize it, using builtin
+// definition.
+export const normalizeCommonShape = async function ({
   plugin,
   locationType,
   originalLocation,
-  opts: { shape, sharedPropNames, context, keywords },
+  opts: { sharedPropNames, keywords },
 }) {
-  const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
+  return await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
     all: {
       prefix: PLUGIN_PREFIX,
       context: { sharedPropNames, locationType, originalLocation },
@@ -20,21 +21,26 @@ export const normalizeShape = async function ({
     InputErrorType: PluginError,
     DefinitionErrorType: Error,
   })
+}
 
-  if (shape === undefined) {
-    return pluginA
-  }
-
-  return await safeNormalizeConfig(
-    pluginA,
-    new Set([getDummyRules(COMMON_SHAPE_RULES), shape]),
-    {
-      all: { prefix: PLUGIN_PREFIX, context },
-      keywords,
-      InputErrorType: PluginError,
-      DefinitionErrorType: UserError,
-    },
-  )
+// Validate a plugin has the correct shape and normalize it, using `shape`
+// option.
+export const normalizeCustomShape = async function (
+  plugin,
+  { shape, context, keywords },
+) {
+  return shape === undefined
+    ? plugin
+    : await safeNormalizeConfig(
+        plugin,
+        new Set([getDummyRules(COMMON_SHAPE_RULES), shape]),
+        {
+          all: { prefix: PLUGIN_PREFIX, context },
+          keywords,
+          InputErrorType: PluginError,
+          DefinitionErrorType: UserError,
+        },
+      )
 }
 
 const PLUGIN_PREFIX = 'Plugin property'

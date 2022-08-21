@@ -3,7 +3,7 @@ import { PluginError } from './error.js'
 import { importPlugin } from './import.js'
 import { normalizeLocation } from './location_normalize.js'
 import { getLocationType } from './location_type.js'
-import { normalizeShape } from './shape.js'
+import { normalizeCommonShape, normalizeCustomShape } from './shape.js'
 import { normalizePluginConfigTop } from './top.js'
 
 // Get each `pluginInfo`, i.e. normalized `plugin` + `pluginConfig`
@@ -23,19 +23,21 @@ export const getPluginInfo = async function (pluginConfig, opts) {
       opts,
     })
     const { plugin, path } = await importPlugin(location, locationType, opts)
-    const { config: pluginConfigRules, ...pluginA } = await normalizeShape({
+    const pluginA = await normalizeCommonShape({
       plugin,
       locationType,
       originalLocation,
       opts,
     })
+    const { config: pluginConfigRules, ...pluginB } =
+      await normalizeCustomShape(pluginA, opts)
     const pluginConfigB = await normalizePluginConfig({
       pluginConfig: pluginConfigA,
-      plugin: pluginA,
+      plugin: pluginB,
       pluginConfigRules,
       opts,
     })
-    return { plugin: pluginA, path, config: pluginConfigB }
+    return { plugin: pluginB, path, config: pluginConfigB }
   } catch (error) {
     throw handlePluginError(error, originalLocation)
   }
