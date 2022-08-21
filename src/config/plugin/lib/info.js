@@ -1,5 +1,5 @@
 import { normalizePluginConfig } from './config.js'
-import { PluginError } from './error.js'
+import { PluginError, addErrorBugsUrl } from './error.js'
 import { importPlugin } from './import.js'
 import { normalizeLocation } from './location_normalize.js'
 import { getLocationType } from './location_type.js'
@@ -66,12 +66,7 @@ const normalizePluginInfo = async function ({
 }
 
 const addPluginErrorBugsUrl = function (error, { bugsUrl }) {
-  return error instanceof PluginError &&
-    typeof bugsUrl === 'string' &&
-    bugsUrl !== ''
-    ? // eslint-disable-next-line unicorn/error-message
-      new Error('', { cause: error, bugsUrl })
-    : error
+  return error instanceof PluginError ? addErrorBugsUrl(error, bugsUrl) : error
 }
 
 const addPluginErrorLocation = function (error, originalLocation) {

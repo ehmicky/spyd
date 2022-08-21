@@ -13,3 +13,12 @@ export const {
 } = modernErrors(['UserError', 'PluginError', 'ConsumerError'], {
   bugsUrl: packageJson.bugs.url,
 })
+
+// When `options.bugsUrl` is defined, user errors report it.
+// When `plugin.bugsUrl` is defined, plugin errors report it.
+export const addErrorBugsUrl = function (error, bugsUrl) {
+  return typeof bugsUrl === 'string' && bugsUrl !== ''
+    ? // eslint-disable-next-line unicorn/error-message
+      new Error('', { cause: error, bugsUrl })
+    : error
+}

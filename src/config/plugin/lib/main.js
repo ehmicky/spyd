@@ -1,5 +1,5 @@
 import { validateDuplicatePlugins } from './duplicates.js'
-import { UserError, errorHandler } from './error.js'
+import { UserError, errorHandler, addErrorBugsUrl } from './error.js'
 import { getPluginInfo } from './info.js'
 import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 
@@ -30,7 +30,7 @@ export const getPlugins = async function (pluginConfigs, opts) {
     validateDuplicatePlugins(pluginInfos, optsA)
     return pluginInfos
   } catch (error) {
-    throw errorHandler(error)
+    throw handleError(error, opts)
   }
 }
 
@@ -55,7 +55,7 @@ export const getPlugin = async function (pluginConfig, opts) {
     const plugin = await getPluginInfo(pluginConfig, optsA)
     return plugin
   } catch (error) {
-    throw errorHandler(error)
+    throw handleError(error, opts)
   }
 }
 
@@ -63,4 +63,10 @@ const validateDefined = function (value, { name }) {
   if (value === undefined) {
     throw new UserError(`Configuration property "${name}" must be defined.`)
   }
+}
+
+const handleError = function (error, { bugsUrl }) {
+  const errorA =
+    error instanceof UserError ? addErrorBugsUrl(error, bugsUrl) : error
+  return errorHandler(errorA)
 }
