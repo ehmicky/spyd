@@ -2,6 +2,8 @@ import { pathToFileURL } from 'url'
 
 import isPlainObj from 'is-plain-obj'
 
+import { PluginError } from './error.js'
+
 // Builtin modules are lazy loaded for performance reasons.
 // We shallow clone it the return value to ensure plugins of same location and
 // type but different configs do not share the same top-level properties.
@@ -9,14 +11,10 @@ import isPlainObj from 'is-plain-obj'
 export const importPlugin = async function (
   location,
   locationType,
-  { name, builtins, PluginError },
+  { name, builtins },
 ) {
   try {
-    const { plugin, path } = await IMPORTERS[locationType]({
-      location,
-      builtins,
-      PluginError,
-    })
+    const { plugin, path } = await IMPORTERS[locationType](location, builtins)
     const pluginA = isPlainObj(plugin) ? { ...plugin } : plugin
     return { plugin: pluginA, path }
   } catch (cause) {
@@ -24,7 +22,7 @@ export const importPlugin = async function (
   }
 }
 
-const importInline = function ({ location }) {
+const importInline = function (location) {
   return { plugin: location }
 }
 
@@ -32,7 +30,7 @@ const importInline = function ({ location }) {
 // the plugin object as is.
 // However, they are likely to call `import()`, therefore we handle a `default`
 // import too.
-const importBuiltin = async function ({ location, builtins }) {
+const importBuiltin = async function (location, builtins) {
   const builtinPlugin = await builtins[location]()
   const plugin = isPlainObj(builtinPlugin.default)
     ? builtinPlugin.default
@@ -44,7 +42,7 @@ const importBuiltin = async function ({ location, builtins }) {
 //  - It allows plugin to make other exports
 //  - It does not require wildcard imports when importing the plugin
 //    programmatically
-const importPath = async function ({ location, PluginError }) {
+const importPath = async function (location) {
   // eslint-disable-next-line import/no-dynamic-require
   const { default: plugin } = await import(pathToFileURL(location))
 

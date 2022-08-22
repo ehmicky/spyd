@@ -3,6 +3,7 @@ import { has } from 'wild-wild-path'
 import { deepMergePair } from '../../merge.js'
 import { getDummyRules } from '../../normalize/dummy.js'
 
+import { UserError, PluginError, ConsumerError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Plugins use an array of objects for both selection and configuration.
@@ -73,15 +74,7 @@ const normalizeSharedConfig = async function ({
   pluginConfigRules = [],
   plugin,
   parent,
-  opts: {
-    context,
-    cwd,
-    shared = [],
-    prefix,
-    keywords,
-    ConsumerError,
-    UserError,
-  },
+  opts: { context, cwd, shared = [], prefix, keywords },
 }) {
   const rules = new Set([getDummyRules(pluginConfigRules), shared])
   return await safeNormalizeConfig(pluginConfig, rules, {
@@ -96,15 +89,7 @@ const normalizeSpecificConfig = async function ({
   pluginConfig,
   pluginConfigRules = [],
   parent,
-  opts: {
-    context,
-    cwd,
-    shared = [],
-    prefix,
-    keywords,
-    ConsumerError,
-    PluginError,
-  },
+  opts: { context, cwd, shared = [], prefix, keywords },
 }) {
   const rules = new Set([getDummyRules(shared), pluginConfigRules])
   return await safeNormalizeConfig(pluginConfig, rules, {

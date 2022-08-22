@@ -8,35 +8,37 @@ import {
 } from 'wild-wild-parser'
 import { pick } from 'wild-wild-utils'
 
+import { UserError } from './error.js'
+
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
-export const getSharedConfig = function (sharedConfig, shared, UserError) {
-  const sharedPropNames = getSharedPropNames(UserError, shared)
+export const getSharedConfig = function (sharedConfig, shared) {
+  const sharedPropNames = getSharedPropNames(shared)
   const sharedConfigA = pick(sharedConfig, sharedPropNames)
   return { sharedConfig: sharedConfigA, sharedPropNames }
 }
 
-const getSharedPropNames = function (UserError, shared = []) {
-  const sharedPropNames = getRuleNames(shared, [], UserError)
+const getSharedPropNames = function (shared = []) {
+  const sharedPropNames = getRuleNames(shared, [])
   const sharedPropNamesA = [
     ...new Set(sharedPropNames.map(serializeQuery)),
   ].flatMap(parseQuery)
   return sharedPropNamesA.filter(isPropRuleName)
 }
 
-const getRuleNames = function (rulesOrRule, indices, UserError) {
+const getRuleNames = function (rulesOrRule, indices) {
   const rulesOrRuleA =
     rulesOrRule instanceof Set ? [...rulesOrRule] : rulesOrRule
 
   return Array.isArray(rulesOrRuleA)
     ? rulesOrRuleA.flatMap((rule, index) =>
-        getRuleNames(rule, [...indices, index], UserError),
+        getRuleNames(rule, [...indices, index]),
       )
-    : getRuleName(rulesOrRuleA, indices, UserError)
+    : getRuleName(rulesOrRuleA, indices)
 }
 
 // Parse and validate all `shared.*.name`
-const getRuleName = function ({ name }, indices, UserError) {
+const getRuleName = function ({ name }, indices) {
   try {
     return normalizeQuery(name)
   } catch (error) {
@@ -46,15 +48,13 @@ const getRuleName = function ({ name }, indices, UserError) {
 }
 
 // Normalize plugin-specific configuration property `name`
-export const normalizeRuleName = function (name, UserError) {
+export const normalizeRuleName = function (name) {
   const queryArrays = normalizeQuery(name)
-  queryArrays.forEach((queryArray) => {
-    validateRuleName(queryArray, UserError)
-  })
+  queryArrays.forEach(validateRuleName)
   return queryArrays
 }
 
-const validateRuleName = function (queryArray, UserError) {
+const validateRuleName = function (queryArray) {
   if (!isPropRuleName(queryArray)) {
     throw new UserError(
       `the first token must be a property name instead of: ${inspect(

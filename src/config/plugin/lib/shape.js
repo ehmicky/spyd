@@ -1,5 +1,6 @@
 import { getDummyRules } from '../../normalize/dummy.js'
 
+import { PluginError, UserError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 import { normalizeRuleName, validateSharedProp } from './shared.js'
 
@@ -8,12 +9,12 @@ export const normalizeShape = async function ({
   plugin,
   locationType,
   originalLocation,
-  opts: { shape, sharedPropNames, context, keywords, PluginError, UserError },
+  opts: { shape, sharedPropNames, context, keywords },
 }) {
   const pluginA = await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
     all: {
       prefix: PLUGIN_PREFIX,
-      context: { sharedPropNames, locationType, originalLocation, UserError },
+      context: { sharedPropNames, locationType, originalLocation },
     },
     keywords,
     InputErrorType: PluginError,
@@ -51,9 +52,9 @@ const PLUGIN_ID_REGEXP = /^[a-z]?[a-z\d]*$/u
 // Those types must have the same `plugin.id` as the user-specified `location`
 const MODULE_LOCATION_TYPES = new Set(['builtin', 'module'])
 
-const transformConfigPropName = function (name, UserError) {
+const transformConfigPropName = function (name) {
   try {
-    return normalizeRuleName(name, UserError)
+    return normalizeRuleName(name)
   } catch (error) {
     throw new Error(`must be valid: ${error.message}`)
   }
@@ -97,8 +98,8 @@ const COMMON_SHAPE_RULES = new Set([
   },
   {
     name: 'config.*.name',
-    transform(name, { context: { sharedPropNames, UserError } }) {
-      const nameA = transformConfigPropName(name, UserError)
+    transform(name, { context: { sharedPropNames } }) {
+      const nameA = transformConfigPropName(name)
       validateSharedProp(nameA, sharedPropNames)
       return nameA
     },

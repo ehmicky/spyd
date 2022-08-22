@@ -1,3 +1,5 @@
+import { ConsumerError } from './error.js'
+
 // Specifying the same plugin id twice:
 //  - Might be a user error
 //  - Might not work with the user's logic if it does not handle duplicate
@@ -10,7 +12,7 @@
 //  - The same module or file being referenced in different ways
 export const validateDuplicatePlugins = function (
   pluginInfos,
-  { name, duplicates, ConsumerError },
+  { name, duplicates },
 ) {
   if (duplicates) {
     return
