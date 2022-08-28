@@ -18,7 +18,6 @@ export const {
 // When `plugin.bugsUrl` is defined, plugin errors report it.
 export const addErrorBugsUrl = function (error, bugsUrl) {
   return typeof bugsUrl === 'string' && bugsUrl !== ''
-    ? // eslint-disable-next-line unicorn/error-message
-      new Error('', { cause: error, bugsUrl })
+    ? new Error('', { cause: error, bugsUrl })
     : error
 }
