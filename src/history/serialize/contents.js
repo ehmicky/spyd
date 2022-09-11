@@ -18,7 +18,7 @@ export const serializeRawResult = function (rawResult) {
   return `${rawResultStrA}\n`
 }
 
-// Some arrays like `histogram` and `quantiles` are big. `JSON.serialize()`
+// Some arrays like `histogram` and `quantiles` are big. `JSON.stringify()`
 // put each item in a separate line. We put those in a single line instead.
 //  - This makes it easier to view the file
 //  - This creates simpler git diffs

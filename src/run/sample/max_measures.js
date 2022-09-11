@@ -5,7 +5,7 @@
 // We also make sure `measures` is garbage-collectable between each combination.
 // We could use a more elaborate logic to allow for the benchmark to continue
 // even after reaching that threshold:
-//  - For example, we could persist measures on the filesysystem, or aggregate
+//  - For example, we could persist measures on the filesystem, or aggregate
 //    them in-memory
 //  - However, needing more measures is unlikely to be needed:
 //     - With a single step and max `precision`, the number of loops is still
@@ -14,7 +14,7 @@
 //        - 4e6 with `rstdev` 100%
 //  - This assumption could be wrong in the following unlikely cases:
 //     - A combination with hundreds of steps
-//     - A `rstdev` > 100%, which is theoritically possible if the task duration
+//     - A `rstdev` > 100%, which is theoretically possible if the task duration
 //       is exponential based on a random factor
 export const hasMaxMeasures = function (measures) {
   return getMaxMeasuresLeft(measures) <= 0
