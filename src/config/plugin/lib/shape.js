@@ -98,7 +98,7 @@ const COMMON_SHAPE_RULES = new Set([
   {
     name: 'bugsUrl',
     schema: { type: 'string', minLength: 1, format: 'uri' },
-    example(value, { inputs: { id } }) {
+    example({ inputs: { id } }) {
       return `https://github.com/my-user/${id}/issues`
     },
   },
