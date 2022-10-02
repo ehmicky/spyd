@@ -1,7 +1,5 @@
 import { inspect } from 'util'
 
-import moize from 'moize'
-
 import { DefinitionError } from '../../error.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 
@@ -32,11 +30,7 @@ const addCustomKeywords = function (keywords) {
 
 const normalizeKeyword = function (keyword, sync) {
   const keywordA = normalizeAsyncMethods(keyword, sync)
-  return {
-    ...DEFAULT_VALUES,
-    ...keywordA,
-    normalize: memoizeNormalize(keywordA),
-  }
+  return { ...DEFAULT_VALUES, ...keywordA }
 }
 
 const DEFAULT_VALUES = {
@@ -44,14 +38,3 @@ const DEFAULT_VALUES = {
   undefinedInput: false,
   undefinedDefinition: false,
 }
-
-// `keyword.normalize()` must be a pure function, because it is memoized for
-// performance reasons.
-// Due to `isPromise`, async methods should always return promises.
-const memoizeNormalize = function ({ normalize, normalizeSync }) {
-  return normalize === undefined
-    ? normalize
-    : moize(normalize, { ...MOIZE_OPTS, isPromise: !normalizeSync })
-}
-
-const MOIZE_OPTS = { isSerialized: true, maxSize: 1 }
