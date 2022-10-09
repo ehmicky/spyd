@@ -53,12 +53,27 @@ const COMMANDS = { run, show, remove, dev }
 
 // Error class-specific behavior
 const ERROR_CLASSES = {
-  StopError: { exitCode: 1, short: true },
-  LimitError: { exitCode: 2, short: true },
-  UserError: { exitCode: 3, short: true },
-  UserCodeError: { exitCode: 4 },
-  PluginError: { exitCode: 5 },
-  default: { exitCode: 6 },
+  default: { exitCode: 1, header: 'red bold', icon: 'cross' },
+  PluginError: { exitCode: 2, header: 'magenta bold', icon: 'star' },
+  StopError: {
+    exitCode: 3,
+    header: 'gray bold',
+    icon: 'hamburger',
+    stack: false,
+  },
+  UserCodeError: { exitCode: 4, header: 'yellow bold', icon: 'pointer' },
+  UserError: {
+    exitCode: 5,
+    header: 'yellow bold',
+    icon: 'warning',
+    stack: false,
+  },
+  LimitError: {
+    exitCode: 6,
+    header: 'cyan bold',
+    icon: 'triangleDown',
+    stack: false,
+  },
 }
 
 runCli()
