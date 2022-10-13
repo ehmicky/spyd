@@ -15,7 +15,7 @@
   },
   "description": "Complete yet simple benchmark runner",
   "keywords": [],
-  "license": "Apache-2.0",
+  "license": "MIT",
   "homepage": "https://www.github.com/ehmicky/spyd",
   "repository": "ehmicky/spyd",
   "bugs": {
