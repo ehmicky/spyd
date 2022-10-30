@@ -1,6 +1,6 @@
 import { excludeKeys } from 'filter-obj'
 
-import { PluginError } from '../../error/main.js'
+import { getReporterPluginError } from '../error.js'
 import { FORMATS } from '../formats/list.js'
 
 // Retrieve reporter's contents by calling all `reporter.report()` then
@@ -25,7 +25,6 @@ const callReportFunc = async function ({
     startData,
     config: reporterConfig,
     config: { format, output, colors },
-    bugs,
   },
 }) {
   const reporterSpecificConfig = excludeKeys(
@@ -41,7 +40,9 @@ const callReportFunc = async function ({
     ])
     return { content, result, format, footerString, output, colors }
   } catch (cause) {
-    throw new PluginError(`Could not call reporter "${id}".`, { cause, bugs })
+    throw getReporterPluginError(reporter, `Could not call reporter "${id}".`, {
+      cause,
+    })
   }
 }
 

@@ -1,4 +1,4 @@
-import { PluginError } from '../error/main.js'
+import { getReporterPluginError } from './error.js'
 
 // Call all `reporter.start()`
 export const startReporters = async function (config) {
@@ -7,7 +7,7 @@ export const startReporters = async function (config) {
 }
 
 const startReporter = async function (reporter) {
-  const { start, id, bugs } = reporter
+  const { start, id } = reporter
 
   if (start === undefined) {
     return reporter
@@ -17,7 +17,11 @@ const startReporter = async function (reporter) {
     const startData = await start()
     return { ...reporter, startData }
   } catch (cause) {
-    throw new PluginError(`Could not start reporter "${id}".`, { cause, bugs })
+    throw getReporterPluginError(
+      reporter,
+      `Could not start reporter "${id}".`,
+      { cause },
+    )
   }
 }
 
@@ -26,7 +30,9 @@ export const endReporters = async function ({ reporters }) {
   await Promise.all(reporters.map(endReporter))
 }
 
-const endReporter = async function ({ end, startData, id, bugs }) {
+const endReporter = async function (reporter) {
+  const { end, startData, id } = reporter
+
   if (end === undefined) {
     return
   }
@@ -34,6 +40,8 @@ const endReporter = async function ({ end, startData, id, bugs }) {
   try {
     await end(startData)
   } catch (cause) {
-    throw new PluginError(`Could not end reporter "${id}".`, { cause, bugs })
+    throw getReporterPluginError(reporter, `Could not end reporter "${id}".`, {
+      cause,
+    })
   }
 }

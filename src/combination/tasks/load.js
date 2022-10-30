@@ -4,7 +4,7 @@ import { computeRunnerVersions } from '../../top/system/versions/compute.js'
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`
 export const loadRunner = async function (
-  { id, config, launch },
+  { id, config, launch, bugs },
   cwd,
   commonVersions,
 ) {
@@ -20,7 +20,7 @@ export const loadRunner = async function (
     spawnOptions,
     cwd,
   })
-  return { id, spawn, spawnOptions, versions: versionsA, config }
+  return { id, spawn, spawnOptions, versions: versionsA, config, bugs }
 }
 
 // Fire `runner.launch()`.

@@ -15,11 +15,3 @@ export const PluginError = AnyError.subclass('PluginError')
 
 // Error from a plugin user
 export const ConsumerError = AnyError.subclass('ConsumerError')
-
-// When `options.bugs` is defined, user errors report it.
-// When `plugin.bugs` is defined, plugin errors report it.
-export const addErrorBugs = function (error, bugsOpt) {
-  return typeof bugsOpt === 'string' && bugsOpt !== ''
-    ? new AnyError('', { cause: error, bugs: bugsOpt })
-    : error
-}

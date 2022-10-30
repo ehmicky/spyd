@@ -1,7 +1,7 @@
 import { getCombinationPrefix } from '../../combination/ids/name.js'
+import { handlePluginError } from '../../config/plugin/error.js'
 import { useConfigSelectors } from '../../config/select/use.js'
-import { AnyError } from '../../error/main.js'
-import { handleRunnerError } from '../../runners/plugin/error.js'
+import { AnyError, PluginError } from '../../error/main.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -35,7 +35,12 @@ export const measureCombination = async function ({ index, config, ...args }) {
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
   } catch (error) {
-    throw handleRunnerError(error, combination.dimensions.runner)
+    throw handlePluginError({
+      error,
+      bugs: combination.dimensions.runner.bugs,
+      PluginError,
+      AnyError,
+    })
   } finally {
     await updateDescription(previewState, '')
   }

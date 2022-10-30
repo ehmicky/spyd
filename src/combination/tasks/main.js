@@ -1,4 +1,5 @@
-import { handleRunnerError } from '../../runners/plugin/error.js'
+import { handlePluginError } from '../../config/plugin/error.js'
+import { AnyError, PluginError } from '../../error/main.js'
 import { getCommonVersions } from '../../top/system/versions/common.js'
 import { getCombsNoDimensions } from '../filter.js'
 
@@ -97,7 +98,10 @@ const getDimensions = function (runner) {
 }
 
 const getDimensionsTasks = async function ({
-  dimensions: { runner },
+  dimensions: {
+    runner,
+    runner: { bugs },
+  },
   noDimensions,
   cwd,
   commonVersions,
@@ -111,7 +115,7 @@ const getDimensionsTasks = async function ({
     )
     return tasks.flat()
   } catch (error) {
-    throw handleRunnerError(error, runner)
+    throw handlePluginError({ error, bugs, PluginError, AnyError })
   }
 }
 

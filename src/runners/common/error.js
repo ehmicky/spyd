@@ -1,12 +1,9 @@
 import modernErrors from 'modern-errors'
-import modernErrorsBugs from 'modern-errors-bugs'
 import modernErrorsSerialize from 'modern-errors-serialize'
 
-import { bugs } from '../../utils/package.js'
+export const AnyError = modernErrors([modernErrorsSerialize])
 
-export const AnyError = modernErrors([modernErrorsBugs, modernErrorsSerialize])
-
-export const UnknownError = AnyError.subclass('UnknownError', { bugs })
+export const UnknownError = AnyError.subclass('UnknownError')
 
 // Could not JSON-stringify IPC payload
 export const IpcSerializationError = AnyError.subclass('IpcSerializationError')
