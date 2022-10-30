@@ -36,7 +36,9 @@ export const startServer = async function () {
 //    in the runner inner logic nor doing IPC.
 //  - Samples might last longer if the task is slow
 const KEEP_ALIVE_FACTOR = 1e2
-const KEEP_ALIVE_TIMEOUT = TARGET_SAMPLE_DURATION * KEEP_ALIVE_FACTOR
+const NANOSECS_TO_MILLISECS = 1e6
+const KEEP_ALIVE_TIMEOUT =
+  (TARGET_SAMPLE_DURATION / NANOSECS_TO_MILLISECS) * KEEP_ALIVE_FACTOR
 
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
