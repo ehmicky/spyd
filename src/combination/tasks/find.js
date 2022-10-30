@@ -24,7 +24,7 @@ export const findTasks = async function ({
         noDimensions,
       },
     )
-    validateDuplicateTaskIds(ids, runner)
+    validateDuplicateTaskIds(ids)
     return ids.map((id) => ({ id, taskPath, runner }))
   } catch (cause) {
     throw new AnyError(`Tasks file: "${taskPath}"`, { cause })
@@ -37,13 +37,12 @@ export const findTasks = async function ({
 // Using the same task id is allowed through in different:
 //  - Runners: to compare the same task across runners
 //  - Task files: to override shared configuration's tasks
-const validateDuplicateTaskIds = function (ids, { bugs }) {
+const validateDuplicateTaskIds = function (ids) {
   const duplicateId = ids.find(isDuplicateId)
 
   if (duplicateId !== undefined) {
     throw new PluginError(
       `Task "${duplicateId}" must not be defined several times.`,
-      { bugs },
     )
   }
 }

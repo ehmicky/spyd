@@ -22,12 +22,11 @@ export const computeRunnerVersions = async function ({
   id,
   spawnOptions,
   cwd,
-  bugs,
 }) {
   const dedupedVersions = mapValues(versions, keepOriginalName)
   const dedupedVersionsA = mapKeys(dedupedVersions, dedupeVersion)
   const dedupedVersionsB = await pProps(dedupedVersionsA, ({ name, version }) =>
-    computeRunnerVersion({ name, version, id, spawnOptions, cwd, bugs }),
+    computeRunnerVersion({ name, version, id, spawnOptions, cwd }),
   )
   const versionsA = mapValues(
     versions,
@@ -62,26 +61,13 @@ const computeRunnerVersion = async function ({
   id,
   spawnOptions,
   cwd,
-  bugs,
 }) {
-  const versionA = await getRunnerVersion({
-    version,
-    id,
-    spawnOptions,
-    cwd,
-    bugs,
-  })
-  validateVersion({ version: versionA, name, id, bugs })
+  const versionA = await getRunnerVersion({ version, id, spawnOptions, cwd })
+  validateVersion({ version: versionA, name, id })
   return versionA
 }
 
-const getRunnerVersion = async function ({
-  version,
-  id,
-  spawnOptions,
-  cwd,
-  bugs,
-}) {
+const getRunnerVersion = async function ({ version, id, spawnOptions, cwd }) {
   if (typeof version === 'string') {
     return version
   }
@@ -97,7 +83,7 @@ const getRunnerVersion = async function ({
     throw new PluginError(
       `Could not start runner "${id}".
 Retrieving runner versions failed: ${version.join(' ')}`,
-      { cause, bugs },
+      { cause },
     )
   }
 }
@@ -105,12 +91,11 @@ Retrieving runner versions failed: ${version.join(' ')}`,
 // When merging runners and results with different values of the same version
 // property, we concatenate them. This becomes ambiguous if the version value
 // contains the same separator.
-const validateVersion = function ({ version, name, id, bugs }) {
+const validateVersion = function ({ version, name, id }) {
   if (version.includes(VERSIONS_VALUE_SEPARATOR)) {
     throw new PluginError(
       `Could not start runner "${id}".
 Computing runner's "${name}" version failed because it cannot contain "${VERSIONS_VALUE_SEPARATOR}": "${version}"`,
-      { bugs },
     )
   }
 }

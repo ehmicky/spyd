@@ -1,3 +1,4 @@
+import { handleRunnerError } from '../../runners/plugin/error.js'
 import { getCommonVersions } from '../../top/system/versions/common.js'
 import { getCombsNoDimensions } from '../filter.js'
 
@@ -101,20 +102,24 @@ const getDimensionsTasks = async function ({
   cwd,
   commonVersions,
 }) {
-  const runnerA = await loadRunner(runner, cwd, commonVersions)
-  const tasks = await Promise.all(
-    runnerA.config.tasks.map((taskPath) =>
-      findTasks({ taskPath, runner: runnerA, noDimensions, cwd }),
-    ),
-  )
-  return tasks.flat()
+  try {
+    const runnerA = await loadRunner(runner, cwd, commonVersions)
+    const tasks = await Promise.all(
+      runnerA.config.tasks.map((taskPath) =>
+        findTasks({ taskPath, runner: runnerA, noDimensions, cwd }),
+      ),
+    )
+    return tasks.flat()
+  } catch (error) {
+    throw handleRunnerError(error, runner)
+  }
 }
 
 // When two task files export the same task id, we only keep one based on the
 // following priority:
 //  - `config.runner.tasks` over `config.tasks`
 //  - `tasks` array order (last has priority)
-// This allows overridding tasks when using shared configurations.
+// This allows overriding tasks when using shared configurations.
 // This only applies when the task files are using the same runner.
 const hasUniqueTaskId = function (task, index, tasks) {
   return tasks

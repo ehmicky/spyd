@@ -1,4 +1,4 @@
-import { AnyError, PluginError } from '../../error/main.js'
+import { AnyError } from '../../error/main.js'
 import { noUnhandledRejection } from '../../error/unhandled_rejection.js'
 import { spawnProcess } from '../../utils/spawn.js'
 
@@ -84,22 +84,6 @@ const waitForIpcSetup = async function (childProcess, server) {
     throwOnSpawnExit(childProcess),
     receiveReturnValue(server),
   ])
-}
-
-// Add runner `bugs` URL on runner `PluginError`
-export const handleRunnerError = function (
-  error,
-  {
-    combination: {
-      dimensions: {
-        runner: { bugs },
-      },
-    },
-  },
-) {
-  return error instanceof PluginError
-    ? new AnyError('', { cause: error, bugs })
-    : error
 }
 
 // Terminate each combination's process after being measured.

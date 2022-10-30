@@ -1,6 +1,7 @@
 import { getCombinationPrefix } from '../../combination/ids/name.js'
 import { useConfigSelectors } from '../../config/select/use.js'
 import { AnyError } from '../../error/main.js'
+import { handleRunnerError } from '../../runners/plugin/error.js'
 import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
@@ -12,7 +13,6 @@ import { updateDescription } from '../preview/description.js'
 import {
   spawnRunnerProcess,
   terminateRunnerProcess,
-  handleRunnerError,
 } from '../process/runner.js'
 import { throwIfStopped } from '../stop/error.js'
 
@@ -34,6 +34,8 @@ export const measureCombination = async function ({ index, config, ...args }) {
     const { stats, taskIds } = await logAndMeasure({ ...args, config: configA })
     await endCombinationPreview(previewState)
     return { ...combination, stats, taskIds }
+  } catch (error) {
+    throw handleRunnerError(error, combination.dimensions.runner)
   } finally {
     await updateDescription(previewState, '')
   }
@@ -75,8 +77,6 @@ const spawnAndMeasure = async function ({ serverUrl, logsStream, ...args }) {
 
   try {
     return await handleStopAndMeasure({ ...args, onTaskExit })
-  } catch (error) {
-    throw handleRunnerError(error, args)
   } finally {
     terminateRunnerProcess(childProcess)
   }
