@@ -1,4 +1,4 @@
-import { AnyError } from '../../error/main.js'
+import { AnyError, PluginError } from '../../error/main.js'
 import { noUnhandledRejection } from '../../error/unhandled_rejection.js'
 import { spawnProcess } from '../../utils/spawn.js'
 
@@ -38,7 +38,6 @@ export const spawnRunnerProcess = async function ({
         id,
         spawn: [file, ...args],
         spawnOptions,
-        bugs,
       },
     },
   },
@@ -59,7 +58,7 @@ export const spawnRunnerProcess = async function ({
       },
       cwd,
     )
-    await waitForIpcSetup(childProcess, server, bugs)
+    await waitForIpcSetup(childProcess, server)
     const onTaskExit = noUnhandledRejection(throwOnTaskExit(childProcess))
     return { childProcess, onTaskExit }
   } catch (cause) {
@@ -80,11 +79,27 @@ const getStdio = function (logsStream) {
 }
 
 // Wait for IPC to be initialized. Throw if process exits before that.
-const waitForIpcSetup = async function (childProcess, server, bugs) {
+const waitForIpcSetup = async function (childProcess, server) {
   await Promise.race([
-    throwOnSpawnExit(childProcess, bugs),
+    throwOnSpawnExit(childProcess),
     receiveReturnValue(server),
   ])
+}
+
+// Add runner `bugs` URL on runner `PluginError`
+export const handleRunnerError = function (
+  error,
+  {
+    combination: {
+      dimensions: {
+        runner: { bugs },
+      },
+    },
+  },
+) {
+  return error instanceof PluginError
+    ? new AnyError('', { cause: error, bugs })
+    : error
 }
 
 // Terminate each combination's process after being measured.

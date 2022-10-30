@@ -12,6 +12,7 @@ import { updateDescription } from '../preview/description.js'
 import {
   spawnRunnerProcess,
   terminateRunnerProcess,
+  handleRunnerError,
 } from '../process/runner.js'
 import { throwIfStopped } from '../stop/error.js'
 
@@ -74,6 +75,8 @@ const spawnAndMeasure = async function ({ serverUrl, logsStream, ...args }) {
 
   try {
     return await handleStopAndMeasure({ ...args, onTaskExit })
+  } catch (error) {
+    throw handleRunnerError(error, args)
   } finally {
     terminateRunnerProcess(childProcess)
   }

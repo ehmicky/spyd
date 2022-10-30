@@ -6,9 +6,9 @@ import { PluginError, UserError } from '../../error/main.js'
 // Throws when process exit as it spawns.
 // We distinguish it from process exits after spawning, since this is a
 // plugin error, not a user error.
-export const throwOnSpawnExit = async function (childProcess, bugs) {
+export const throwOnSpawnExit = async function (childProcess) {
   const { message = DEFAULT_SPAWN_ERROR } = await childProcess
-  throw new PluginError(message, { bugs })
+  throw new PluginError(message)
 }
 
 const DEFAULT_SPAWN_ERROR = 'The runner exited while starting.'
