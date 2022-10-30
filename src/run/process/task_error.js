@@ -14,15 +14,12 @@ export const throwOnTaskError = function ({ error: errorObject }) {
   }
 
   const error = AnyError.parse(errorObject)
-  const name = getName(error)
-  const { ErrorClass, prefix, stack } = ERROR_PROPS[name]
+  const { ErrorClass, prefix, stack } = ERROR_MAP[getName(error)]
   throw new ErrorClass(prefix, { cause: error, cli: { stack } })
 }
 
 const getName = function (error) {
-  return isErrorInstance(error) &&
-    typeof error.name === 'string' &&
-    error.name in ERROR_PROPS
+  return isErrorInstance(error) && error.name in ERROR_MAP
     ? error.name
     : DEFAULT_ERROR_NAME
 }
@@ -30,7 +27,7 @@ const getName = function (error) {
 // The `name` is among a series of possible ones, which allows abstracting:
 //  - Whether the error should be reported as caused by the user or the plugin
 //  - Prefixing the error message
-const ERROR_PROPS = {
+const ERROR_MAP = {
   UnknownError: {
     ErrorClass: PluginError,
     prefix: 'Runner internal bug.',

@@ -1,5 +1,5 @@
 import {
-  AnyError,
+  UnknownError,
   InputError,
   DefinitionError,
 } from '../../normalize/lib/error.js'
@@ -11,15 +11,18 @@ export const safeNormalizeConfig = async function (config, rules, opts) {
     const { inputs } = await normalizeInputs(config, rules, opts)
     return inputs
   } catch (error) {
-    const ErrorType = getErrorType(error, opts)
-    throw new ErrorType('', { cause: error })
+    const ErrorClass = getErrorClass(error, opts)
+    throw new ErrorClass('', { cause: error })
   }
 }
 
-const getErrorType = function (error, { InputErrorType, DefinitionErrorType }) {
+const getErrorClass = function (
+  error,
+  { InputErrorType, DefinitionErrorType },
+) {
   if (error instanceof InputError) {
     return InputErrorType
   }
 
-  return error instanceof DefinitionError ? DefinitionErrorType : AnyError
+  return error instanceof DefinitionError ? DefinitionErrorType : UnknownError
 }

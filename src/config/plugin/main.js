@@ -1,3 +1,5 @@
+import isErrorInstance from 'is-error-instance'
+
 import { AnyError, PluginError, UserError } from '../../error/main.js'
 import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
@@ -51,8 +53,8 @@ const normalizePluginConfigs = async function ({
     })
     const pluginInfosA = pluginInfos.map(normalizePluginInfo)
     return { [name]: pluginInfosA }
-  } catch (error) {
-    throw handlePluginsError(error)
+  } catch (cause) {
+    throw handlePluginsError(cause)
   }
 }
 
@@ -62,10 +64,15 @@ const normalizePluginInfo = function ({ plugin, config }) {
 
 // Translate error classes from the plugins library to error classes from this
 // library
-const handlePluginsError = function (error) {
-  const errorA = AnyError.normalize(error)
-  const ErrorType = errorA.name in ERROR_MAP ? ERROR_MAP[errorA.name] : AnyError
-  return new ErrorType('', { cause: errorA })
+const handlePluginsError = function (cause) {
+  const ErrorClass = ERROR_MAP[getName(cause)]
+  return new ErrorClass('', { cause })
+}
+
+const getName = function (error) {
+  return isErrorInstance(error) && error.name in ERROR_MAP
+    ? error.name
+    : DEFAULT_ERROR_NAME
 }
 
 const ERROR_MAP = {
@@ -74,3 +81,5 @@ const ERROR_MAP = {
   PluginError,
   ConsumerError: UserError,
 }
+
+const DEFAULT_ERROR_NAME = 'UnknownError'
