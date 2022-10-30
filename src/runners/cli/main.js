@@ -1,3 +1,5 @@
+import { bugs } from '../../utils/package.js'
+
 import { config } from './config.js'
 import { launch } from './launch.js'
 
@@ -6,4 +8,5 @@ export default {
   id: 'cli',
   config,
   launch,
+  bugs,
 }

@@ -1,3 +1,5 @@
+import { bugs } from '../../../utils/package.js'
+
 import { config } from './config.js'
 import { reportTerminal } from './report.js'
 
@@ -7,4 +9,5 @@ export default {
   capabilities: { debugStats: true },
   config,
   reportTerminal,
+  bugs,
 }
