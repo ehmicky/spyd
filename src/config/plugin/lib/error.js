@@ -3,11 +3,11 @@ import modernErrorsBugs from 'modern-errors-bugs'
 
 import { packageJson } from '../../../utils/package.js'
 
-export const AnyError = modernErrors([modernErrorsBugs], {
+export const AnyError = modernErrors([modernErrorsBugs])
+
+export const UnknownError = AnyError.subclass('UnknownError', {
   bugs: packageJson.bugs.url,
 })
-
-export const UnknownError = AnyError.subclass('UnknownError')
 
 // Error from the library's user, who defines available plugin types
 export const UserError = AnyError.subclass('UserError')
