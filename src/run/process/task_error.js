@@ -1,4 +1,4 @@
-import isPlainObj from 'is-plain-obj'
+import isErrorInstance from 'is-error-instance'
 
 import { PluginError, UserError, UserCodeError } from '../../error/main.js'
 import { AnyError } from '../../runners/common/error.js'
@@ -20,7 +20,7 @@ export const throwOnTaskError = function ({ error: errorObject }) {
 }
 
 const getName = function (error) {
-  return isPlainObj(error) &&
+  return isErrorInstance(error) &&
     typeof error.name === 'string' &&
     error.name in ERROR_PROPS
     ? error.name
