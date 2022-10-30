@@ -1,12 +1,14 @@
 import modernErrors from 'modern-errors'
 import modernErrorsBugs from 'modern-errors-bugs'
+import modernErrorsCli from 'modern-errors-cli'
 import modernErrorsStack from 'modern-errors-stack'
 
 import { packageJson } from '../utils/package.js'
 
-export const AnyError = modernErrors([modernErrorsBugs, modernErrorsStack], {
-  bugs: packageJson.bugs.url,
-})
+export const AnyError = modernErrors(
+  [modernErrorsBugs, modernErrorsCli, modernErrorsStack],
+  { bugs: packageJson.bugs.url },
+)
 
 export const UnknownError = AnyError.subclass('UnknownError', {
   cli: { exitCode: 1, header: 'red bold', icon: 'cross' },
