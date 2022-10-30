@@ -15,8 +15,8 @@ export const throwOnTaskError = function ({ error: errorObject }) {
 
   const error = AnyError.parse(errorObject)
   const name = getName(error)
-  const { ErrorClass, prefix } = ERROR_PROPS[name]
-  throw new ErrorClass(prefix, { cause: error })
+  const { ErrorClass, prefix, stack } = ERROR_PROPS[name]
+  throw new ErrorClass(prefix, { cause: error, cli: { stack } })
 }
 
 const getName = function (error) {
@@ -34,26 +34,32 @@ const ERROR_PROPS = {
   UnknownError: {
     ErrorClass: PluginError,
     prefix: 'Runner internal bug.',
+    stack: true,
   },
   IpcSerializationError: {
     ErrorClass: PluginError,
     prefix: 'Serialization error.',
+    stack: true,
   },
   TasksLoadError: {
     ErrorClass: UserCodeError,
     prefix: 'Could not load the tasks file.',
+    stack: true,
   },
   TasksSyntaxError: {
     ErrorClass: UserCodeError,
     prefix: 'Syntax error in the tasks file.',
+    stack: false,
   },
   TasksRunError: {
     ErrorClass: UserCodeError,
     prefix: 'Could not run the task.',
+    stack: true,
   },
   ConfigError: {
     ErrorClass: UserError,
     prefix: 'Runner configuration error.',
+    stack: false,
   },
 }
 
