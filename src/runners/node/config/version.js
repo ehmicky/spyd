@@ -1,22 +1,18 @@
-import { dirname } from 'path'
 import { version as currentNodeVersion } from 'process'
-import { fileURLToPath } from 'url'
 
-import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
 import { normalizeNumberString } from '../../../config/normalize/transform.js'
+import { nodeVersion } from '../../../utils/package.js'
 import { AnyError } from '../../common/error.js'
 
-// Normalize and validate the Node.js version
+// Normalize and validate the Node.js version.
+// We can only allow Node versions that are valid with the runner's code.
 const transformVersion = async function (version) {
-  const [versionInfo, allowedVersions] = await Promise.all([
-    normalizeVersion(version),
-    getAllowedVersions(),
-  ])
+  const versionInfo = await normalizeVersion(version)
 
-  if (!semver.satisfies(versionInfo.version, allowedVersions)) {
-    throw new Error(`must be ${allowedVersions}`)
+  if (!semver.satisfies(versionInfo.version, nodeVersion)) {
+    throw new Error(`must be ${nodeVersion}`)
   }
 
   return versionInfo.version
@@ -36,13 +32,6 @@ const normalizeVersion = async function (version) {
   } catch (cause) {
     throw new AnyError('must be a valid Node.js version:\n', { cause })
   }
-}
-
-// We can only allow Node versions that are valid with the runner's code
-const getAllowedVersions = async function () {
-  const cwd = dirname(fileURLToPath(import.meta.url))
-  const { packageJson } = await readPackageUp({ cwd })
-  return packageJson.engines.node
 }
 
 export const versionRule = {

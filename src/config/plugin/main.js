@@ -5,6 +5,7 @@ import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
 import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
 import { cleanObject } from '../../utils/clean.js'
+import { bugs } from '../../utils/package.js'
 import { PREFIX } from '../normalize/main.js'
 
 import { getPlugins } from './lib/main.js'
@@ -50,6 +51,7 @@ const normalizePluginConfigs = async function ({
       context,
       cwd,
       prefix: PREFIX,
+      bugs,
     })
     const pluginInfosA = pluginInfos.map(normalizePluginInfo)
     return { [name]: pluginInfosA }
