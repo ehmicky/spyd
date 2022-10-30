@@ -1,23 +1,27 @@
 import modernErrors from 'modern-errors'
+import modernErrorsBugs from 'modern-errors-bugs'
 
 import { packageJson } from '../../../utils/package.js'
 
-export const {
-  // Error from the library's user, who defines available plugin types
-  UserError,
-  // Error from a plugin author, who defines a specific plugin
-  PluginError,
-  // Error from a plugin user
-  ConsumerError,
-  errorHandler,
-} = modernErrors(['UserError', 'PluginError', 'ConsumerError'], {
-  bugsUrl: packageJson.bugs.url,
+export const AnyError = modernErrors([modernErrorsBugs], {
+  bugs: packageJson.bugs.url,
 })
 
-// When `options.bugsUrl` is defined, user errors report it.
-// When `plugin.bugsUrl` is defined, plugin errors report it.
-export const addErrorBugsUrl = function (error, bugsUrl) {
-  return typeof bugsUrl === 'string' && bugsUrl !== ''
-    ? new Error('', { cause: error, bugsUrl })
+export const UnknownError = AnyError.subclass('UnknownError')
+
+// Error from the library's user, who defines available plugin types
+export const UserError = AnyError.subclass('UserError')
+
+// Error from a plugin author, who defines a specific plugin
+export const PluginError = AnyError.subclass('PluginError')
+
+// Error from a plugin user
+export const ConsumerError = AnyError.subclass('ConsumerError')
+
+// When `options.bugs` is defined, user errors report it.
+// When `plugin.bugs` is defined, plugin errors report it.
+export const addErrorBugs = function (error, bugs) {
+  return typeof bugs === 'string' && bugs !== ''
+    ? new AnyError('', { cause: error, bugs })
     : error
 }

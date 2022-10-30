@@ -1,8 +1,7 @@
-import { parse } from 'error-serializer'
 import isPlainObj from 'is-plain-obj'
-import mapObj from 'map-obj'
 
 import { PluginError, UserError, UserCodeError } from '../../error/main.js'
+import { AnyError } from '../../runners/common/error.js'
 
 // When a task throws during any stage, we propagate the error and fail the
 // benchmark. Tasks that throw are unstable and might yield invalid benchmarks,
@@ -14,21 +13,17 @@ export const throwOnTaskError = function ({ error: errorObject }) {
     return
   }
 
-  const error = parse(errorObject, { classes: ERROR_CLASSES })
-  throw addPrefix(error, errorObject)
+  const error = AnyError.parse(errorObject)
+  const name = getName(error)
+  const { ErrorClass, prefix } = ERROR_PROPS[name]
+  throw new ErrorClass(prefix, { cause: error })
 }
 
-const addPrefix = function (error, errorObject) {
-  const name = getName(errorObject)
-  const { prefix } = ERROR_PROPS[name]
-  return new Error(prefix, { cause: error })
-}
-
-const getName = function (errorObject) {
-  return isPlainObj(errorObject) &&
-    typeof errorObject.name === 'string' &&
-    errorObject.name in ERROR_PROPS
-    ? errorObject.name
+const getName = function (error) {
+  return isPlainObj(error) &&
+    typeof error.name === 'string' &&
+    error.name in ERROR_PROPS
+    ? error.name
     : DEFAULT_ERROR_NAME
 }
 
@@ -37,35 +32,29 @@ const getName = function (errorObject) {
 //  - Prefixing the error message
 const ERROR_PROPS = {
   UnknownError: {
-    ErrorType: PluginError,
+    ErrorClass: PluginError,
     prefix: 'Runner internal bug.',
   },
   IpcSerializationError: {
-    ErrorType: PluginError,
+    ErrorClass: PluginError,
     prefix: 'Serialization error.',
   },
   TasksLoadError: {
-    ErrorType: UserCodeError,
+    ErrorClass: UserCodeError,
     prefix: 'Could not load the tasks file.',
   },
   TasksSyntaxError: {
-    ErrorType: UserCodeError,
+    ErrorClass: UserCodeError,
     prefix: 'Syntax error in the tasks file.',
   },
   TasksRunError: {
-    ErrorType: UserCodeError,
+    ErrorClass: UserCodeError,
     prefix: 'Could not run the task.',
   },
   ConfigError: {
-    ErrorType: UserError,
+    ErrorClass: UserError,
     prefix: 'Runner configuration error.',
   },
 }
 
 const DEFAULT_ERROR_NAME = 'UnknownError'
-
-const getErrorType = function (name, { ErrorType }) {
-  return [name, ErrorType]
-}
-
-const ERROR_CLASSES = mapObj(ERROR_PROPS, getErrorType)

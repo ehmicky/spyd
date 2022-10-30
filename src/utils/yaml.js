@@ -3,6 +3,8 @@ import { extname } from 'path'
 
 import { load as loadYaml, JSON_SCHEMA } from 'js-yaml'
 
+import { UnknownError } from '../error/main.js'
+
 // Load and parse YAML file
 export const loadYamlFile = async function (path) {
   validateFileExtension(path)
@@ -14,7 +16,7 @@ export const loadYamlFile = async function (path) {
 // Prevent against selecting the wrong file
 const validateFileExtension = function (path) {
   if (!YAML_FILE_EXTENSIONS.has(extname(path))) {
-    throw new Error(`File extension must be ".yml" or ".yaml": ${path}`)
+    throw new UnknownError(`File extension must be ".yml" or ".yaml": ${path}`)
   }
 }
 
@@ -24,7 +26,7 @@ const readYamlFile = async function (path) {
   try {
     return await readFile(path, 'utf8')
   } catch (cause) {
-    throw new Error(`Could not read file '${path}'.`, { cause })
+    throw new UnknownError(`Could not read file '${path}'.`, { cause })
   }
 }
 
@@ -32,6 +34,6 @@ const parseYaml = function (string, path) {
   try {
     return loadYaml(string, { schema: JSON_SCHEMA })
   } catch (cause) {
-    throw new Error(`Invalid YAML in file '${path}'.`, { cause })
+    throw new UnknownError(`Invalid YAML in file '${path}'.`, { cause })
   }
 }

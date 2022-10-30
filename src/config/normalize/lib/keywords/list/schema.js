@@ -9,7 +9,9 @@ const normalize = function (definition) {
     return AJV.compile(definition)
   } catch {
     const cause = getValidationError(AJV.errors)
-    throw new Error('must be a valid JSON schema (version 2020):\n', { cause })
+    throw new Error(
+      `must be a valid JSON schema (version 2020):\n${cause.message}`,
+    )
   }
 }
 

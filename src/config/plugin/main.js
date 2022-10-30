@@ -1,4 +1,4 @@
-import { PluginError, UserError } from '../../error/main.js'
+import { AnyError, PluginError, UserError } from '../../error/main.js'
 import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
 import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
@@ -51,8 +51,8 @@ const normalizePluginConfigs = async function ({
     })
     const pluginInfosA = pluginInfos.map(normalizePluginInfo)
     return { [name]: pluginInfosA }
-  } catch (cause) {
-    throw handlePluginsError(cause)
+  } catch (error) {
+    throw handlePluginsError(error)
   }
 }
 
@@ -62,14 +62,15 @@ const normalizePluginInfo = function ({ plugin, config }) {
 
 // Translate error classes from the plugins library to error classes from this
 // library
-const handlePluginsError = function (cause) {
-  const ErrorType = cause.name in ERROR_MAP ? ERROR_MAP[cause.name] : Error
-  return new ErrorType('', { cause })
+const handlePluginsError = function (error) {
+  const errorA = AnyError.normalize(error)
+  const ErrorType = errorA.name in ERROR_MAP ? ERROR_MAP[errorA.name] : AnyError
+  return new ErrorType('', { cause: errorA })
 }
 
 const ERROR_MAP = {
-  UnknownError: Error,
-  UserError: Error,
+  UnknownError: AnyError,
+  UserError: AnyError,
   PluginError,
   ConsumerError: UserError,
 }

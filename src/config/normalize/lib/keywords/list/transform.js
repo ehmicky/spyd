@@ -11,7 +11,7 @@ const normalize = function (definition) {
   try {
     return { value, newProp: normalizePath(newProp) }
   } catch (cause) {
-    throw new Error('must return a valid "newProp":\n', { cause })
+    throw new Error(`must return a valid "newProp":\n${cause.message}`)
   }
 }
 

@@ -1,13 +1,15 @@
 import { Buffer } from 'buffer'
 import { open } from 'fs/promises'
 
+import { AnyError, StopError } from '../../error/main.js'
+
 import { getAdditionalMessage } from './additional.js'
 import { normalizeLogs } from './normalize.js'
 
 // When an exception is thrown, add the runner's last log lines to the error
 // message.
 export const addErrorTaskLogs = async function (error, logsPath) {
-  if (error.name === 'StopError') {
+  if (error instanceof StopError) {
     return error
   }
 
@@ -19,7 +21,7 @@ export const addErrorTaskLogs = async function (error, logsPath) {
   }
 
   const additionalMessage = getAdditionalMessage(taskLogsA)
-  return new Error(`${additionalMessage}Task logs:\n${taskLogsA}`, {
+  return new AnyError(`${additionalMessage}Task logs:\n${taskLogsA}`, {
     cause: error,
   })
 }

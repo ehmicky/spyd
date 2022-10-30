@@ -1,5 +1,5 @@
 import { validateDuplicatePlugins } from './duplicates.js'
-import { UserError, errorHandler, addErrorBugsUrl } from './error.js'
+import { AnyError, UserError, addErrorBugs } from './error.js'
 import { getPluginInfo } from './info.js'
 import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 
@@ -65,8 +65,7 @@ const validateDefined = function (value, { name }) {
   }
 }
 
-const handleError = function (error, { bugsUrl }) {
-  const errorA =
-    error instanceof UserError ? addErrorBugsUrl(error, bugsUrl) : error
-  return errorHandler(errorA)
+const handleError = function (error, { bugs }) {
+  const errorA = AnyError.normalize(error)
+  return errorA instanceof UserError ? addErrorBugs(errorA, bugs) : errorA
 }

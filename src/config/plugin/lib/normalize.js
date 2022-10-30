@@ -1,3 +1,8 @@
+import {
+  AnyError,
+  InputError,
+  DefinitionError,
+} from '../../normalize/lib/error.js'
 import { normalizeInputs } from '../../normalize/lib/main.js'
 
 // Call `normalizeConfig` while assigning the right error classes
@@ -12,9 +17,9 @@ export const safeNormalizeConfig = async function (config, rules, opts) {
 }
 
 const getErrorType = function (error, { InputErrorType, DefinitionErrorType }) {
-  if (error.name === 'InputError') {
+  if (error instanceof InputError) {
     return InputErrorType
   }
 
-  return error.name === 'DefinitionError' ? DefinitionErrorType : Error
+  return error instanceof DefinitionError ? DefinitionErrorType : AnyError
 }

@@ -2,7 +2,7 @@ import { inspect } from 'util'
 
 import isPlainObj from 'is-plain-obj'
 
-import { DefinitionError } from '../../error.js'
+import { AnyError, DefinitionError } from '../../error.js'
 
 import { validateName } from './name.js'
 import { validateKeywordProps } from './props.js'
@@ -24,6 +24,6 @@ const validateKeyword = function (keyword, index, keywords) {
   try {
     validateKeywordProps(keyword, index, keywords)
   } catch (cause) {
-    throw new Error(`Invalid keyword "${keyword.name}":`, { cause })
+    throw new AnyError(`Invalid keyword "${keyword.name}":`, { cause })
   }
 }

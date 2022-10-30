@@ -1,5 +1,6 @@
 import cliCursor from 'cli-cursor'
 
+import { StopError } from '../../../error/main.js'
 import {
   clearScreen,
   clearScreenFull,
@@ -77,7 +78,7 @@ export const endPreview = async function (previewState, error = {}) {
   stopHandleKeypress(previewState)
   stopHandleResize(previewState)
 
-  if (error.name !== 'StopError') {
+  if (!(error instanceof StopError)) {
     await clearScreen()
   }
 

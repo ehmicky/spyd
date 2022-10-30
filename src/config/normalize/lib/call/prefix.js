@@ -1,7 +1,9 @@
+import { AnyError } from '../error.js'
+
 // The `prefix` is the name of the type of property to show in error
 // message and warnings such as "Option".
 export const addInputPrefix = function (error, prefix, originalName) {
-  return new Error(`${prefix} "${originalName}":`, { cause: error })
+  return new AnyError(`${prefix} "${originalName}":`, { cause: error })
 }
 
 export const addDefinitionPrefix = function ({
@@ -12,7 +14,7 @@ export const addDefinitionPrefix = function ({
   isValidation,
 }) {
   const suffix = isValidation ? 'definition:' : 'must have a valid definition.'
-  return new Error(
+  return new AnyError(
     `${prefix} "${originalName}"'s keyword "${keyword}" ${suffix}`,
     { cause: error },
   )
@@ -24,7 +26,8 @@ export const addKeywordPrefix = function ({
   originalName,
   keyword,
 }) {
-  return new Error(`${prefix} "${originalName}"'s keyword "${keyword}" bug.`, {
-    cause: error,
-  })
+  return new AnyError(
+    `${prefix} "${originalName}"'s keyword "${keyword}" bug.`,
+    { cause: error },
+  )
 }

@@ -1,5 +1,5 @@
 import { normalizePluginConfig } from './config.js'
-import { PluginError, addErrorBugsUrl } from './error.js'
+import { AnyError, PluginError, addErrorBugs } from './error.js'
 import { importPlugin } from './import.js'
 import { normalizeLocation } from './location_normalize.js'
 import { getLocationType } from './location_type.js'
@@ -65,12 +65,12 @@ const normalizePluginInfo = async function ({
   }
 }
 
-const addPluginErrorBugsUrl = function (error, { bugsUrl }) {
-  return error instanceof PluginError ? addErrorBugsUrl(error, bugsUrl) : error
+const addPluginErrorBugsUrl = function (error, { bugs }) {
+  return error instanceof PluginError ? addErrorBugs(error, bugs) : error
 }
 
 const addPluginErrorLocation = function (error, originalLocation) {
   return error instanceof PluginError
-    ? new Error(`Invalid plugin "${originalLocation}".`, { cause: error })
+    ? new AnyError(`Invalid plugin "${originalLocation}".`, { cause: error })
     : error
 }

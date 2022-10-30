@@ -6,6 +6,7 @@ import { readPackageUp } from 'read-pkg-up'
 import semver from 'semver'
 
 import { normalizeNumberString } from '../../../config/normalize/transform.js'
+import { AnyError } from '../../common/error.js'
 
 // Normalize and validate the Node.js version
 const transformVersion = async function (version) {
@@ -33,7 +34,7 @@ const normalizeVersion = async function (version) {
   try {
     return await nvexeca(versionA, 'node', { progress: true, dry: true })
   } catch (cause) {
-    throw new Error('must be a valid Node.js version:\n', { cause })
+    throw new AnyError('must be a valid Node.js version:\n', { cause })
   }
 }
 

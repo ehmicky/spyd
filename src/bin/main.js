@@ -2,10 +2,10 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-import handleCliError from 'handle-cli-error'
 import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
+import { AnyError } from '../error/main.js'
 import { run, show, remove, dev } from '../main.js'
 
 import { parseCliFlags } from './parse.js'
@@ -38,7 +38,7 @@ const runCli = async function () {
     const { command, configFlags } = parseCliFlags(yargs)
     await COMMANDS[command](configFlags)
   } catch (error) {
-    handleCliError(error, { classes: ERROR_CLASSES })
+    AnyError.normalize(error).exit()
   }
 }
 
@@ -50,30 +50,5 @@ const checkUpdate = async function () {
 }
 
 const COMMANDS = { run, show, remove, dev }
-
-// Error class-specific behavior
-const ERROR_CLASSES = {
-  default: { exitCode: 1, header: 'red bold', icon: 'cross' },
-  PluginError: { exitCode: 2, header: 'magenta bold', icon: 'star' },
-  StopError: {
-    exitCode: 3,
-    header: 'gray bold',
-    icon: 'hamburger',
-    stack: false,
-  },
-  UserCodeError: { exitCode: 4, header: 'yellow bold', icon: 'pointer' },
-  UserError: {
-    exitCode: 5,
-    header: 'yellow bold',
-    icon: 'warning',
-    stack: false,
-  },
-  LimitError: {
-    exitCode: 6,
-    header: 'cyan bold',
-    icon: 'triangleDown',
-    stack: false,
-  },
-}
 
 runCli()

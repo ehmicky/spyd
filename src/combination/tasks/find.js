@@ -1,4 +1,4 @@
-import { PluginError } from '../../error/main.js'
+import { AnyError, PluginError } from '../../error/main.js'
 import { measureCombinations } from '../../run/measure/main.js'
 
 // Each combination has its own process, in order to prevent them from
@@ -27,7 +27,7 @@ export const findTasks = async function ({
     validateDuplicateTaskIds(ids)
     return ids.map((id) => ({ id, taskPath, runner }))
   } catch (cause) {
-    throw new Error(`Tasks file: "${taskPath}"`, { cause })
+    throw new AnyError(`Tasks file: "${taskPath}"`, { cause })
   }
 }
 

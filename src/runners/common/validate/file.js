@@ -3,7 +3,7 @@ import { inspect } from 'util'
 import isPlainObj from 'is-plain-obj'
 
 import { mapValues } from '../../../utils/map.js'
-import { TasksSyntaxError } from '../error.js'
+import { AnyError, TasksSyntaxError } from '../error.js'
 
 // Validate that the tasks file has correct shape
 export const validateTasks = function ({ tasks, validators, normalizeTask }) {
@@ -22,7 +22,7 @@ const validateTask = function ({ taskId, task, validators, normalizeTask }) {
   try {
     return eValidateTask({ task, validators, normalizeTask })
   } catch (cause) {
-    throw new Error(`Task "${taskId}":`, { cause })
+    throw new AnyError(`Task "${taskId}":`, { cause })
   }
 }
 
