@@ -1,6 +1,6 @@
 import isErrorInstance from 'is-error-instance'
 
-import { AnyError, PluginError, UserError } from '../../error/main.js'
+import { UnknownError, PluginError, UserError } from '../../error/main.js'
 import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
 import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
@@ -78,8 +78,8 @@ const getName = function (error) {
 }
 
 const ERROR_MAP = {
-  UnknownError: AnyError,
-  UserError: AnyError,
+  UnknownError,
+  UserError: UnknownError,
   PluginError,
   ConsumerError: UserError,
 }
