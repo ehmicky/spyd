@@ -25,6 +25,7 @@ const callReportFunc = async function ({
     startData,
     config: reporterConfig,
     config: { format, output, colors },
+    bugs,
   },
 }) {
   const reporterSpecificConfig = excludeKeys(
@@ -40,7 +41,7 @@ const callReportFunc = async function ({
     ])
     return { content, result, format, footerString, output, colors }
   } catch (cause) {
-    throw new PluginError(`Could not call reporter "${id}".`, { cause })
+    throw new PluginError(`Could not call reporter "${id}".`, { cause, bugs })
   }
 }
 

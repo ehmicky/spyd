@@ -22,11 +22,12 @@ export const computeRunnerVersions = async function ({
   id,
   spawnOptions,
   cwd,
+  bugs,
 }) {
   const dedupedVersions = mapValues(versions, keepOriginalName)
   const dedupedVersionsA = mapKeys(dedupedVersions, dedupeVersion)
   const dedupedVersionsB = await pProps(dedupedVersionsA, ({ name, version }) =>
-    computeRunnerVersion({ name, version, id, spawnOptions, cwd }),
+    computeRunnerVersion({ name, version, id, spawnOptions, cwd, bugs }),
   )
   const versionsA = mapValues(
     versions,
@@ -61,13 +62,26 @@ const computeRunnerVersion = async function ({
   id,
   spawnOptions,
   cwd,
+  bugs,
 }) {
-  const versionA = await getRunnerVersion({ version, id, spawnOptions, cwd })
-  validateVersion(versionA, name, id)
+  const versionA = await getRunnerVersion({
+    version,
+    id,
+    spawnOptions,
+    cwd,
+    bugs,
+  })
+  validateVersion({ version: versionA, name, id, bugs })
   return versionA
 }
 
-const getRunnerVersion = async function ({ version, id, spawnOptions, cwd }) {
+const getRunnerVersion = async function ({
+  version,
+  id,
+  spawnOptions,
+  cwd,
+  bugs,
+}) {
   if (typeof version === 'string') {
     return version
   }
@@ -83,7 +97,7 @@ const getRunnerVersion = async function ({ version, id, spawnOptions, cwd }) {
     throw new PluginError(
       `Could not start runner "${id}".
 Retrieving runner versions failed: ${version.join(' ')}`,
-      { cause },
+      { cause, bugs },
     )
   }
 }
@@ -91,11 +105,12 @@ Retrieving runner versions failed: ${version.join(' ')}`,
 // When merging runners and results with different values of the same version
 // property, we concatenate them. This becomes ambiguous if the version value
 // contains the same separator.
-const validateVersion = function (version, name, id) {
+const validateVersion = function ({ version, name, id, bugs }) {
   if (version.includes(VERSIONS_VALUE_SEPARATOR)) {
     throw new PluginError(
       `Could not start runner "${id}".
 Computing runner's "${name}" version failed because it cannot contain "${VERSIONS_VALUE_SEPARATOR}": "${version}"`,
+      { bugs },
     )
   }
 }

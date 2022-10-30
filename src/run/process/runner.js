@@ -38,6 +38,7 @@ export const spawnRunnerProcess = async function ({
         id,
         spawn: [file, ...args],
         spawnOptions,
+        bugs,
       },
     },
   },
@@ -58,7 +59,7 @@ export const spawnRunnerProcess = async function ({
       },
       cwd,
     )
-    await waitForIpcSetup(childProcess, server)
+    await waitForIpcSetup(childProcess, server, bugs)
     const onTaskExit = noUnhandledRejection(throwOnTaskExit(childProcess))
     return { childProcess, onTaskExit }
   } catch (cause) {
@@ -79,9 +80,9 @@ const getStdio = function (logsStream) {
 }
 
 // Wait for IPC to be initialized. Throw if process exits before that.
-const waitForIpcSetup = async function (childProcess, server) {
+const waitForIpcSetup = async function (childProcess, server, bugs) {
   await Promise.race([
-    throwOnSpawnExit(childProcess),
+    throwOnSpawnExit(childProcess, bugs),
     receiveReturnValue(server),
   ])
 }

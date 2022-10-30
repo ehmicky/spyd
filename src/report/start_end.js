@@ -7,17 +7,17 @@ export const startReporters = async function (config) {
 }
 
 const startReporter = async function (reporter) {
-  if (reporter.start === undefined) {
+  const { start, id, bugs } = reporter
+
+  if (start === undefined) {
     return reporter
   }
 
   try {
-    const startData = await reporter.start()
+    const startData = await start()
     return { ...reporter, startData }
   } catch (cause) {
-    throw new PluginError(`Could not start reporter "${reporter.id}".`, {
-      cause,
-    })
+    throw new PluginError(`Could not start reporter "${id}".`, { cause, bugs })
   }
 }
 
@@ -26,7 +26,7 @@ export const endReporters = async function ({ reporters }) {
   await Promise.all(reporters.map(endReporter))
 }
 
-const endReporter = async function ({ end, startData, id }) {
+const endReporter = async function ({ end, startData, id, bugs }) {
   if (end === undefined) {
     return
   }
@@ -34,6 +34,6 @@ const endReporter = async function ({ end, startData, id }) {
   try {
     await end(startData)
   } catch (cause) {
-    throw new PluginError(`Could not end reporter "${id}".`, { cause })
+    throw new PluginError(`Could not end reporter "${id}".`, { cause, bugs })
   }
 }
