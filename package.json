@@ -38,7 +38,7 @@
     "color-convert": "^2.0.1",
     "colors-option": "^4.4.0",
     "decamelize": "^6.0.0",
-    "declarative-merge": "^2.2.2",
+    "declarative-merge": "^2.3.0",
     "delay": "^5.0.0",
     "detect-newline": "^4.0.0",
     "env-ci": "^7.1.0",
