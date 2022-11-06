@@ -1,5 +1,4 @@
-// eslint-disable-next-line fp/no-events
-import { once } from 'events'
+import { once } from 'node:events'
 
 import { PluginError, UserError } from '../../error/main.js'
 

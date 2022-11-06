@@ -1,4 +1,4 @@
-import { cpus as listCpus, totalmem } from 'os'
+import { cpus as listCpus, totalmem } from 'node:os'
 
 import envCi from 'env-ci'
 import osName from 'os-name'

@@ -1,4 +1,4 @@
-import { constants } from 'fs'
+import { constants } from 'node:fs'
 
 import { checkAccess, checkAccessAsync } from './access.js'
 import { EXIST_KEYWORD } from './normalize.js'

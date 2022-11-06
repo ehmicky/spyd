@@ -1,5 +1,5 @@
-import process from 'process'
-import { emitKeypressEvents } from 'readline'
+import process from 'node:process'
+import { emitKeypressEvents } from 'node:readline'
 
 import { isTtyInput } from '../../../report/tty.js'
 import { refreshPreview } from '../update/main.js'

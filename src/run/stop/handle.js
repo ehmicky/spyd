@@ -1,4 +1,4 @@
-import process from 'process'
+import process from 'node:process'
 
 import { waitForEvents, waitForDelay } from '../../utils/timeout.js'
 import { addAction, removeAction } from '../preview/action.js'

@@ -1,5 +1,5 @@
-import { readdir } from 'fs/promises'
-import { relative, normalize } from 'path'
+import { readdir } from 'node:fs/promises'
+import { relative, normalize } from 'node:path'
 
 import { findUp } from 'find-up'
 import pLocate from 'p-locate'

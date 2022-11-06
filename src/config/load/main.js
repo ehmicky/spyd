@@ -1,4 +1,4 @@
-import { dirname } from 'path'
+import { dirname } from 'node:path'
 
 import { UserError } from '../../error/main.js'
 import { addBases } from '../cwd.js'

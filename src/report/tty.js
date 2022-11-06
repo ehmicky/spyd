@@ -1,6 +1,6 @@
-import { stdin, stdout } from 'process'
-import { cursorTo, clearScreenDown } from 'readline'
-import { promisify } from 'util'
+import { stdin, stdout } from 'node:process'
+import { cursorTo, clearScreenDown } from 'node:readline'
+import { promisify } from 'node:util'
 
 import isInteractive from 'is-interactive'
 

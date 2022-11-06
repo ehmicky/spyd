@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { cwd as getCwd } from 'process'
+import { cwd as getCwd } from 'node:process'
 
 import {
   DEFAULT_INPUTS,

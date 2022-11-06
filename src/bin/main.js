@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'

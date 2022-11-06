@@ -1,5 +1,5 @@
-import { readFile } from 'fs/promises'
-import { extname } from 'path'
+import { readFile } from 'node:fs/promises'
+import { extname } from 'node:path'
 
 import { load as loadYaml, JSON_SCHEMA } from 'js-yaml'
 

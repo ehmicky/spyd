@@ -1,5 +1,5 @@
-import { Buffer } from 'buffer'
-import { open } from 'fs/promises'
+import { Buffer } from 'node:buffer'
+import { open } from 'node:fs/promises'
 
 import { AnyError, StopError } from '../../error/main.js'
 

@@ -1,4 +1,4 @@
-import { version as currentNodeVersion } from 'process'
+import { version as currentNodeVersion } from 'node:process'
 
 import semver from 'semver'
 

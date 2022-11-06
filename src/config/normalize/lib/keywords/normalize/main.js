@@ -1,4 +1,4 @@
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 import { DefinitionError } from '../../error.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'

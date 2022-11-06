@@ -1,4 +1,4 @@
-import { inspect } from 'util'
+import { inspect } from 'node:util'
 
 import { excludeKeys } from 'filter-obj'
 import isPlainObj from 'is-plain-obj'

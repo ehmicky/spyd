@@ -1,7 +1,7 @@
-import { statSync } from 'fs'
-import { stat } from 'fs/promises'
-import { resolve } from 'path'
-import { cwd as getCwd } from 'process'
+import { statSync } from 'node:fs'
+import { stat } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import { cwd as getCwd } from 'node:process'
 
 const normalize = function (definition) {
   validateCwd(definition)

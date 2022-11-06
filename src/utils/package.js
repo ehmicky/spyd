@@ -1,4 +1,4 @@
-import { createRequire } from 'module'
+import { createRequire } from 'node:module'
 
 // TODO: replace with a JSON import after dropping support for Node <16.14.0
 const {

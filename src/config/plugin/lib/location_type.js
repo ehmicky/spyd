@@ -1,5 +1,5 @@
-import { isAbsolute } from 'path'
-import { fileURLToPath } from 'url'
+import { isAbsolute } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { resolveModuleLocation } from './module.js'
 

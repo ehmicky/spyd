@@ -1,5 +1,5 @@
-import { statSync } from 'fs'
-import { stat } from 'fs/promises'
+import { statSync } from 'node:fs'
+import { stat } from 'node:fs/promises'
 
 import { FILE_KEYWORD, DIR_KEYWORD } from './normalize.js'
 

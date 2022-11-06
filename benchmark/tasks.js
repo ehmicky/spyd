@@ -1,10 +1,10 @@
 // This is an example of tasks, used mostly for debugging
-import { execFile } from 'child_process'
-import { randomInt, createHash } from 'crypto'
-import { readFile, writeFile, unlink } from 'fs/promises'
+import { execFile } from 'node:child_process'
+import { randomInt, createHash } from 'node:crypto'
+import { readFile, writeFile, unlink } from 'node:fs/promises'
 // eslint-disable-next-line no-shadow
-import { setTimeout } from 'timers/promises'
-import { promisify } from 'util'
+import { setTimeout } from 'node:timers/promises'
+import { promisify } from 'node:util'
 
 import got from 'got'
 import { tmpName } from 'tmp-promise'

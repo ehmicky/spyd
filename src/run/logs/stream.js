@@ -1,5 +1,5 @@
-import { createWriteStream } from 'fs'
-import { promisify } from 'util'
+import { createWriteStream } from 'node:fs'
+import { promisify } from 'node:util'
 
 // Start file stream for the runner process to write to
 export const startLogsStream = function (logsFd) {

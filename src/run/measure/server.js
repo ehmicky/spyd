@@ -1,5 +1,5 @@
-import { createServer } from 'http'
-import { promisify } from 'util'
+import { createServer } from 'node:http'
+import { promisify } from 'node:util'
 
 import { TARGET_SAMPLE_DURATION } from './loop.js'
 

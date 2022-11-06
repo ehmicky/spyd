@@ -1,6 +1,5 @@
-// eslint-disable-next-line fp/no-events
-import { once } from 'events'
-import { promisify } from 'util'
+import { once } from 'node:events'
+import { promisify } from 'node:util'
 
 import getStream from 'get-stream'
 

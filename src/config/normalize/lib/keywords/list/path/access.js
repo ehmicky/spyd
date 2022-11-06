@@ -1,5 +1,5 @@
-import { constants, accessSync } from 'fs'
-import { access } from 'fs/promises'
+import { constants, accessSync } from 'node:fs'
+import { access } from 'node:fs/promises'
 
 import { READ_KEYWORD, WRITE_KEYWORD, EXEC_KEYWORD } from './normalize.js'
 

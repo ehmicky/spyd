@@ -1,4 +1,4 @@
-import process from 'process'
+import process from 'node:process'
 
 // Ensure default handlers for those signals are not used.
 // Create a new `noop` function at each call, in case this function is called

@@ -1,5 +1,5 @@
-import { extname } from 'path'
-import { pathToFileURL } from 'url'
+import { extname } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 import { UserError } from '../error/main.js'
 

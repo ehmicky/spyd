@@ -1,5 +1,5 @@
-import { extname } from 'path'
-import { inspect } from 'util'
+import { extname } from 'node:path'
+import { inspect } from 'node:util'
 
 import isPlainObj from 'is-plain-obj'
 
