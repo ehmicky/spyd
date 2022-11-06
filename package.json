@@ -88,7 +88,7 @@
     "uuid": "^8.3.2",
     "wild-wild-parser": "^3.3.0",
     "wild-wild-path": "^3.4.0",
-    "wild-wild-utils": "^4.6.0",
+    "wild-wild-utils": "^4.7.0",
     "wrap-ansi": "^8.0.1",
     "write-file-atomic": "^4.0.1",
     "yargs": "^17.5.1"
