@@ -1,7 +1,9 @@
-import modernErrors from 'modern-errors'
+import ModernError from 'modern-errors'
 import modernErrorsSerialize from 'modern-errors-serialize'
 
-export const BaseError = modernErrors([modernErrorsSerialize])
+export const BaseError = ModernError.subclass('BaseError', {
+  plugins: [modernErrorsSerialize],
+})
 
 export const UnknownError = BaseError.subclass('UnknownError')
 

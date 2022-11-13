@@ -1,15 +1,13 @@
-import modernErrors from 'modern-errors'
+import ModernError from 'modern-errors'
 import modernErrorsBugs from 'modern-errors-bugs'
 import modernErrorsClean from 'modern-errors-clean'
 import modernErrorsCli from 'modern-errors-cli'
 
 import { bugs } from '../utils/package.js'
 
-export const BaseError = modernErrors([
-  modernErrorsBugs,
-  modernErrorsCli,
-  modernErrorsClean,
-])
+export const BaseError = ModernError.subclass('BaseError', {
+  plugins: [modernErrorsBugs, modernErrorsCli, modernErrorsClean],
+})
 
 export const UnknownError = BaseError.subclass('UnknownError', {
   bugs,
