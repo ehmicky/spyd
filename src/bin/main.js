@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { readPackageUp } from 'read-pkg-up'
 import UpdateNotifier from 'update-notifier'
 
-import { BaseError } from '../error/main.js'
+import { BaseError, UnknownError } from '../error/main.js'
 import { run, show, remove, dev } from '../main.js'
 
 import { parseCliFlags } from './parse.js'
@@ -38,7 +38,7 @@ const runCli = async function () {
     const { command, configFlags } = parseCliFlags(yargs)
     await COMMANDS[command](configFlags)
   } catch (error) {
-    BaseError.normalize(error).exit()
+    BaseError.normalize(error, UnknownError).exit()
   }
 }
 

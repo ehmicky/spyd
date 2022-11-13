@@ -2,7 +2,7 @@ import { argv } from 'node:process'
 
 import got from 'got'
 
-import { BaseError, IpcSerializationError } from './error.js'
+import { BaseError, UnknownError, IpcSerializationError } from './error.js'
 
 // Handles IPC communication with the parent process
 export const handleEvents = async function (handlers) {
@@ -44,7 +44,7 @@ const handlePayload = async function (payload, handlers, state) {
 
 // Retrieve payload to send to parent on errors
 const getErrorPayload = function (error) {
-  const errorA = BaseError.normalize(error)
+  const errorA = BaseError.normalize(error, UnknownError)
   return { error: errorA }
 }
 

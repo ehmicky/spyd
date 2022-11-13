@@ -1,7 +1,7 @@
 import { handlePluginError } from '../error.js'
 
 import { validateDuplicatePlugins } from './duplicates.js'
-import { BaseError, UserError } from './error.js'
+import { BaseError, UnknownError, UserError } from './error.js'
 import { getPluginInfo } from './info.js'
 import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 
@@ -69,7 +69,7 @@ const validateDefined = function (value, { name }) {
 
 const handleError = function (error, { bugs }) {
   return handlePluginError({
-    error: BaseError.normalize(error),
+    error: BaseError.normalize(error, UnknownError),
     bugs,
     PluginError: UserError,
     BaseError,
