@@ -60,7 +60,7 @@
     "junk": "^4.0.0",
     "map-obj": "^5.0.2",
     "modern-errors": "^5.0.0",
-    "modern-errors-bugs": "^2.0.1",
+    "modern-errors-bugs": "^2.1.0",
     "modern-errors-clean": "^3.1.0",
     "modern-errors-cli": "^2.1.0",
     "modern-errors-serialize": "^2.1.0",
