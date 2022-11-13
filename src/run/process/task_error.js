@@ -13,7 +13,7 @@ export const throwOnTaskError = function ({ error: errorObject }) {
     return
   }
 
-  const error = BaseError.fromJSON(errorObject)
+  const error = BaseError.parse(errorObject)
   const { ErrorClass, prefix } = ERROR_MAP[getName(error)]
   throw new ErrorClass(prefix, { cause: error })
 }
