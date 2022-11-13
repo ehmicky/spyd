@@ -3,15 +3,15 @@ import modernErrorsBugs from 'modern-errors-bugs'
 
 import { bugs } from '../../../utils/package.js'
 
-export const AnyError = modernErrors([modernErrorsBugs])
+export const BaseError = modernErrors([modernErrorsBugs])
 
-export const UnknownError = AnyError.subclass('UnknownError', { bugs })
+export const UnknownError = BaseError.subclass('UnknownError', { bugs })
 
 // Error from the library's user, who defines available plugin types
-export const UserError = AnyError.subclass('UserError')
+export const UserError = BaseError.subclass('UserError')
 
 // Error from a plugin author, who defines a specific plugin
-export const PluginError = AnyError.subclass('PluginError')
+export const PluginError = BaseError.subclass('PluginError')
 
 // Error from a plugin user
-export const ConsumerError = AnyError.subclass('ConsumerError')
+export const ConsumerError = BaseError.subclass('ConsumerError')

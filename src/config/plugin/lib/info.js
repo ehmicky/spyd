@@ -1,7 +1,7 @@
 import { handlePluginError } from '../error.js'
 
 import { normalizePluginConfig } from './config.js'
-import { AnyError, PluginError } from './error.js'
+import { BaseError, PluginError } from './error.js'
 import { importPlugin } from './import.js'
 import { normalizeLocation } from './location_normalize.js'
 import { getLocationType } from './location_type.js'
@@ -64,12 +64,12 @@ const normalizePluginInfo = async function ({
     })
     return { plugin: pluginB, config: pluginConfigA }
   } catch (error) {
-    throw handlePluginError({ error, bugs, PluginError, AnyError })
+    throw handlePluginError({ error, bugs, PluginError, BaseError })
   }
 }
 
 const addPluginErrorLocation = function (error, originalLocation) {
   return error instanceof PluginError
-    ? new AnyError(`Invalid plugin "${originalLocation}".`, { cause: error })
+    ? new BaseError(`Invalid plugin "${originalLocation}".`, { cause: error })
     : error
 }

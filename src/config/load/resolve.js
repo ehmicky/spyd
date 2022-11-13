@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
 
-import { AnyError } from '../../error/main.js'
+import { BaseError } from '../../error/main.js'
 
 // The `config` can be:
 //  - a Node module name starting with "[@scope/]spyd-config-"
@@ -19,7 +19,7 @@ const resolveNpm = function (configOpt, cwd) {
   try {
     return createRequire(`${cwd}/`).resolve(configOpt)
   } catch (error) {
-    throw new AnyError(
+    throw new BaseError(
       `must be a valid package name.
 This Node module was not found, please ensure it is installed:\n`,
       { cause: error },

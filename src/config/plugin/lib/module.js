@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
 
-import { AnyError } from './error.js'
+import { BaseError } from './error.js'
 
 // Resolve Node module names to absolute file paths.
 // We enforce a npm package naming convention for all plugins.
@@ -14,7 +14,7 @@ export const resolveModuleLocation = function (
   try {
     return createRequire(`${cwd}/`).resolve(moduleName)
   } catch (cause) {
-    throw new AnyError(
+    throw new BaseError(
       `must be ${getBuiltinsError(builtins)}
 This Node module was not found, please ensure it is installed:\n`,
       { cause },

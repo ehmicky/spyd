@@ -1,7 +1,7 @@
 import { listCombinations } from './combination/list.js'
 import { getConfig } from './config/main.js'
 import { performDev } from './dev/main.js'
-import { AnyError } from './error/main.js'
+import { BaseError } from './error/main.js'
 import { checkLimits } from './history/compare/limit.js'
 import { getFromHistory, removeFromHistory } from './history/data/main.js'
 import { getTargetRawResults } from './history/merge/results.js'
@@ -27,7 +27,7 @@ export const run = async function (configFlags) {
     checkLimits(programmaticResult)
     return programmaticResult
   } catch (error) {
-    throw AnyError.normalize(error)
+    throw BaseError.normalize(error)
   }
 }
 
@@ -40,7 +40,7 @@ export const show = async function (configFlags) {
     checkLimits(programmaticResult)
     return programmaticResult
   } catch (error) {
-    throw AnyError.normalize(error)
+    throw BaseError.normalize(error)
   }
 }
 
@@ -54,7 +54,7 @@ export const remove = async function (configFlags) {
     await removeFromHistory(targetRawResults, config)
     return programmaticResult
   } catch (error) {
-    throw AnyError.normalize(error)
+    throw BaseError.normalize(error)
   }
 }
 
@@ -65,6 +65,6 @@ export const dev = async function (configFlags) {
     const combinations = await listCombinations(config)
     await performDev(combinations, config)
   } catch (error) {
-    throw AnyError.normalize(error)
+    throw BaseError.normalize(error)
   }
 }

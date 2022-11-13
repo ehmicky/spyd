@@ -1,7 +1,7 @@
 import { Buffer } from 'node:buffer'
 import { open } from 'node:fs/promises'
 
-import { AnyError, StopError } from '../../error/main.js'
+import { BaseError, StopError } from '../../error/main.js'
 
 import { getAdditionalMessage } from './additional.js'
 import { normalizeLogs } from './normalize.js'
@@ -21,7 +21,7 @@ export const addErrorTaskLogs = async function (error, logsPath) {
   }
 
   const additionalMessage = getAdditionalMessage(taskLogsA)
-  return new AnyError(`${additionalMessage}Task logs:\n${taskLogsA}`, {
+  return new BaseError(`${additionalMessage}Task logs:\n${taskLogsA}`, {
     cause: error,
   })
 }

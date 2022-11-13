@@ -1,5 +1,5 @@
 import { handlePluginError } from '../../config/plugin/error.js'
-import { AnyError, PluginError } from '../../error/main.js'
+import { BaseError, PluginError } from '../../error/main.js'
 import { getCommonVersions } from '../../top/system/versions/common.js'
 import { getCombsNoDimensions } from '../filter.js'
 
@@ -115,7 +115,7 @@ const getDimensionsTasks = async function ({
     )
     return tasks.flat()
   } catch (error) {
-    throw handlePluginError({ error, bugs, PluginError, AnyError })
+    throw handlePluginError({ error, bugs, PluginError, BaseError })
   }
 }
 

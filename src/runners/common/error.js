@@ -1,21 +1,21 @@
 import modernErrors from 'modern-errors'
 import modernErrorsSerialize from 'modern-errors-serialize'
 
-export const AnyError = modernErrors([modernErrorsSerialize])
+export const BaseError = modernErrors([modernErrorsSerialize])
 
-export const UnknownError = AnyError.subclass('UnknownError')
+export const UnknownError = BaseError.subclass('UnknownError')
 
 // Could not JSON-stringify IPC payload
-export const IpcSerializationError = AnyError.subclass('IpcSerializationError')
+export const IpcSerializationError = BaseError.subclass('IpcSerializationError')
 
 // Tasks file throws when loading
-export const TasksLoadError = AnyError.subclass('TasksLoadError')
+export const TasksLoadError = BaseError.subclass('TasksLoadError')
 
 // Tasks throws when running
-export const TasksRunError = AnyError.subclass('TasksRunError')
+export const TasksRunError = BaseError.subclass('TasksRunError')
 
 // Tasks file has invalid syntax, e.g. exports invalid fields
-export const TasksSyntaxError = AnyError.subclass('TasksSyntaxError')
+export const TasksSyntaxError = BaseError.subclass('TasksSyntaxError')
 
 // Invalid runner config
-export const ConfigError = AnyError.subclass('ConfigError')
+export const ConfigError = BaseError.subclass('ConfigError')

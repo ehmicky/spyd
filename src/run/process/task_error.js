@@ -1,7 +1,7 @@
 import isErrorInstance from 'is-error-instance'
 
 import { PluginError, UserError, TaskError } from '../../error/main.js'
-import { AnyError } from '../../runners/common/error.js'
+import { BaseError } from '../../runners/common/error.js'
 
 // When a task throws during any stage, we propagate the error and fail the
 // benchmark. Tasks that throw are unstable and might yield invalid benchmarks,
@@ -13,7 +13,7 @@ export const throwOnTaskError = function ({ error: errorObject }) {
     return
   }
 
-  const error = AnyError.parse(errorObject)
+  const error = BaseError.parse(errorObject)
   const { ErrorClass, prefix } = ERROR_MAP[getName(error)]
   throw new ErrorClass(prefix, { cause: error })
 }

@@ -1,4 +1,4 @@
-import { AnyError } from '../../error/main.js'
+import { BaseError } from '../../error/main.js'
 import { findValue } from '../../utils/find.js'
 
 import { getDeltaTypeMessage } from './error.js'
@@ -31,7 +31,7 @@ const parseDelta = function ({ parse, type }, deltaOriginal) {
     const value = parse(deltaOriginal)
     return value === undefined ? undefined : { type, value }
   } catch (cause) {
-    throw new AnyError(`must be a valid ${getDeltaTypeMessage(type)}.`, {
+    throw new BaseError(`must be a valid ${getDeltaTypeMessage(type)}.`, {
       cause,
     })
   }

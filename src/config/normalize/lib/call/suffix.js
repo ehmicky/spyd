@@ -1,6 +1,6 @@
 import { inspect } from 'node:util'
 
-import { AnyError } from '../error.js'
+import { BaseError } from '../error.js'
 
 // Add the current definition as error suffix
 export const addCurrentDefinition = function (error, definition) {
@@ -29,7 +29,7 @@ export const addExampleInput = function ({ error, example, hasInput, test }) {
 }
 
 const addSuffix = function (error, name, value) {
-  return new AnyError(`${name}:${serializeValue(value)}`, { cause: error })
+  return new BaseError(`${name}:${serializeValue(value)}`, { cause: error })
 }
 
 const serializeValue = function (value) {

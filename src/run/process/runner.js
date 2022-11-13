@@ -1,4 +1,4 @@
-import { AnyError } from '../../error/main.js'
+import { BaseError } from '../../error/main.js'
 import { noUnhandledRejection } from '../../error/unhandled_rejection.js'
 import { spawnProcess } from '../../utils/spawn.js'
 
@@ -62,7 +62,7 @@ export const spawnRunnerProcess = async function ({
     const onTaskExit = noUnhandledRejection(throwOnTaskExit(childProcess))
     return { childProcess, onTaskExit }
   } catch (cause) {
-    throw new AnyError(`Could not start runner "${id}".`, { cause })
+    throw new BaseError(`Could not start runner "${id}".`, { cause })
   }
 }
 

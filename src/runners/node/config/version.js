@@ -4,7 +4,7 @@ import semver from 'semver'
 
 import { normalizeNumberString } from '../../../config/normalize/transform.js'
 import { nodeVersion } from '../../../utils/package.js'
-import { AnyError } from '../../common/error.js'
+import { BaseError } from '../../common/error.js'
 
 // Normalize and validate the Node.js version.
 // We can only allow Node versions that are valid with the runner's code.
@@ -30,7 +30,7 @@ const normalizeVersion = async function (version) {
   try {
     return await nvexeca(versionA, 'node', { progress: true, dry: true })
   } catch (cause) {
-    throw new AnyError('must be a valid Node.js version:\n', { cause })
+    throw new BaseError('must be a valid Node.js version:\n', { cause })
   }
 }
 

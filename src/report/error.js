@@ -1,5 +1,5 @@
 import { handlePluginError } from '../config/plugin/error.js'
-import { PluginError, AnyError } from '../error/main.js'
+import { PluginError, BaseError } from '../error/main.js'
 
 // Create a reporter plugin error
 export const getReporterPluginError = function (reporter, ...args) {
@@ -8,6 +8,6 @@ export const getReporterPluginError = function (reporter, ...args) {
     error,
     bugs: reporter.bugs,
     PluginError,
-    AnyError,
+    BaseError,
   })
 }
