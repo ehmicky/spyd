@@ -5,7 +5,7 @@ export const handlePluginError = function ({
   PluginError,
   AnyError,
 }) {
-  return error instanceof PluginError && typeof bugs === 'string' && bugs !== ''
+  return error instanceof PluginError && typeof bugs === 'string'
     ? new AnyError('', { cause: error, bugs })
     : error
 }
