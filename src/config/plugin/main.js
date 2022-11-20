@@ -59,8 +59,8 @@ const normalizePluginConfigs = async function ({
     })
     const pluginInfosA = pluginInfos.map(normalizePluginInfo)
     return { [name]: pluginInfosA }
-  } catch (cause) {
-    throw handlePluginsError(cause)
+  } catch (error) {
+    throw handlePluginsError(error)
   }
 }
 
@@ -68,10 +68,8 @@ const normalizePluginInfo = function ({ plugin, config }) {
   return cleanObject({ ...plugin, config })
 }
 
-// Translate error classes from the plugins library to error classes from this
-// library
-const handlePluginsError = function (cause) {
-  return BaseError.switch(cause)
+const handlePluginsError = function (error) {
+  return BaseError.switch(error)
     .case(PluginLibError, PluginError)
     .case(ConsumerError, UserError)
     .default(UnknownError)
