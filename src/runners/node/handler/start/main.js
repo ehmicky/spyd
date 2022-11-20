@@ -27,9 +27,7 @@ const importFile = async function (taskPath) {
   try {
     return await importJsNamed(taskPath)
   } catch (cause) {
-    throw new TasksLoadError(`Could not import the tasks file "${taskPath}"`, {
-      cause,
-    })
+    throw new TasksLoadError('Could not import the tasks file.', { cause })
   }
 }
 
