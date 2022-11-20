@@ -1,11 +1,10 @@
 import ModernError from 'modern-errors'
 import modernErrorsBugs from 'modern-errors-bugs'
-import modernErrorsSwitch from 'modern-errors-switch'
 
 import { bugs } from '../../../utils/package.js'
 
 export const BaseError = ModernError.subclass('BaseError', {
-  plugins: [modernErrorsBugs, modernErrorsSwitch],
+  plugins: [modernErrorsBugs],
 })
 
 /* jscpd:ignore-start */

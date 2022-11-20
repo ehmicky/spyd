@@ -1,6 +1,9 @@
-import isErrorInstance from 'is-error-instance'
-
-import { UnknownError, PluginError, UserError } from '../../error/main.js'
+import {
+  BaseError,
+  UnknownError,
+  PluginError,
+  UserError,
+} from '../../error/main.js'
 import { normalizeReporters } from '../../report/config/main.js'
 import { REPORTER_PLUGIN_TYPE } from '../../report/reporters/plugin/main.js'
 import { RUNNER_PLUGIN_TYPE } from '../../runners/plugin/main.js'
@@ -8,6 +11,7 @@ import { cleanObject } from '../../utils/clean.js'
 import { bugs } from '../../utils/package.js'
 import { PREFIX } from '../normalize/main.js'
 
+import { PluginError as PluginLibError, ConsumerError } from './lib/error.js'
 import { getPlugins } from './lib/main.js'
 
 // Handle the configuration plugins: runners and reporters
@@ -67,21 +71,8 @@ const normalizePluginInfo = function ({ plugin, config }) {
 // Translate error classes from the plugins library to error classes from this
 // library
 const handlePluginsError = function (cause) {
-  const ErrorClass = ERROR_MAP[getName(cause)]
-  return new ErrorClass('', { cause })
+  return BaseError.switch(cause)
+    .case(PluginLibError, PluginError)
+    .case(ConsumerError, UserError)
+    .default(UnknownError)
 }
-
-const getName = function (error) {
-  return isErrorInstance(error) && error.name in ERROR_MAP
-    ? error.name
-    : DEFAULT_ERROR_NAME
-}
-
-const ERROR_MAP = {
-  UnknownError,
-  UserError: UnknownError,
-  PluginError,
-  ConsumerError: UserError,
-}
-
-const DEFAULT_ERROR_NAME = 'UnknownError'
