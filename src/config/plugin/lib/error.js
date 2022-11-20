@@ -1,10 +1,11 @@
 import ModernError from 'modern-errors'
 import modernErrorsBugs from 'modern-errors-bugs'
+import modernErrorsSwitch from 'modern-errors-switch'
 
 import { bugs } from '../../../utils/package.js'
 
 export const BaseError = ModernError.subclass('BaseError', {
-  plugins: [modernErrorsBugs],
+  plugins: [modernErrorsBugs, modernErrorsSwitch],
 })
 
 export const UnknownError = BaseError.subclass('UnknownError', { bugs })

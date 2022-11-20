@@ -18,8 +18,8 @@ export const normalizeCommonShape = async function ({
       context: { sharedPropNames, locationType, originalLocation },
     },
     keywords,
-    InputErrorType: PluginError,
-    DefinitionErrorType: Error,
+    InputErrorClass: PluginError,
+    DefinitionErrorClass: Error,
   })
 }
 
@@ -37,8 +37,8 @@ export const normalizeCustomShape = async function (
         {
           all: { prefix: PLUGIN_PREFIX, context },
           keywords,
-          InputErrorType: PluginError,
-          DefinitionErrorType: UserError,
+          InputErrorClass: PluginError,
+          DefinitionErrorClass: UserError,
         },
       )
 }

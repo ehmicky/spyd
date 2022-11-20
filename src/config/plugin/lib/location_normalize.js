@@ -18,8 +18,8 @@ export const normalizeLocation = async function ({
       context: { locationType, builtins, modulePrefix },
     },
     keywords,
-    InputErrorType: ConsumerError,
-    DefinitionErrorType: Error,
+    InputErrorClass: ConsumerError,
+    DefinitionErrorClass: Error,
   })
 }
 

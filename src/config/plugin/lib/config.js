@@ -80,8 +80,8 @@ const normalizeSharedConfig = async function ({
   return await safeNormalizeConfig(pluginConfig, rules, {
     all: { cwd, prefix, parent, context: { ...context, plugin } },
     keywords,
-    InputErrorType: ConsumerError,
-    DefinitionErrorType: UserError,
+    InputErrorClass: ConsumerError,
+    DefinitionErrorClass: UserError,
   })
 }
 
@@ -95,7 +95,7 @@ const normalizeSpecificConfig = async function ({
   return await safeNormalizeConfig(pluginConfig, rules, {
     all: { cwd, prefix, parent, context },
     keywords,
-    InputErrorType: ConsumerError,
-    DefinitionErrorType: PluginError,
+    InputErrorClass: ConsumerError,
+    DefinitionErrorClass: PluginError,
   })
 }
