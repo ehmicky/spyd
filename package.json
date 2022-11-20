@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "ajv": "^8.11.0",
+    "ajv": "^8.11.2",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.0-rc.0",
     "ajv-keywords": "^5.1.0",
