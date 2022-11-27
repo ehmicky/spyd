@@ -43,7 +43,7 @@
     "detect-newline": "^4.0.0",
     "env-ci": "^7.3.0",
     "execa": "^6.1.0",
-    "fast-glob": "^3.2.11",
+    "fast-glob": "^3.2.12",
     "filter-obj": "^5.1.0",
     "find-up": "^6.3.0",
     "get-stream": "^6.0.0",
