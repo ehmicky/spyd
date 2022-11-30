@@ -5,7 +5,9 @@
   "exports": "./build/src/main.js",
   "main": "./build/src/main.js",
   "files": [
-    "build/src/**/*.{js,json}"
+    "build/src/**/*.{js,json}",
+    "!build/src/**/*.test.js",
+    "!build/src/{helpers,fixtures}/**/*.js"
   ],
   "bin": {
     "spyd": "build/src/bin/main.js"
