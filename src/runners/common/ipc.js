@@ -1,6 +1,6 @@
 import { argv } from 'node:process'
 
-import got from 'got'
+import { got } from 'got'
 
 import { BaseError, UnknownError, IpcSerializationError } from './error.js'
 

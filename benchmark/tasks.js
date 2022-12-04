@@ -6,7 +6,7 @@ import { readFile, writeFile, unlink } from 'node:fs/promises'
 import { setTimeout } from 'node:timers/promises'
 import { promisify } from 'node:util'
 
-import got from 'got'
+import { got } from 'got'
 import { tmpName } from 'tmp-promise'
 
 const pExecFile = promisify(execFile)
