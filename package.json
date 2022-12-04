@@ -89,7 +89,7 @@
     "update-notifier": "^6.0.2",
     "uuid": "^9.0.0",
     "wild-wild-parser": "^3.4.0",
-    "wild-wild-path": "^3.5.0",
+    "wild-wild-path": "^3.6.0",
     "wild-wild-utils": "^4.8.0",
     "wrap-ansi": "^8.0.1",
     "write-file-atomic": "^5.0.0",
