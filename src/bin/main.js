@@ -51,4 +51,4 @@ const checkUpdate = async function () {
 
 const COMMANDS = { run, show, remove, dev }
 
-runCli()
+await runCli()
