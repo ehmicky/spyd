@@ -83,7 +83,7 @@
     "string-width": "^5.1.2",
     "strip-ansi": "^7.0.1",
     "strip-final-newline": "^3.0.0",
-    "time-resolution": "^1.0.0",
+    "time-resolution": "^1.1.0",
     "tmp-promise": "^3.0.2",
     "update-notifier": "^6.0.2",
     "uuid": "^9.0.0",
