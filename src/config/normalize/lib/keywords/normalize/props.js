@@ -73,7 +73,6 @@ const BOOLEAN_PROPS = ['hasInput', 'undefinedInput', 'undefinedDefinition']
 const validateOptionalProp = function (keyword, propName, typeName) {
   const value = keyword[propName]
 
-  // eslint-disable-next-line valid-typeof
   if (value !== undefined && typeof value !== typeName) {
     throw new KeywordError(
       `"${propName}" property must be a ${typeName}: ${inspect(value)}`,

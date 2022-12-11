@@ -3,7 +3,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { readPackageUp } from 'read-pkg-up'
-import UpdateNotifier from 'update-notifier'
+import updateNotifier from 'update-notifier'
 
 import { BaseError, UnknownError } from '../error/main.js'
 import { run, show, remove, dev } from '../main.js'
@@ -46,7 +46,7 @@ const runCli = async function () {
 const checkUpdate = async function () {
   const cwd = dirname(fileURLToPath(import.meta.url))
   const { packageJson } = await readPackageUp({ cwd, normalize: false })
-  UpdateNotifier({ pkg: packageJson }).notify()
+  updateNotifier({ pkg: packageJson }).notify()
 }
 
 const COMMANDS = { run, show, remove, dev }
