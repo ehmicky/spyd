@@ -59,7 +59,7 @@
     "json-ptr": "^3.1.1",
     "junk": "^4.0.0",
     "map-obj": "^5.0.2",
-    "modern-errors": "^5.4.0",
+    "modern-errors": "^5.5.0",
     "modern-errors-bugs": "^2.1.0",
     "modern-errors-clean": "^3.1.0",
     "modern-errors-cli": "^2.3.0",
