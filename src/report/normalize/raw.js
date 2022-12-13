@@ -26,11 +26,7 @@ import { selectResult } from '../../select/main.js'
 //       measured combinations are expected to be reported
 //  - The core issue is due to `select` having two purposes with the `run`
 //    command: restricting measuring and reporting
-export const normalizeReportedResults = function (
-  targetResult,
-  history,
-  { select },
-) {
+export const normalizeReportedResults = (targetResult, history, { select }) => {
   const { history: historyA, targetResult: targetResultA } = mergeResults(
     history,
     targetResult,
@@ -46,8 +42,7 @@ export const normalizeReportedResults = function (
 // We ignore the combinations from history results that do not exist in the
 // target result.
 // This simplifies both the implementation and the user experience.
-const filterUnusedCombinations = function (history, combinations) {
-  return history.map((historyResult) =>
+const filterUnusedCombinations = (history, combinations) =>
+  history.map((historyResult) =>
     keepResultCombinations(historyResult, combinations),
   )
-}

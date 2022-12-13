@@ -6,13 +6,13 @@ import { getGroupsCount } from './size.js'
 // `clusterSize` elements. Each group has a specific `clusterSize`.
 // Then, sum the elements of each cluster and compute the variance of all
 // clusters within each group.
-export const computeGroups = function ({
+export const computeGroups = ({
   array,
   clusterSizes,
   mean,
   variance,
   filter,
-}) {
+}) => {
   const groups = getInitGroups(clusterSizes, mean)
   const filteredLength = iterateOnGroups({ groups, array, filter })
   const filteredGroupsCount = getGroupsCount(filteredLength)
@@ -25,13 +25,13 @@ export const computeGroups = function ({
 // The final `clusterSize` 0 is a performance optimization so that the actual
 // last group can assign `parentGroup.sum` without checking if it is
 // `undefined`.
-const getInitGroups = function (clusterSizes, mean) {
+const getInitGroups = (clusterSizes, mean) => {
   const clusterSizesA = [...clusterSizes, 0]
   return clusterSizesA.map((clusterSize) => getInitGroup(clusterSize, mean))
 }
 
 // `groupMean` is the mean of all clusters of this group
-const getInitGroup = function (clusterSize, mean) {
+const getInitGroup = (clusterSize, mean) => {
   const groupMean = mean * clusterSize
   return { clusterSize, groupMean, sum: 0, deviationSum: 0 }
 }
@@ -41,13 +41,13 @@ const getInitGroup = function (clusterSize, mean) {
 /* eslint-disable fp/no-mutation, fp/no-let, fp/no-loops, no-param-reassign,
    max-depth, no-continue */
 // eslint-disable-next-line max-statements
-const iterateOnGroups = function ({
+const iterateOnGroups = ({
   groups,
   groups: [firstGroup],
   array,
   array: { length },
   filter,
-}) {
+}) => {
   let valueIndex = 0
 
   for (let index = 0; index < length; index += 1) {
@@ -102,11 +102,11 @@ const iterateOnGroups = function ({
 //        - Instead, consumers can correct this bias themselves, if needed
 //          (which is most likely not the case)
 //     - This is simpler implementation-wise
-const getFinalGroup = function (
+const getFinalGroup = (
   { clusterSize, deviationSum },
   filteredLength,
   variance,
-) {
+) => {
   const groupSize = Math.floor(filteredLength / clusterSize)
   const groupVariance = deviationSum / (groupSize - 1)
   const expectedVariance = variance * clusterSize
@@ -128,11 +128,7 @@ const getFinalGroup = function (
 //       picked more often than they should.
 //  - This follows a chi-squared distribution with `groupSize - 1` degrees of
 //    freedom
-const getConfidenceInterval = function (
-  groupSize,
-  groupVariance,
-  expectedVariance,
-) {
+const getConfidenceInterval = (groupSize, groupVariance, expectedVariance) => {
   const varianceMin =
     groupVariance * getChiSquaredValue(groupSize, SIGNIFICANCE_LEVEL_MIN)
   const varianceRatioMin = varianceMin / expectedVariance

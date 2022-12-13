@@ -8,7 +8,7 @@
 //  - This ensures both low and high outliers are not removed at the same time,
 //    which would mean adding one `measure` could potentially remove one from
 //    `length`
-export const getLengthFromLoops = function (loops, outliersMin, outliersMax) {
+export const getLengthFromLoops = (loops, outliersMin, outliersMax) => {
   const minIndex = Math.round(loops * outliersMin)
   const maxIndex = loops - 1 - Math.round((loops - 1) * outliersMax)
   const length = maxIndex - minIndex + 1
@@ -18,6 +18,5 @@ export const getLengthFromLoops = function (loops, outliersMin, outliersMax) {
 // Inverse function of `getLengthFromLoops()`, i.e. retrieves `loops` from
 // `length`. Due to the use of multiple `Math.round()`, the result might be
 // 1 lower|higher than the actual result.
-export const getLoopsFromLength = function (length, outliersMin, outliersMax) {
-  return Math.round(length / (1 - outliersMax - outliersMin))
-}
+export const getLoopsFromLength = (length, outliersMin, outliersMax) =>
+  Math.round(length / (1 - outliersMax - outliersMin))

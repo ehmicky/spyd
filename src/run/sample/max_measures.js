@@ -16,13 +16,9 @@
 //     - A combination with hundreds of steps
 //     - A `rstdev` > 100%, which is theoretically possible if the task duration
 //       is exponential based on a random factor
-export const hasMaxMeasures = function (measures) {
-  return getMaxMeasuresLeft(measures) <= 0
-}
+export const hasMaxMeasures = (measures) => getMaxMeasuresLeft(measures) <= 0
 
-export const getMaxMeasuresLeft = function (measures) {
-  return MAX_MEASURES - measures.length
-}
+export const getMaxMeasuresLeft = (measures) => MAX_MEASURES - measures.length
 
 // The two limits we are avoiding are:
 //  - Default memory limit in V8: 1.7GB

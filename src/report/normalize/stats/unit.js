@@ -1,19 +1,11 @@
 // Retrieve unit shown after the stat, depending on its scale
-export const getUnit = function (kind, scale) {
-  return UNITS[kind](scale)
-}
+export const getUnit = (kind, scale) => UNITS[kind](scale)
 
-const getCountUnit = function (scale) {
-  return scale === 1 ? '' : `e${Math.log10(scale)}`
-}
+const getCountUnit = (scale) => (scale === 1 ? '' : `e${Math.log10(scale)}`)
 
-const getPercentageUnit = function () {
-  return '%'
-}
+const getPercentageUnit = () => '%'
 
-const getDurationUnit = function (scale) {
-  return DURATION_UNITS.get(scale)
-}
+const getDurationUnit = (scale) => DURATION_UNITS.get(scale)
 
 /* eslint-disable no-magic-numbers */
 const DURATION_UNITS = new Map([

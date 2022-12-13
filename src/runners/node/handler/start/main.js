@@ -6,10 +6,10 @@ import { useRequireConfig } from './require_config.js'
 import { validate } from './validate.js'
 
 // Start the combinations by requiring the task files.
-export const start = async function (
+export const start = async (
   state,
   { runnerConfig: { require: requireConfig }, taskPath, taskId, inputs },
-) {
+) => {
   await useRequireConfig(requireConfig)
 
   const tasks = await importFile(taskPath)
@@ -23,7 +23,7 @@ export const start = async function (
   return { tasks: tasksC }
 }
 
-const importFile = async function (taskPath) {
+const importFile = async (taskPath) => {
   try {
     return await importJsNamed(taskPath)
   } catch (cause) {
@@ -33,4 +33,4 @@ const importFile = async function (taskPath) {
 
 // Revert any state created by `start`
 // eslint-disable-next-line no-empty-function
-export const end = function () {}
+export const end = () => {}

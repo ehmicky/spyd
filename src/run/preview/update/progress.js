@@ -2,17 +2,13 @@ import { getPaddedScreenWidth } from '../../../report/tty.js'
 import { goodColor, separatorColor } from '../../../report/utils/colors.js'
 
 // Retrieve row with progress bar
-export const getProgressRow = function ({
-  durationLeft,
-  percentage,
-  leftWidth,
-}) {
+export const getProgressRow = ({ durationLeft, percentage, leftWidth }) => {
   const durationLeftA = durationLeft.padEnd(leftWidth)
   const progressBar = getProgressBar(durationLeftA, percentage)
   return `${durationLeftA}${progressBar}\n`
 }
 
-const getProgressBar = function (durationLeft, percentage) {
+const getProgressBar = (durationLeft, percentage) => {
   const progressBarWidth = getPaddedScreenWidth() - durationLeft.length
   const filled = Math.floor(progressBarWidth * percentage)
   const filledChars = goodColor(FILL_CHAR.repeat(filled))

@@ -4,7 +4,7 @@ import { KeywordError } from '../error.js'
 import { addMove } from '../move.js'
 
 // Keywords can give a hint on where a value has moved by returning a `path`
-export const applyPath = function ({ path }, moves, { path: oldPath }) {
+export const applyPath = ({ path }, moves, { path: oldPath }) => {
   if (path === undefined) {
     return
   }
@@ -16,7 +16,7 @@ export const applyPath = function ({ path }, moves, { path: oldPath }) {
   }
 }
 
-const safeNormalizePath = function (path) {
+const safeNormalizePath = (path) => {
   try {
     return normalizePath(path)
   } catch (cause) {

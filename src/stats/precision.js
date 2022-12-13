@@ -4,7 +4,7 @@ import { getAdjustedMoe, getMoe, getRmoe } from './moe.js'
 import { getVarianceStats } from './variance.js'
 
 // Retrieve stats related to `stdev` and precision.
-export const getPrecisionStats = function ({
+export const getPrecisionStats = ({
   measures,
   unsortedMeasures,
   minIndex,
@@ -14,7 +14,7 @@ export const getPrecisionStats = function ({
   max,
   filter,
   mean,
-}) {
+}) => {
   if (length < MIN_STDEV_LOOPS) {
     return {}
   }
@@ -93,19 +93,17 @@ const MIN_STDEV_LOOPS = 4
 //    to `Number.EPSILON`
 // We make sure this is only returned after `length` is high enough, since
 // mean might be 0 due to a low sample size
-const getPerfectPrecisionStats = function (mean) {
-  return {
-    stdev: 0,
-    rstdev: 0,
-    moe: 0,
-    rmoe: 0,
-    meanMin: mean,
-    meanMax: mean,
-    envDev: 0,
-  }
-}
+const getPerfectPrecisionStats = (mean) => ({
+  stdev: 0,
+  rstdev: 0,
+  moe: 0,
+  rmoe: 0,
+  meanMin: mean,
+  meanMax: mean,
+  envDev: 0,
+})
 
-const getMoeStats = function ({ stdev, envDev, length, min, max, mean }) {
+const getMoeStats = ({ stdev, envDev, length, min, max, mean }) => {
   const adjustedMoe = getAdjustedMoe(stdev, length, envDev)
   const moe = getMoe(stdev, length)
   const rmoe = getRmoe(moe, mean)

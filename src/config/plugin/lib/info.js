@@ -9,7 +9,7 @@ import { normalizeCommonShape, normalizeCustomShape } from './shape.js'
 import { normalizePluginConfigTop } from './top.js'
 
 // Get each `pluginInfo`, i.e. normalized `plugin` + `pluginConfig`
-export const getPluginInfo = async function (pluginConfig, opts) {
+export const getPluginInfo = async (pluginConfig, opts) => {
   const {
     originalLocation,
     pluginConfig: pluginConfigA,
@@ -39,14 +39,14 @@ export const getPluginInfo = async function (pluginConfig, opts) {
   }
 }
 
-const normalizePluginInfo = async function ({
+const normalizePluginInfo = async ({
   pluginConfig,
   plugin,
   plugin: { bugs },
   locationType,
   originalLocation,
   opts,
-}) {
+}) => {
   try {
     const pluginA = await normalizeCommonShape({
       plugin,
@@ -68,8 +68,7 @@ const normalizePluginInfo = async function ({
   }
 }
 
-const addPluginErrorLocation = function (error, originalLocation) {
-  return error instanceof PluginError
+const addPluginErrorLocation = (error, originalLocation) =>
+  error instanceof PluginError
     ? new BaseError(`Invalid plugin "${originalLocation}".`, { cause: error })
     : error
-}

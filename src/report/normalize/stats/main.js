@@ -17,18 +17,16 @@ import { addStatsPretty } from './prettify.js'
 //    pass those as `allCombinations`.
 //  - Must be done on each history result during each preview since the target
 //    result might change the scale of all history results
-export const prettifyHistoryStats = function (history) {
+export const prettifyHistoryStats = (history) => {
   const allCombinations = history.flatMap(getCombinations)
   return history.map((historyResult) =>
     prettifyStats(historyResult, allCombinations),
   )
 }
 
-const getCombinations = function ({ combinations }) {
-  return combinations
-}
+const getCombinations = ({ combinations }) => combinations
 
-export const prettifyStats = function (result, allCombinations) {
+export const prettifyStats = (result, allCombinations) => {
   const combinations = STAT_KINDS.reduce(
     (combinationsA, statKind) =>
       prettifyCombinationsStat(statKind, combinationsA, allCombinations),
@@ -37,11 +35,11 @@ export const prettifyStats = function (result, allCombinations) {
   return { ...result, combinations }
 }
 
-const prettifyCombinationsStat = function (
+const prettifyCombinationsStat = (
   { name, kind, signed, ownScale },
   combinations,
   allCombinations,
-) {
+) => {
   const combinationsA = addStatsPretty({
     combinations,
     allCombinations,

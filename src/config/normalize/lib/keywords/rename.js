@@ -7,14 +7,14 @@ import { addMove } from '../move.js'
 import { setInputs } from './set.js'
 
 // Keywords can move the input by returning a `rename` property
-export const applyRename = function ({
+export const applyRename = ({
   returnValue: { rename },
   state,
   state: { inputs, moves },
   input,
   info,
   info: { name: oldName, path: oldPath },
-}) {
+}) => {
   if (rename === undefined) {
     return info
   }
@@ -35,7 +35,7 @@ export const applyRename = function ({
 // `keyword.normalize()` should apply `normalizePath()` when possible, for
 // performance reasons, and so that this is reported as a `DefinitionError`
 // instead of `KeywordError`. But we do it again, to check for keyword bugs.
-const safeNormalizePath = function (rename) {
+const safeNormalizePath = (rename) => {
   try {
     return normalizePath(rename)
   } catch (cause) {

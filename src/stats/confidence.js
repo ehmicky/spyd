@@ -45,12 +45,7 @@
 //          different durations
 //     - This results in big jumps of the preview duration through the run
 //        - `envDev` currently varies a lot through the run
-export const getConfidenceInterval = function ({
-  mean,
-  adjustedMoe,
-  min,
-  max,
-}) {
+export const getConfidenceInterval = ({ mean, adjustedMoe, min, max }) => {
   const meanMin = Math.max(mean - adjustedMoe, min, 0)
   const meanMax = Math.min(mean + adjustedMoe, max)
   return { meanMin, meanMax }

@@ -10,11 +10,7 @@ import { normalizeTargetResult } from './target.js'
 
 // Normalize as many properties as possible at the beginning of the reporting
 // (once) as opposed to later on (repeatedly)
-export const normalizeEarlyResult = async function (
-  rawResult,
-  history,
-  config,
-) {
+export const normalizeEarlyResult = async (rawResult, history, config) => {
   const {
     result,
     history: historyA,
@@ -37,13 +33,13 @@ export const normalizeEarlyResult = async function (
 
 // Add report-specific properties to each `history` result.
 // This is only computed once at the beginning of the command.
-const normalizeHistory = async function ({
+const normalizeHistory = async ({
   history,
   result,
   sinceResult,
   noDimensions,
   config,
-}) {
+}) => {
   if (!config.reporters.some(reporterHasHistory)) {
     return config
   }
@@ -67,14 +63,12 @@ const normalizeHistory = async function ({
 // Add report-specific properties that only apply to `history` results.
 // History should only be accessed at the target result level.
 // We set an empty array of history results for monomorphism.
-const normalizeHistoryAll = function (result) {
-  return { ...result, history: [] }
-}
+const normalizeHistoryAll = (result) => ({ ...result, history: [] })
 
 // Add report-specific properties to each `history` result that are
 // reporter-specific.
 // Those are saved in `reporter.history` and merged later.
-const normalizeHistoryEach = async function (history, reporter, config) {
+const normalizeHistoryEach = async (history, reporter, config) => {
   if (!reporterHasHistory(reporter)) {
     return reporter
   }
@@ -90,6 +84,4 @@ const normalizeHistoryEach = async function (history, reporter, config) {
 
 // As a performance optimization, reporters which do not use `history` do not
 // normalize it
-const reporterHasHistory = function ({ capabilities: { history } }) {
-  return history
-}
+const reporterHasHistory = ({ capabilities: { history } }) => history

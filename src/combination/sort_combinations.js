@@ -17,7 +17,7 @@ import { getCombsDimensions } from './dimensions.js'
 //     - `select` configuration property
 //     - Variations being runner-specific
 //  - Those should be filtered out, as opposed to showing empty rows|columns
-export const sortCombinations = function (result) {
+export const sortCombinations = (result) => {
   const { combinations } = result
   const dimensions = getCombsDimensions(combinations)
   const sortFunctions = dimensions.map((dimension) =>
@@ -28,7 +28,7 @@ export const sortCombinations = function (result) {
 }
 
 // Retrieve a function used to compare combinations for a specific dimension
-const getSortFunction = function ({ propName }, combinations) {
+const getSortFunction = ({ propName }, combinations) => {
   const combinationsGroups = groupBy(
     combinations,
     ({ dimensions }) => dimensions[propName].id,
@@ -39,20 +39,16 @@ const getSortFunction = function ({ propName }, combinations) {
 
 // Retrieve the mean of all `stat.mean` for a specific dimension and id.
 // `undefined` means are omitted. Ids with all means undefined are sorted last.
-const getMeanOfMeans = function (combinations) {
+const getMeanOfMeans = (combinations) => {
   const means = combinations.map(getCombinationMean).filter(isDefined)
   return means.length === 0 ? Number.POSITIVE_INFINITY : getMean(means)
 }
 
-const getCombinationMean = function ({ stats: { mean } }) {
-  return mean
-}
+const getCombinationMean = ({ stats: { mean } }) => mean
 
-const isDefined = function (mean) {
-  return mean !== undefined
-}
+const isDefined = (mean) => mean !== undefined
 
-const getCombinationOrder = function (propName, meansOfMeans, { dimensions }) {
+const getCombinationOrder = (propName, meansOfMeans, { dimensions }) => {
   const { id } = dimensions[propName]
   return meansOfMeans[id]
 }

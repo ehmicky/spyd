@@ -6,7 +6,7 @@ import { getCounterRow, getCounter } from './counter.js'
 import { getProgressRow } from './progress.js'
 
 // Retrieve bottom bar of preview
-export const getBottomBar = function ({
+export const getBottomBar = ({
   actions,
   durationLeft,
   percentage,
@@ -20,7 +20,7 @@ export const getBottomBar = function ({
       config: { colors },
     },
   ],
-}) {
+}) => {
   const separator = getSeparator(report)
   const leftWidth = getLeftWidth({ durationLeft, total })
   const progressRow = getProgressRow({ durationLeft, percentage, leftWidth })
@@ -41,18 +41,13 @@ export const getBottomBar = function ({
 // It has bottom padding to separate it from the `bottomBar` but no top padding
 // to separate it from the `report`, to make it clear the `bottomBar` overlays
 // it.
-const getSeparator = function (report) {
-  return report === '' ? '' : getFullLineSeparator()
-}
+const getSeparator = (report) => (report === '' ? '' : getFullLineSeparator())
 
-const getLeftWidth = function ({ durationLeft, total }) {
-  return (
-    Math.max(
-      durationLeft.length,
-      getCounter(total, total).length,
-      ACTIONS_LABEL.length,
-    ) + LEFT_WIDTH_PADDING
-  )
-}
+const getLeftWidth = ({ durationLeft, total }) =>
+  Math.max(
+    durationLeft.length,
+    getCounter(total, total).length,
+    ACTIONS_LABEL.length,
+  ) + LEFT_WIDTH_PADDING
 
 const LEFT_WIDTH_PADDING = 2

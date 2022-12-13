@@ -8,7 +8,7 @@ import { sortSystems } from './sort/main.js'
 import { addSystemsTitles } from './title.js'
 
 // Add each `reporter.footer`
-export const computeFooter = function ({
+export const computeFooter = ({
   result: { id },
   systems,
   timestamp,
@@ -17,7 +17,7 @@ export const computeFooter = function ({
     config: { format, showTitles, showMetadata, showSystem },
   },
   config: { titles },
-}) {
+}) => {
   const footer = { id, timestamp, systems }
   const footerA = omitFooterProps(footer, showMetadata, showSystem)
   const footerB = serializeFooter(footerA)

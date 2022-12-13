@@ -2,14 +2,14 @@ import now from 'precise-now'
 
 import { addContext } from './context.js'
 
-export const performLoopsAsync = async function ({
+export const performLoopsAsync = async ({
   main,
   beforeEach,
   afterEach,
   inputs,
   repeat,
   maxLoops,
-}) {
+}) => {
   const measures = new Array(maxLoops)
   const { length } = measures
 
@@ -28,13 +28,13 @@ export const performLoopsAsync = async function ({
   return measures
 }
 
-const performLoopAsync = async function ({
+const performLoopAsync = async ({
   main,
   beforeEach,
   afterEach,
   inputs,
   repeat,
-}) {
+}) => {
   const allInputs = addContext(inputs, repeat)
 
   await performHookAsync(beforeEach, allInputs)
@@ -45,7 +45,7 @@ const performLoopAsync = async function ({
 
 // Each `beforeEach`/`afterEach` is executed serially to prevent hitting OS
 // resources limits (such as max number of open files)
-const performHookAsync = async function (hook, allInputs) {
+const performHookAsync = async (hook, allInputs) => {
   if (hook === undefined) {
     return
   }
@@ -57,7 +57,7 @@ const performHookAsync = async function (hook, allInputs) {
   }
 }
 
-const getDurationAsync = async function (main, allInputs) {
+const getDurationAsync = async (main, allInputs) => {
   const start = now()
 
   // eslint-disable-next-line fp/no-loops

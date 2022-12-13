@@ -11,7 +11,7 @@ import { wrapRows } from '../utils/wrap.js'
 // might be used to avoid vertical jitter when the reporter knows those empty
 // lines will be eventually filled (e.g. when combinations stats become
 // available).
-export const handleContent = function ({ content, padding, colors }) {
+export const handleContent = ({ content, padding, colors }) => {
   const contentA = handleColors(content, colors)
   const contentB = trimEnd(contentA)
   const contentC = wrapRows(contentB)
@@ -21,19 +21,13 @@ export const handleContent = function ({ content, padding, colors }) {
 
 // Reporters should always assume `colors` are true, but the core remove this
 // from the returned content if not.
-const handleColors = function (content, colors) {
-  return colors ? content : stripAnsi(content)
-}
+const handleColors = (content, colors) =>
+  colors ? content : stripAnsi(content)
 
 // Trim the end of each line to avoid wrapping-related visual bugs
-const trimEnd = function (content) {
-  return content.split('\n').map(trimEndLine).join('\n')
-}
+const trimEnd = (content) => content.split('\n').map(trimEndLine).join('\n')
 
-const trimEndLine = function (line) {
-  return line.trimEnd()
-}
+const trimEndLine = (line) => line.trimEnd()
 
-const padContents = function (joinedContents, padding) {
-  return padding ? addPadding(joinedContents) : joinedContents
-}
+const padContents = (joinedContents, padding) =>
+  padding ? addPadding(joinedContents) : joinedContents

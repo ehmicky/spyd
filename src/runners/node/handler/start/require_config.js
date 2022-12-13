@@ -3,11 +3,11 @@ import { pathToFileURL } from 'node:url'
 import { ConfigError } from '../../../common/error.js'
 
 // Use the `require` configuration property
-export const useRequireConfig = async function (requireConfig) {
+export const useRequireConfig = async (requireConfig) => {
   await Promise.all(requireConfig.map(useRequiredModule))
 }
 
-const useRequiredModule = async function (requiredModule) {
+const useRequiredModule = async (requiredModule) => {
   try {
     // eslint-disable-next-line import/no-dynamic-require
     await import(pathToFileURL(requiredModule))

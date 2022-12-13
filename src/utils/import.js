@@ -8,7 +8,7 @@ import { UserError } from '../error/main.js'
 // CommonJS are imported as `default` imports when using `import()`.
 // ES modules named imports are not plain objects, but module objects.
 // We convert them to plain objects.
-export const importJsNamed = async function (filePath) {
+export const importJsNamed = async (filePath) => {
   const importedValue = await importJsFile(filePath)
   return 'default' in importedValue
     ? importedValue.default
@@ -16,7 +16,7 @@ export const importJsNamed = async function (filePath) {
 }
 
 // Import default exports.
-export const importJsDefault = async function (filePath) {
+export const importJsDefault = async (filePath) => {
   const importedValue = await importJsFile(filePath)
 
   if (!('default' in importedValue)) {
@@ -26,7 +26,7 @@ export const importJsDefault = async function (filePath) {
   return importedValue.default
 }
 
-const importJsFile = async function (filePath) {
+const importJsFile = async (filePath) => {
   const importFunc = EXTENSIONS[extname(filePath)]
 
   if (importFunc === undefined) {
@@ -36,10 +36,9 @@ const importJsFile = async function (filePath) {
   return await importFunc(filePath)
 }
 
-const importJavaScript = async function (filePath) {
+const importJavaScript = async (filePath) =>
   // eslint-disable-next-line import/no-dynamic-require
-  return await import(pathToFileURL(filePath))
-}
+  await import(pathToFileURL(filePath))
 
 const EXTENSIONS = {
   '.js': importJavaScript,

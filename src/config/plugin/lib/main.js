@@ -24,7 +24,7 @@ import { normalizeMultipleOpts, normalizeSingleOpts } from './options.js'
 //    pluginConfig object
 //  - pluginConfig coming both from each pluginConfig object and from
 //    `opts.sharedConfig`
-export const getPlugins = async function (pluginConfigs, opts) {
+export const getPlugins = async (pluginConfigs, opts) => {
   try {
     const optsA = normalizeMultipleOpts(opts)
     validateDefined(pluginConfigs, optsA)
@@ -36,21 +36,20 @@ export const getPlugins = async function (pluginConfigs, opts) {
   }
 }
 
-const getPluginInfos = async function (pluginConfigs, opts) {
-  return Array.isArray(pluginConfigs)
+const getPluginInfos = async (pluginConfigs, opts) =>
+  Array.isArray(pluginConfigs)
     ? await Promise.all(
         pluginConfigs.map(getEachPluginInfo.bind(undefined, opts)),
       )
     : [await getPluginInfo(pluginConfigs, opts)]
-}
 
-const getEachPluginInfo = async function (opts, pluginConfig, index) {
+const getEachPluginInfo = async (opts, pluginConfig, index) => {
   const name = `${opts.name}.${index}`
   return await getPluginInfo(pluginConfig, { ...opts, name })
 }
 
 // Retrieve a single plugin instead of an optional array of them
-export const getPlugin = async function (pluginConfig, opts) {
+export const getPlugin = async (pluginConfig, opts) => {
   try {
     const optsA = normalizeSingleOpts(opts)
     validateDefined(pluginConfig, optsA)
@@ -61,17 +60,16 @@ export const getPlugin = async function (pluginConfig, opts) {
   }
 }
 
-const validateDefined = function (value, { name }) {
+const validateDefined = (value, { name }) => {
   if (value === undefined) {
     throw new UserError(`Configuration property "${name}" must be defined.`)
   }
 }
 
-const handleError = function (error, { bugs }) {
-  return handlePluginError({
+const handleError = (error, { bugs }) =>
+  handlePluginError({
     error: BaseError.normalize(error, UnknownError),
     bugs,
     PluginError: UserError,
     BaseError,
   })
-}

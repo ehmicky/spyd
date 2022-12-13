@@ -1,9 +1,7 @@
 // Sort an array of floats
-export const sortFloats = function (array) {
+export const sortFloats = (array) => {
   // eslint-disable-next-line fp/no-mutating-methods
   array.sort(compareNumbers)
 }
 
-const compareNumbers = function (numA, numB) {
-  return numA - numB
-}
+const compareNumbers = (numA, numB) => numA - numB

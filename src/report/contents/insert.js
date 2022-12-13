@@ -16,7 +16,7 @@ import { UserError } from '../../error/main.js'
 //  - does not require any parsing.
 //  - does not require wrapping inserted content (e.g. in a code block).
 //    This should be done by reporters.
-export const detectInsert = async function (output) {
+export const detectInsert = async (output) => {
   if (!(await pathExists(output))) {
     return
   }
@@ -30,7 +30,7 @@ export const detectInsert = async function (output) {
   return fileContent
 }
 
-const getFileContent = async function (output) {
+const getFileContent = async (output) => {
   try {
     return await readFile(output, 'utf8')
   } catch (cause) {
@@ -38,7 +38,7 @@ const getFileContent = async function (output) {
   }
 }
 
-export const insertContents = async function (output, content, fileContent) {
+export const insertContents = async (output, content, fileContent) => {
   const newline = detectNewlineGraceful(fileContent)
   const lines = fileContent.split(newline)
 
@@ -49,15 +49,14 @@ export const insertContents = async function (output, content, fileContent) {
   await writeFileContent(output, contentB)
 }
 
-const replaceNewline = function (content, newline) {
-  return stripFinalNewline(content.split(UNIX_NEWLINE).join(newline))
-}
+const replaceNewline = (content, newline) =>
+  stripFinalNewline(content.split(UNIX_NEWLINE).join(newline))
 
 const UNIX_NEWLINE = '\n'
 
 // We require both delimiters so that user is aware that both should be moved
 // when moving lines around
-const insertToLines = function (lines, content, output) {
+const insertToLines = (lines, content, output) => {
   const startLine = getLineIndex(lines, START_LINE_TOKEN)
   const endLine = getLineIndex(lines, END_LINE_TOKEN)
 
@@ -78,14 +77,13 @@ const insertToLines = function (lines, content, output) {
   return [...start, content, ...end]
 }
 
-const getLineIndex = function (lines, token) {
-  return lines.findIndex((line) => line.includes(token))
-}
+const getLineIndex = (lines, token) =>
+  lines.findIndex((line) => line.includes(token))
 
 const START_LINE_TOKEN = 'spyd-start'
 const END_LINE_TOKEN = 'spyd-end'
 
-const writeFileContent = async function (output, fileContent) {
+const writeFileContent = async (output, fileContent) => {
   try {
     await writeFileAtomic(output, fileContent)
   } catch (cause) {

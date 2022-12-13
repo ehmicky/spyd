@@ -72,9 +72,7 @@
 //       machines
 //        - this can happen inside the same run (due to previous runs being
 //          merged to current one)
-export const transformPrecision = function (precision) {
-  return PRECISION_TARGETS[precision]
-}
+export const transformPrecision = (precision) => PRECISION_TARGETS[precision]
 
 // Associates `precision` (using array index) to the minimum `rmoe` each
 // combination must reach.
@@ -107,11 +105,8 @@ export const DEFAULT_PRECISION = 5
 //     - This also means those are never reported if `precision: 0`
 // We also check that performance optimization has ended
 //  - We compare `cold` to the same threshold to do so.
-export const isPreciseEnough = function (rmoe, cold, precision) {
-  return (
-    rmoe !== undefined &&
-    rmoe <= precision &&
-    cold !== undefined &&
-    cold <= precision
-  )
-}
+export const isPreciseEnough = (rmoe, cold, precision) =>
+  rmoe !== undefined &&
+  rmoe <= precision &&
+  cold !== undefined &&
+  cold <= precision

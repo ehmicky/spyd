@@ -8,7 +8,7 @@ import { BaseError } from '../../common/error.js'
 
 // Normalize and validate the Node.js version.
 // We can only allow Node versions that are valid with the runner's code.
-const transformVersion = async function (version) {
+const transformVersion = async (version) => {
   const versionInfo = await normalizeVersion(version)
 
   if (!semver.satisfies(versionInfo.version, nodeVersion)) {
@@ -22,7 +22,7 @@ const transformVersion = async function (version) {
 // This also:
 //  - Downloads the Node.js binary
 //  - Exposes running it as a `command` with `spawnOptions`
-const normalizeVersion = async function (version) {
+const normalizeVersion = async (version) => {
   const versionA = normalizeNumberString(version)
   // Lazy loading for performance reasons
   const { default: nvexeca } = await import('nvexeca')

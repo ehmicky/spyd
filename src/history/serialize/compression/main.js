@@ -13,12 +13,7 @@ import { decompressStats, compressStats } from './stats.js'
 // We also ensure:
 //  - No additional unknown keys is persisted
 //  - The keys are persisted in a specific order
-export const compressRawResult = function ({
-  id,
-  subId,
-  timestamp,
-  combinations,
-}) {
+export const compressRawResult = ({ id, subId, timestamp, combinations }) => {
   const combinationsA = combinations.map(compressCombDimensions)
   const system = compressSystem(combinationsA)
   const runners = compressRunners(combinationsA)
@@ -33,17 +28,12 @@ export const compressRawResult = function ({
   })
 }
 
-const compressCombDimensions = function ({
-  dimensions,
-  stats,
-  system,
-  versions,
-}) {
+const compressCombDimensions = ({ dimensions, stats, system, versions }) => {
   const dimensionsA = compressDimensions(dimensions)
   return { dimensions: dimensionsA, stats, system, versions }
 }
 
-const compressSystem = function ([
+const compressSystem = ([
   {
     system: {
       machine: { os, cpus, memory },
@@ -52,40 +42,34 @@ const compressSystem = function ([
       versions,
     },
   },
-]) {
-  return {
-    machine: { os, cpus, memory },
-    git: { branch, tag, commit, prNumber, prBranch },
-    ci,
-    versions,
-  }
-}
+]) => ({
+  machine: { os, cpus, memory },
+  git: { branch, tag, commit, prNumber, prBranch },
+  ci,
+  versions,
+})
 
-const compressCombination = function ({ dimensions, stats }) {
+const compressCombination = ({ dimensions, stats }) => {
   const statsA = compressStats(stats)
   return { dimensions, stats: statsA }
 }
 
 // Restore original rawResults after loading
-export const decompressRawResult = function ({
+export const decompressRawResult = ({
   id,
   subId,
   timestamp,
   system,
   runners,
   combinations,
-}) {
+}) => {
   const combinationsA = combinations.map((combination) =>
     decompressCombination(combination, system, runners),
   )
   return { id, subId, timestamp, combinations: combinationsA }
 }
 
-const decompressCombination = function (
-  { dimensions, stats },
-  system,
-  runners,
-) {
+const decompressCombination = ({ dimensions, stats }, system, runners) => {
   const versions = decompressRunners(runners, dimensions)
   const dimensionsA = decompressDimensions(dimensions)
   const statsA = decompressStats(stats)

@@ -8,12 +8,7 @@ import { measureCombinations } from '../../run/measure/main.js'
 //    to several combinations competing for optimization in the same process
 // Before spawning those, we spawn a single process per task to retrieve the
 // task and step identifiers.
-export const findTasks = async function ({
-  taskPath,
-  runner,
-  noDimensions,
-  cwd,
-}) {
+export const findTasks = async ({ taskPath, runner, noDimensions, cwd }) => {
   try {
     const [{ taskIds: ids }] = await measureCombinations(
       [{ dimensions: { runner }, taskPath, inputsList: [] }],
@@ -37,7 +32,7 @@ export const findTasks = async function ({
 // Using the same task id is allowed through in different:
 //  - Runners: to compare the same task across runners
 //  - Task files: to override shared configuration's tasks
-const validateDuplicateTaskIds = function (ids) {
+const validateDuplicateTaskIds = (ids) => {
   const duplicateId = ids.find(isDuplicateId)
 
   if (duplicateId !== undefined) {
@@ -47,9 +42,7 @@ const validateDuplicateTaskIds = function (ids) {
   }
 }
 
-const isDuplicateId = function (id, index, ids) {
-  return ids.slice(index + 1).includes(id)
-}
+const isDuplicateId = (id, index, ids) => ids.slice(index + 1).includes(id)
 
 // Default value for `tasks`. Applied on each runner.
 // This only applies when `tasks` is `undefined`: an empty array resolves to no

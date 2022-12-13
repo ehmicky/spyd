@@ -4,7 +4,7 @@ import { uniqueDeepUnordered } from '../../../utils/unique.js'
 // Group `propEntries` together if they share the same `dimensionsArray`.
 // Like this, system properties applying to the same dimensions are shown
 // together.
-export const getPropGroups = function (propEntries) {
+export const getPropGroups = (propEntries) => {
   const dimensionsArrays = uniqueDeepUnordered(
     propEntries.map(getPropEntryDimensions),
   )
@@ -14,11 +14,9 @@ export const getPropGroups = function (propEntries) {
   return propGroups
 }
 
-const getPropEntryDimensions = function ({ dimensionsArray }) {
-  return dimensionsArray
-}
+const getPropEntryDimensions = ({ dimensionsArray }) => dimensionsArray
 
-const getPropGroup = function (dimensionsArray, propEntries) {
+const getPropGroup = (dimensionsArray, propEntries) => {
   const propEntriesA = propEntries
     .filter(({ dimensionsArray: dimensionsArrayB }) =>
       isSameArray(dimensionsArray, dimensionsArrayB),
@@ -27,6 +25,7 @@ const getPropGroup = function (dimensionsArray, propEntries) {
   return { propEntries: propEntriesA, dimensionsArray }
 }
 
-const removeDimensionsArray = function ({ propName, propValue }) {
-  return { propName, propValue }
-}
+const removeDimensionsArray = ({ propName, propValue }) => ({
+  propName,
+  propValue,
+})

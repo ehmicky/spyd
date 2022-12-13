@@ -17,7 +17,7 @@ import { updateScrolling } from './scrolling_update.js'
 //    real-time
 //  - However, this prevents jitter due the `setInterval()` decrease going
 //    against the sample updates
-export const updatePreview = async function (previewState) {
+export const updatePreview = async (previewState) => {
   if (previewState.quiet) {
     return
   }
@@ -26,7 +26,7 @@ export const updatePreview = async function (previewState) {
   await refreshPreview(previewState)
 }
 
-export const refreshPreview = async function (previewState) {
+export const refreshPreview = async (previewState) => {
   if (previewState.quiet) {
     return
   }
@@ -38,7 +38,7 @@ export const refreshPreview = async function (previewState) {
 }
 
 // Retrieve preview content.
-const getPreviewContent = function (previewState) {
+const getPreviewContent = (previewState) => {
   addInitialScrollAction(previewState)
   const bottomBar = getBottomBar(previewState)
   const { report, maxScrollTop } = updateScrolling(previewState, bottomBar)

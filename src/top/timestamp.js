@@ -1,14 +1,12 @@
 // `result.timestamp` is stored as an integer, for flexibility
-export const getTimestamp = function () {
-  return Date.now()
-}
+export const getTimestamp = () => Date.now()
 
 // The timezone is:
 //  - Local when the output is interactive, UTC otherwise.
 //  - This is because an interactive terminal expects a single viewer, but other
 //    outputs might be shared and viewed by several people
 //  - We only print it when UTC since users might expect timezone to be local
-export const normalizeTimestamp = function ({ timestamp }, tty) {
+export const normalizeTimestamp = ({ timestamp }, tty) => {
   const date = new Date(timestamp)
   const { timestampFields, timezone } = tty
     ? getLocalTimestampFields(date)
@@ -18,7 +16,7 @@ export const normalizeTimestamp = function ({ timestamp }, tty) {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}${timezone}`
 }
 
-const getLocalTimestampFields = function (date) {
+const getLocalTimestampFields = (date) => {
   const timestampFields = [
     date.getFullYear(),
     date.getMonth(),
@@ -30,7 +28,7 @@ const getLocalTimestampFields = function (date) {
   return { timestampFields, timezone: '' }
 }
 
-const getUTCTimestampFields = function (date) {
+const getUTCTimestampFields = (date) => {
   const timestampFields = [
     date.getUTCFullYear(),
     date.getUTCMonth(),
@@ -42,6 +40,4 @@ const getUTCTimestampFields = function (date) {
   return { timestampFields, timezone: ' UTC' }
 }
 
-const padZeros = function (integer) {
-  return String(integer).padStart(2, '0')
-}
+const padZeros = (integer) => String(integer).padStart(2, '0')

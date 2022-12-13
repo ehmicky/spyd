@@ -4,6 +4,4 @@
 // However, unsorted `unsortedMeasures` cannot do this and require filtering
 // each measure. This cannot be done incrementally since outliers thresholds
 // change between samples
-export const filterOutliers = function (min, max, value) {
-  return value >= min && value <= max
-}
+export const filterOutliers = (min, max, value) => value >= min && value <= max

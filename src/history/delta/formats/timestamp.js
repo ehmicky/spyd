@@ -5,7 +5,7 @@ import { findByTime } from './find.js'
 //  - can specify only the date, or both date and time
 //  - can omit timezone (default to local timezone) but returned date is UTC
 //  - loose parsing
-const parseTimestamp = function (delta) {
+const parseTimestamp = (delta) => {
   if (typeof delta !== 'string') {
     return
   }
@@ -19,9 +19,8 @@ const parseTimestamp = function (delta) {
   return timestamp
 }
 
-const findByTimestamp = function (metadataGroups, timestamp) {
-  return findByTime(metadataGroups, timestamp)
-}
+const findByTimestamp = (metadataGroups, timestamp) =>
+  findByTime(metadataGroups, timestamp)
 
 export const timestampFormat = {
   type: 'timestamp',

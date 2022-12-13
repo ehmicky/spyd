@@ -8,7 +8,7 @@ import { EMPTY_DURATION_LEFT } from '../update/completion.js'
 // When mutating it, it must always be in a consistent state at the end of a
 // microtask since `updatePreview()` could be called by concurrent code.
 // `index` and `total` are used as a 1-based counter in previews.
-export const getPreviewState = function ({ reporters, titles }) {
+export const getPreviewState = ({ reporters, titles }) => {
   const quiet = !reporters.some(reporterHasPreview)
   return {
     quiet,
@@ -26,14 +26,14 @@ export const getPreviewState = function ({ reporters, titles }) {
 }
 
 // Add result-related properties to `previewState`
-export const addResultPreviewState = function ({
+export const addResultPreviewState = ({
   previewState,
   newResult: { combinations },
   result,
   sinceResult,
   noDimensions,
   config: { reporters },
-}) {
+}) => {
   const reportersA = reporters.filter(reporterHasPreview)
   return {
     ...previewState,
@@ -53,6 +53,5 @@ export const addResultPreviewState = function ({
 // if at least one reporter uses preview.
 //  - This is kept as `previewState.quiet`
 // Also, the programmatic reporter is never run during previews.
-const reporterHasPreview = function ({ config: { quiet, output } }) {
-  return !quiet && output === 'stdout'
-}
+const reporterHasPreview = ({ config: { quiet, output } }) =>
+  !quiet && output === 'stdout'

@@ -24,13 +24,13 @@ import { tmpName } from 'tmp-promise'
 // Writing to stdout/stderr in a task has a performance impact which we want to
 // measure:
 //  - Ignoring those streams would lead to inaccurate I/O results
-export const startLogs = async function () {
+export const startLogs = async () => {
   const logsPath = await getLogsPath()
   const logsFd = await open(logsPath, LOGS_FILE_FLAGS)
   return { logsPath, logsFd }
 }
 
-const getLogsPath = async function () {
+const getLogsPath = async () => {
   const logsPath = await tmpName({ dir: LOGS_DIR })
   await mkdir(dirname(logsPath), { recursive: true })
   return logsPath
@@ -50,7 +50,7 @@ const LOGS_DIR = 'spyd/logs/'
 const LOGS_FILE_FLAGS = 'ax'
 
 // Delete logs file after each combination
-export const stopLogs = async function (logsPath, logsFd) {
+export const stopLogs = async (logsPath, logsFd) => {
   await Promise.all([logsFd.close(), unlink(logsPath)])
 }
 
@@ -60,6 +60,4 @@ export const stopLogs = async function (logsPath, logsFd) {
 // might be repeated for each combination. This is good since:
 //  - It makes it clear that each combination has its own process
 //  - Some stdout/stderr might differ from process to process
-export const hasLogs = function (stage) {
-  return stage !== 'dev'
-}
+export const hasLogs = (stage) => stage !== 'dev'

@@ -1,13 +1,13 @@
 // Like `try {} finally {}` except:
 //  - if both blocks throw, the exception from the `try` block has priority.
 //  - the finally block cannot return a value.
-export const safeFinally = async function (tryFunc, finallyFunc) {
+export const safeFinally = async (tryFunc, finallyFunc) => {
   const returnValue = await callTry(tryFunc, finallyFunc)
   await finallyFunc()
   return returnValue
 }
 
-const callTry = async function (tryFunc, finallyFunc) {
+const callTry = async (tryFunc, finallyFunc) => {
   try {
     return await tryFunc()
   } catch (error) {
@@ -16,7 +16,7 @@ const callTry = async function (tryFunc, finallyFunc) {
   }
 }
 
-const callSilentFinally = async function (finallyFunc) {
+const callSilentFinally = async (finallyFunc) => {
   try {
     await finallyFunc()
   } catch {}

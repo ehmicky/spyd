@@ -32,7 +32,7 @@ import { sortFloats } from '../../stats/sort.js'
 //     - Measures of unit "auto"
 //  - However, with the unit group "mixed", they do not make sense and are
 //    filtered out
-export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
+export const normalizeSampleMeasures = (sampleMeasures, repeat) => {
   const sampleUnsortedMeasures = normalizeRepeat(sampleMeasures, repeat)
   const sampleLoops = sampleUnsortedMeasures.length
   const sampleTimes = sampleLoops * repeat
@@ -52,7 +52,7 @@ export const normalizeSampleMeasures = function (sampleMeasures, repeat) {
 
 // The runner measures loops of the task. This retrieve the mean time to execute
 // the task each time, from the time to execute the whole loop.
-const normalizeRepeat = function (sampleMeasures, repeat) {
+const normalizeRepeat = (sampleMeasures, repeat) => {
   if (repeat === 1) {
     return sampleMeasures
   }

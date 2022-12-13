@@ -32,7 +32,7 @@ import { getLengthFromLoops } from './length.js'
 //     - this means, at some point, increasing the number of loops of the
 //       current combination might make its diff imprecise. However, the
 //       variation is minimal.
-export const haveSimilarMeans = function (
+export const haveSimilarMeans = (
   {
     mean: meanA,
     stdev: stdevA,
@@ -49,7 +49,7 @@ export const haveSimilarMeans = function (
     outliersMin: outliersMinB,
     outliersMax: outliersMaxB,
   },
-) {
+) => {
   if (hasImpreciseStdev(stdevA, stdevB)) {
     return
   }
@@ -80,13 +80,12 @@ export const haveSimilarMeans = function (
 
 // When the result does not have enough measures, `stdev` and `envDev` are both
 // `undefined`.
-const hasImpreciseStdev = function (stdevA, stdevB) {
-  return stdevA === undefined || stdevB === undefined
-}
+const hasImpreciseStdev = (stdevA, stdevB) =>
+  stdevA === undefined || stdevB === undefined
 
 // Retrieve the `length` of measures from `loops`.
 // We take `envDev` into account.
-const getLength = function ({ loops, envDev, outliersMin, outliersMax }) {
+const getLength = ({ loops, envDev, outliersMin, outliersMax }) => {
   const { length } = getLengthFromLoops(loops, outliersMin, outliersMax)
   return applyImpreciseEnvDev(length, envDev, ENV_DEV_IMPRECISION)
 }
@@ -99,22 +98,11 @@ const ENV_DEV_IMPRECISION = 5
 
 // Welch's t-test does not work with extremely low `length`, but those would
 // indicate that diff is most likely imprecise anyway.
-const hasImpreciseLengths = function (lengthA, lengthB) {
-  return lengthA < 2 || lengthB < 2
-}
+const hasImpreciseLengths = (lengthA, lengthB) => lengthA < 2 || lengthB < 2
 
-const isPerfectStdev = function (stdevA, stdevB) {
-  return stdevA === 0 && stdevB === 0
-}
+const isPerfectStdev = (stdevA, stdevB) => stdevA === 0 && stdevB === 0
 
-const welchTTest = function ({
-  meanA,
-  stdevA,
-  lengthA,
-  meanB,
-  stdevB,
-  lengthB,
-}) {
+const welchTTest = ({ meanA, stdevA, lengthA, meanB, stdevB, lengthB }) => {
   const errorSquaredA = getErrorSquared(stdevA, lengthA)
   const errorSquaredB = getErrorSquared(stdevB, lengthB)
   const tStat = Math.abs(
@@ -130,9 +118,7 @@ const welchTTest = function ({
   return tStat < tValue
 }
 
-const getErrorSquared = function (stdev, length) {
-  return (stdev / Math.sqrt(length)) ** 2
-}
+const getErrorSquared = (stdev, length) => (stdev / Math.sqrt(length)) ** 2
 
 // Significance level when computing the welch t-test.
 // A higher value increases the false positives

@@ -1,7 +1,7 @@
 import sortOn from 'sort-on'
 
 // Add|remove available user actions shown in preview
-export const addAction = function (previewState, action) {
+export const addAction = (previewState, action) => {
   if (previewState.quiet) {
     return
   }
@@ -13,7 +13,7 @@ export const addAction = function (previewState, action) {
   )
 }
 
-export const removeAction = function (previewState, name) {
+export const removeAction = (previewState, name) => {
   if (previewState.quiet) {
     return
   }
@@ -22,6 +22,5 @@ export const removeAction = function (previewState, name) {
   previewState.actions = filterAction(previewState.actions, name)
 }
 
-const filterAction = function (actions, name) {
-  return actions.filter((action) => action.name !== name)
-}
+const filterAction = (actions, name) =>
+  actions.filter((action) => action.name !== name)

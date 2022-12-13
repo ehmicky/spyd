@@ -1,10 +1,8 @@
 import { normalizeBoolean } from '../normalize/common.js'
 
-const test = function (input) {
-  return input === undefined
-}
+const test = (input) => input === undefined
 
-const main = function (definition) {
+const main = (definition) => {
   if (definition) {
     throw new Error('must be defined.')
   }

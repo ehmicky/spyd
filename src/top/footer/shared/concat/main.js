@@ -9,7 +9,7 @@ import { loopFirstDimensions } from './loop.js'
 // We do so by iterating through every combination of dimensions
 //  - If only one dimension differs, we merge them
 //  - We repeat until no more dimension has been merged
-export const concatDimensionsValues = function (dimensionsArray) {
+export const concatDimensionsValues = (dimensionsArray) => {
   const dimensionsArrayA = dimensionsArray.map(normalizeDimensions)
 
   // eslint-disable-next-line fp/no-let
@@ -26,17 +26,13 @@ export const concatDimensionsValues = function (dimensionsArray) {
   return dimensionsArrayB
 }
 
-const normalizeDimensions = function (dimensions) {
+const normalizeDimensions = (dimensions) => {
   const dimensionNames = Object.keys(dimensions)
   const dimensionsA = mapValues(dimensions, normalizeDimension)
   return { dimensionNames, dimensions: dimensionsA }
 }
 
 // Dimension values are now array of alternatives
-const normalizeDimension = function (dimensionValue) {
-  return [dimensionValue]
-}
+const normalizeDimension = (dimensionValue) => [dimensionValue]
 
-const denormalizeDimensions = function ({ dimensions }) {
-  return dimensions
-}
+const denormalizeDimensions = ({ dimensions }) => dimensions

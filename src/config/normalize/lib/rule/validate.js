@@ -3,12 +3,12 @@ import { DefinitionError } from '../error.js'
 import { CORE_PROPS_SET, validateRuleKey } from './props.js'
 
 // Validate that a `definitions` object has only allowed properties
-export const validateRuleProps = function ({
+export const validateRuleProps = ({
   definitions,
   ruleProps,
   message,
   sync,
-}) {
+}) => {
   // `definitions` is a plain object, i.e. does not have inherited properties
   // eslint-disable-next-line fp/no-loops, guard-for-in
   for (const ruleProp in definitions) {
@@ -16,13 +16,13 @@ export const validateRuleProps = function ({
   }
 }
 
-const validateRuleProp = function ({
+const validateRuleProp = ({
   ruleProp,
   ruleProps,
   message,
   definitions,
   sync,
-}) {
+}) => {
   validateRuleKey({ ruleProp, ruleProps, message, definitions })
   validateRuleSync({ ruleProp, message, definitions, sync })
 }
@@ -33,7 +33,7 @@ const validateRuleProp = function ({
 //  - Functions might be transpiled
 // I.e. this is more of a failsafe check.
 // We do not use `util.types.isAsyncFunction()` to make it work client-side.
-const validateRuleSync = function ({ ruleProp, message, definitions, sync }) {
+const validateRuleSync = ({ ruleProp, message, definitions, sync }) => {
   if (
     sync &&
     isAsyncFunction(definitions[ruleProp]) &&
@@ -45,9 +45,6 @@ const validateRuleSync = function ({ ruleProp, message, definitions, sync }) {
   }
 }
 
-const isAsyncFunction = function (definition) {
-  return (
-    typeof definition === 'function' &&
-    definition.constructor.name === 'AsyncFunction'
-  )
-}
+const isAsyncFunction = (definition) =>
+  typeof definition === 'function' &&
+  definition.constructor.name === 'AsyncFunction'

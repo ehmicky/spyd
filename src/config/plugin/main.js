@@ -15,12 +15,12 @@ import { PluginError as PluginLibError, ConsumerError } from './lib/error.js'
 import { getPlugins } from './lib/main.js'
 
 // Handle the configuration plugins: runners and reporters
-export const normalizePluginsConfig = async function ({
+export const normalizePluginsConfig = async ({
   config,
   command,
   context,
   cwd,
-}) {
+}) => {
   const allPluginsEntries = await Promise.all(
     PLUGIN_TYPES.map((pluginType) =>
       normalizePluginConfigs({ pluginType, config, context, cwd }),
@@ -33,13 +33,13 @@ export const normalizePluginsConfig = async function ({
 
 const PLUGIN_TYPES = [RUNNER_PLUGIN_TYPE, REPORTER_PLUGIN_TYPE]
 
-const normalizePluginConfigs = async function ({
+const normalizePluginConfigs = async ({
   pluginType,
   pluginType: { name },
   config,
   context,
   cwd,
-}) {
+}) => {
   const pluginConfigs = config[name]
 
   if (pluginConfigs === undefined) {
@@ -64,13 +64,11 @@ const normalizePluginConfigs = async function ({
   }
 }
 
-const normalizePluginInfo = function ({ plugin, config }) {
-  return cleanObject({ ...plugin, config })
-}
+const normalizePluginInfo = ({ plugin, config }) =>
+  cleanObject({ ...plugin, config })
 
-const handlePluginsError = function (error) {
-  return BaseError.switch(error)
+const handlePluginsError = (error) =>
+  BaseError.switch(error)
     .case(PluginLibError, PluginError)
     .case(ConsumerError, UserError)
     .default(UnknownError)
-}

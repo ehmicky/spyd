@@ -6,13 +6,13 @@ import { normalizeRuleName, validateSharedProp } from './shared.js'
 
 // Validate a plugin has the correct shape and normalize it, using builtin
 // definition.
-export const normalizeCommonShape = async function ({
+export const normalizeCommonShape = async ({
   plugin,
   locationType,
   originalLocation,
   opts: { sharedPropNames, keywords },
-}) {
-  return await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
+}) =>
+  await safeNormalizeConfig(plugin, COMMON_SHAPE_RULES, {
     all: {
       prefix: PLUGIN_PREFIX,
       context: { sharedPropNames, locationType, originalLocation },
@@ -21,15 +21,14 @@ export const normalizeCommonShape = async function ({
     InputErrorClass: PluginError,
     DefinitionErrorClass: Error,
   })
-}
 
 // Validate a plugin has the correct shape and normalize it, using `shape`
 // option.
-export const normalizeCustomShape = async function (
+export const normalizeCustomShape = async (
   plugin,
   { shape, context, keywords },
-) {
-  return shape === undefined
+) =>
+  shape === undefined
     ? plugin
     : await safeNormalizeConfig(
         plugin,
@@ -41,7 +40,6 @@ export const normalizeCustomShape = async function (
           DefinitionErrorClass: UserError,
         },
       )
-}
 
 const PLUGIN_PREFIX = 'Plugin property'
 
@@ -58,7 +56,7 @@ const PLUGIN_ID_REGEXP = /^[a-z]?[a-z\d]*$/u
 // Those types must have the same `plugin.id` as the user-specified `location`
 const MODULE_LOCATION_TYPES = new Set(['builtin', 'module'])
 
-const transformConfigPropName = function (name) {
+const transformConfigPropName = (name) => {
   try {
     return normalizeRuleName(name)
   } catch (error) {
@@ -82,29 +80,26 @@ const COMMON_SHAPE_RULES = new Set([
     },
     // When using a Node module, the exported `id` must match the `location`
     // specified by the user
-    validate(id, { context: { locationType, originalLocation } }) {
+    validate: (id, { context: { locationType, originalLocation } }) => {
       if (MODULE_LOCATION_TYPES.has(locationType) && originalLocation !== id) {
         throw new Error(
           `must be "${originalLocation}" to match the package name.`,
         )
       }
     },
-    example({ context: { locationType, originalLocation } }) {
-      return MODULE_LOCATION_TYPES.has(locationType)
+    example: ({ context: { locationType, originalLocation } }) =>
+      MODULE_LOCATION_TYPES.has(locationType)
         ? originalLocation
-        : 'module-name'
-    },
+        : 'module-name',
   },
   {
     name: 'bugs',
     schema: { type: 'string', minLength: 1, format: 'uri' },
-    example({ inputs: { id } }) {
-      return `https://github.com/my-user/${id}/issues`
-    },
+    example: ({ inputs: { id } }) => `https://github.com/my-user/${id}/issues`,
   },
   {
     name: 'config.*.name',
-    transform(name, { context: { sharedPropNames } }) {
+    transform: (name, { context: { sharedPropNames } }) => {
       const nameA = transformConfigPropName(name)
       validateSharedProp(nameA, sharedPropNames)
       return nameA

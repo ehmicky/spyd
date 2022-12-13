@@ -1,5 +1,5 @@
 // Compress `result.combinations[*].stats`
-export const compressStats = function (stats) {
+export const compressStats = (stats) => {
   const quantilesA = compressQuantiles(stats.quantiles, stats.mean)
   const histogramA = compressHistogram(stats.histogram, stats.mean)
   return {
@@ -28,35 +28,35 @@ export const compressStats = function (stats) {
   }
 }
 
-const compressQuantiles = function (quantiles, mean) {
-  return quantiles.map((quantile) => quantile - mean)
-}
+const compressQuantiles = (quantiles, mean) =>
+  quantiles.map((quantile) => quantile - mean)
 
-const compressHistogram = function (histogram, mean) {
-  return histogram.map((bucket) => compressBucket(bucket, mean))
-}
+const compressHistogram = (histogram, mean) =>
+  histogram.map((bucket) => compressBucket(bucket, mean))
 
-const compressBucket = function ({ start, end, frequency }, mean) {
-  return [start - mean, end - mean, frequency]
-}
+const compressBucket = ({ start, end, frequency }, mean) => [
+  start - mean,
+  end - mean,
+  frequency,
+]
 
 // Decompress `result.combinations[*].stats`
-export const decompressStats = function (stats) {
+export const decompressStats = (stats) => {
   const histogramA = decompressHistogram(stats.histogram, stats.mean)
   const quantilesA = decompressQuantiles(stats.quantiles, stats.mean)
   return { ...stats, histogram: histogramA, quantiles: quantilesA }
 }
 
-const decompressHistogram = function (histogram, mean) {
-  return histogram === undefined
+const decompressHistogram = (histogram, mean) =>
+  histogram === undefined
     ? undefined
     : histogram.map((bucket) => decompressBucket(bucket, mean))
-}
 
-const decompressBucket = function ([start, end, frequency], mean) {
-  return { start: start + mean, end: end + mean, frequency }
-}
+const decompressBucket = ([start, end, frequency], mean) => ({
+  start: start + mean,
+  end: end + mean,
+  frequency,
+})
 
-const decompressQuantiles = function (quantiles, mean) {
-  return quantiles.map((quantile) => quantile + mean)
-}
+const decompressQuantiles = (quantiles, mean) =>
+  quantiles.map((quantile) => quantile + mean)

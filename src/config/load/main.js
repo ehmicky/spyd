@@ -86,11 +86,11 @@ import { normalizeConfigProp } from './normalize.js'
 //  - For most containers (e.g. docker):
 //     - This only runs on Linux
 //     - The consumer might need to set some flags, e.g. for networking
-export const loadConfig = async function (
+export const loadConfig = async (
   { config: configOpt, ...configContents },
   base,
   childConfigPaths,
-) {
+) => {
   const configWithBases = addBases(configContents, base)
   const configPaths = await normalizeConfigProp(configOpt, base)
   const bases = configPaths.map(getBase)
@@ -107,7 +107,7 @@ export const loadConfig = async function (
   return { configWithBases: configWithBasesA, bases }
 }
 
-const getParentConfigWithBases = async function (configPath, childConfigPaths) {
+const getParentConfigWithBases = async (configPath, childConfigPaths) => {
   try {
     const base = getBase(configPath)
     const childConfigPathsA = checkRecursivePath(configPath, childConfigPaths)
@@ -126,12 +126,10 @@ const getParentConfigWithBases = async function (configPath, childConfigPaths) {
   }
 }
 
-const getBase = function (configPath) {
-  return dirname(configPath)
-}
+const getBase = (configPath) => dirname(configPath)
 
 // Prevent infinite recursion of configuration files
-const checkRecursivePath = function (configPath, childConfigPaths) {
+const checkRecursivePath = (configPath, childConfigPaths) => {
   const childConfigPathIndex = childConfigPaths.indexOf(configPath)
 
   if (childConfigPathIndex === -1) {
@@ -147,9 +145,7 @@ const checkRecursivePath = function (configPath, childConfigPaths) {
 
 // The default `config` is only applied to the top-level CLI flag.
 // Therefore, we default it to an empty array when set from a config file.
-const addDefaultConfig = function ({
-  config: configOpt = [],
-  ...configContents
-}) {
-  return { ...configContents, config: configOpt }
-}
+const addDefaultConfig = ({ config: configOpt = [], ...configContents }) => ({
+  ...configContents,
+  config: configOpt,
+})

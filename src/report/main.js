@@ -13,7 +13,7 @@ import { startReporters, endReporters } from './start_end.js'
 //  - This prevents a clear screen flash at the end, by ensuring slow logic like
 //    the final `reportCompute()` is not performed after the preview ended
 //    after clearing the screen
-export const reportResult = async function (rawResult, history, config) {
+export const reportResult = async (rawResult, history, config) => {
   const startProps = await reportStart(rawResult, history, config)
 
   try {
@@ -26,7 +26,7 @@ export const reportResult = async function (rawResult, history, config) {
 }
 
 // Start reporting
-export const reportStart = async function (rawResult, history, config) {
+export const reportStart = async (rawResult, history, config) => {
   const configA = await startReporters(config)
   const {
     result,
@@ -40,7 +40,7 @@ export const reportStart = async function (rawResult, history, config) {
 // Report preview results in `run` command.
 // The report output is not printed right away. Instead, it is printed by the
 // preview refresh function at regular intervals.
-export const reportPreview = async function (startProps) {
+export const reportPreview = async (startProps) => {
   const contents = await computeContents(startProps)
   const contentsA = finalizeContents(contents)
   return contentsA.length === 0 ? '' : contentsA[0].content
@@ -48,7 +48,7 @@ export const reportPreview = async function (startProps) {
 
 // Compute the report contents.
 // Unlike `reportPreview`, the first reporter is the programmatic one.
-export const reportCompute = async function (startProps) {
+export const reportCompute = async (startProps) => {
   const [{ result: programmaticResult }, ...contents] = await computeContents(
     startProps,
   )
@@ -56,18 +56,18 @@ export const reportCompute = async function (startProps) {
   return { programmaticResult, contents: contentsA }
 }
 
-const computeContents = async function (startProps) {
+const computeContents = async (startProps) => {
   const config = await normalizeComputedResult(startProps)
   const contents = await getContents(config)
   return contents
 }
 
 // Print the report contents to the output
-export const reportPrint = async function (contents) {
+export const reportPrint = async (contents) => {
   await outputContents(contents)
 }
 
 // End reporting
-export const reportEnd = async function (config) {
+export const reportEnd = async (config) => {
   await endReporters(config)
 }

@@ -8,10 +8,7 @@ import { getPositions } from './position.js'
 import { getWidths } from './width.js'
 
 // Reporter showing boxplot of measures (min, q1, median, q3, max)
-export const reportTerminal = function (
-  { combinations, screenWidth },
-  { mini },
-) {
+export const reportTerminal = ({ combinations, screenWidth }, { mini }) => {
   const combinationsA = combinations.map(normalizeQuantiles)
   const { minAll, maxAll } = getMinMaxAll(combinationsA)
   const { titlesWidth, minBlockWidth, contentWidth } = getWidths({
@@ -36,7 +33,7 @@ export const reportTerminal = function (
     .join('\n')
 }
 
-const serializeCombination = function ({
+const serializeCombination = ({
   combination,
   minAll,
   maxAll,
@@ -44,7 +41,7 @@ const serializeCombination = function ({
   minBlockWidth,
   contentWidth,
   mini,
-}) {
+}) => {
   const combinationTitles = getCombTitleColorPad(combination)
 
   if (!isMeasuredCombination(combination)) {
@@ -60,7 +57,7 @@ const serializeCombination = function ({
 }
 
 // Shown when a combination has not been measured yet
-const getEmptyCombination = function (combinationTitles, mini) {
+const getEmptyCombination = (combinationTitles, mini) => {
   const labelsLine = mini ? '' : '\n'
   return `${combinationTitles}\n${labelsLine}`
 }

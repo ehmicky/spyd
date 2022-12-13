@@ -1,10 +1,6 @@
-const test = function (input) {
-  return input === undefined
-}
+const test = (input) => input === undefined
 
-const main = function (definition) {
-  return { input: definition }
-}
+const main = (definition) => ({ input: definition })
 
 // Apply `default[(info)]` which assigns a default value
 // eslint-disable-next-line import/no-default-export

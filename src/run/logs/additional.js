@@ -5,7 +5,7 @@
 //  - Might share the same language, e.g. several runners might use
 //    JavaScript
 //  - Call another language, e.g. the `cli` runner might call `node`
-export const getAdditionalMessage = function (taskLogs) {
+export const getAdditionalMessage = (taskLogs) => {
   const additionalMessage = ADDITIONAL_MESSAGES.find(({ includes }) =>
     taskLogs.includes(includes),
   )

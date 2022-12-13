@@ -1,7 +1,7 @@
 import { findByTime } from './find.js'
 
 // Deltas can be durations.
-const parseDuration = function (delta) {
+const parseDuration = (delta) => {
   if (typeof delta !== 'string') {
     return
   }
@@ -46,7 +46,7 @@ const DURATION_UNITS = {
 }
 /* eslint-enable id-length */
 
-const findByDuration = function (metadataGroups, duration) {
+const findByDuration = (metadataGroups, duration) => {
   const timestamp = Date.now() - duration
   return findByTime(metadataGroups, timestamp)
 }

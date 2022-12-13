@@ -11,31 +11,24 @@ import { setArray } from '../../../utils/set.js'
 // `dimensionArray`.
 // We do this by iterating through each dimension, checking if it can be
 // removed, then removing it.
-export const skipRedundantInfo = function (dimensionsArray, systems) {
-  return dimensionsArray.reduce(
+export const skipRedundantInfo = (dimensionsArray, systems) =>
+  dimensionsArray.reduce(
     skipRedundantDimensions.bind(undefined, systems),
     dimensionsArray,
   )
-}
 
 // eslint-disable-next-line max-params
-const skipRedundantDimensions = function (
-  systems,
-  dimensionsArray,
-  dimensions,
-  index,
-) {
-  return Object.keys(dimensions).reduce(
+const skipRedundantDimensions = (systems, dimensionsArray, dimensions, index) =>
+  Object.keys(dimensions).reduce(
     skipRedundantDimension.bind(undefined, { systems, index }),
     dimensionsArray,
   )
-}
 
-const skipRedundantDimension = function (
+const skipRedundantDimension = (
   { systems, index },
   dimensionsArray,
   dimensionName,
-) {
+) => {
   if (
     !isRedundantDimension({ systems, dimensionsArray, dimensionName, index })
   ) {
@@ -48,25 +41,25 @@ const skipRedundantDimension = function (
 
 // Check if removing the dimension would result in a different count of matching
 // systems
-const isRedundantDimension = function ({
+const isRedundantDimension = ({
   systems,
   dimensionsArray,
   dimensionName,
   index,
-}) {
+}) => {
   const { length } = systems.filter((system) =>
     dimensionsArrayMatches({ system, dimensionsArray, index, dimensionName }),
   )
   return length === dimensionsArray.length
 }
 
-const dimensionsArrayMatches = function ({
+const dimensionsArrayMatches = ({
   system,
   dimensionsArray,
   index,
   dimensionName,
-}) {
-  return dimensionsArray.some((dimensions, indexB) =>
+}) =>
+  dimensionsArray.some((dimensions, indexB) =>
     dimensionsMatches({
       system,
       dimensions,
@@ -75,16 +68,15 @@ const dimensionsArrayMatches = function ({
       dimensionName,
     }),
   )
-}
 
-const dimensionsMatches = function ({
+const dimensionsMatches = ({
   system,
   dimensions,
   index,
   indexB,
   dimensionName,
-}) {
-  return Object.entries(dimensions).every(([dimensionNameB, dimensionValueB]) =>
+}) =>
+  Object.entries(dimensions).every(([dimensionNameB, dimensionValueB]) =>
     dimensionMatches({
       system,
       index,
@@ -94,18 +86,14 @@ const dimensionsMatches = function ({
       dimensionValueB,
     }),
   )
-}
 
-const dimensionMatches = function ({
+const dimensionMatches = ({
   system,
   index,
   indexB,
   dimensionName,
   dimensionNameB,
   dimensionValueB,
-}) {
-  return (
-    system.dimensions[dimensionNameB] === dimensionValueB ||
-    (indexB === index && dimensionNameB === dimensionName)
-  )
-}
+}) =>
+  system.dimensions[dimensionNameB] === dimensionValueB ||
+  (indexB === index && dimensionNameB === dimensionName)

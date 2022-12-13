@@ -10,10 +10,7 @@ import { ConsumerError } from './error.js'
 // Plugin's identity is checked using `plugin.id`, which works with:
 //  - Inline ids
 //  - The same module or file being referenced in different ways
-export const validateDuplicatePlugins = function (
-  pluginInfos,
-  { name, duplicates },
-) {
+export const validateDuplicatePlugins = (pluginInfos, { name, duplicates }) => {
   if (duplicates) {
     return
   }
@@ -30,13 +27,11 @@ export const validateDuplicatePlugins = function (
   )
 }
 
-const isDuplicateId = function (pluginInfo, index, pluginInfos) {
+const isDuplicateId = (pluginInfo, index, pluginInfos) => {
   const id = getPluginId(pluginInfo)
   return pluginInfos.some(
     (pluginInfoA, indexA) => index > indexA && id === getPluginId(pluginInfoA),
   )
 }
 
-const getPluginId = function ({ plugin: { id } }) {
-  return id
-}
+const getPluginId = ({ plugin: { id } }) => id

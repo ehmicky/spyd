@@ -5,7 +5,7 @@ import { got } from 'got'
 import { BaseError, UnknownError, IpcSerializationError } from './error.js'
 
 // Handles IPC communication with the parent process
-export const handleEvents = async function (handlers) {
+export const handleEvents = async (handlers) => {
   const state = {}
   // eslint-disable-next-line fp/no-let
   let body = JSON.stringify({})
@@ -20,20 +20,19 @@ export const handleEvents = async function (handlers) {
 }
 
 // Send HTTP request to parent
-const sendReturnValue = async function (body) {
-  return await got({
+const sendReturnValue = async (body) =>
+  await got({
     url: argv[argv.length - 1],
     method: 'POST',
     body,
     responseType: 'json',
     resolveBodyOnly: true,
   })
-}
 
 // Handle HTTP response from parent.
 // Any error while starting or measuring is most likely a user error, which is
 // sent back to the main process.
-const handlePayload = async function (payload, handlers, state) {
+const handlePayload = async (payload, handlers, state) => {
   try {
     const returnValue = await handlers[payload.event](state, payload)
     return safeSerializeBody(returnValue)
@@ -43,13 +42,13 @@ const handlePayload = async function (payload, handlers, state) {
 }
 
 // Retrieve payload to send to parent on errors
-const getErrorPayload = function (error) {
+const getErrorPayload = (error) => {
   const errorA = BaseError.normalize(error, UnknownError)
   return { error: errorA }
 }
 
 // Serialize payload but also handle invalid JSON errors
-const safeSerializeBody = function (returnValue = {}) {
+const safeSerializeBody = (returnValue = {}) => {
   try {
     return serializeBody(returnValue)
   } catch (cause) {
@@ -57,6 +56,4 @@ const safeSerializeBody = function (returnValue = {}) {
   }
 }
 
-const serializeBody = function (returnValue) {
-  return JSON.stringify(returnValue)
-}
+const serializeBody = (returnValue) => JSON.stringify(returnValue)

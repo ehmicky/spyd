@@ -7,8 +7,8 @@ const HANDLER_MAIN_PATH = fileURLToPath(
 
 // `runner.version` can be used to spawn a different Node.js version
 // than the current one.
-export const launch = function ({ version }) {
-  return version === undefined
+export const launch = ({ version }) =>
+  version === undefined
     ? {
         spawn: ['node', HANDLER_MAIN_PATH],
         versions: { Node: currentVersion.slice(1) },
@@ -18,4 +18,3 @@ export const launch = function ({ version }) {
         spawnOptions: version.execaOptions,
         versions: { Node: version.version },
       }
-}

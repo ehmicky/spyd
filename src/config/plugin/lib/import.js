@@ -8,11 +8,11 @@ import { PluginError } from './error.js'
 // We shallow clone it the return value to ensure plugins of same location and
 // type but different configs do not share the same top-level properties.
 //   - However, they will share deep properties by reference.
-export const importPlugin = async function (
+export const importPlugin = async (
   location,
   locationType,
   { name, builtins },
-) {
+) => {
   try {
     const { plugin, path } = await IMPORTERS[locationType](location, builtins)
     const pluginA = isPlainObj(plugin) ? { ...plugin } : plugin
@@ -22,15 +22,13 @@ export const importPlugin = async function (
   }
 }
 
-const importInline = function (location) {
-  return { plugin: location }
-}
+const importInline = (location) => ({ plugin: location })
 
 // We do not assume `builtins` methods are calling `import()`: they could return
 // the plugin object as is.
 // However, they are likely to call `import()`, therefore we handle a `default`
 // import too.
-const importBuiltin = async function (location, builtins) {
+const importBuiltin = async (location, builtins) => {
   const builtinPlugin = await builtins[location]()
   const plugin = isPlainObj(builtinPlugin.default)
     ? builtinPlugin.default
@@ -42,7 +40,7 @@ const importBuiltin = async function (location, builtins) {
 //  - It allows plugin to make other exports
 //  - It does not require wildcard imports when importing the plugin
 //    programmatically
-const importPath = async function (location) {
+const importPath = async (location) => {
   // eslint-disable-next-line import/no-dynamic-require
   const { default: plugin } = await import(pathToFileURL(location))
 

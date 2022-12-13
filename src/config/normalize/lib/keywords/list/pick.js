@@ -1,8 +1,7 @@
 import { normalizeBoolean } from '../normalize/common.js'
 
-const main = function (definition) {
-  return definition ? undefined : { skip: true, input: undefined }
-}
+const main = (definition) =>
+  definition ? undefined : { skip: true, input: undefined }
 
 // Apply `pick[(input, info)]` which omits the current input if `false` is
 // returned. It also skips the current rule.

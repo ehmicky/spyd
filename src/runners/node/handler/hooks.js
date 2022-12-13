@@ -1,7 +1,7 @@
 import { TasksRunError } from '../../common/error.js'
 
 // Perform `beforeAll`, if defined
-export const before = async function ({ task: { beforeAll }, inputs }) {
+export const before = async ({ task: { beforeAll }, inputs }) => {
   if (beforeAll === undefined) {
     return
   }
@@ -14,7 +14,7 @@ export const before = async function ({ task: { beforeAll }, inputs }) {
 }
 
 // Perform `afterAll`, if defined
-export const after = async function ({ task: { afterAll }, inputs }) {
+export const after = async ({ task: { afterAll }, inputs }) => {
   if (afterAll === undefined) {
     return
   }

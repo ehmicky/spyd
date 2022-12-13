@@ -33,7 +33,7 @@ import { findFormat } from './formats/main.js'
 //     - The history being empty
 //     - The delta points to a time in the future or to a non-existing reference
 // This is in contrast to syntactical or semantical errors which always throw.
-export const applyMainDelta = async function (metadataGroups, { delta, cwd }) {
+export const applyMainDelta = async (metadataGroups, { delta, cwd }) => {
   if (metadataGroups.length === 0) {
     throw new UserError('No previous results.')
   }
@@ -82,7 +82,7 @@ export const applyMainDelta = async function (metadataGroups, { delta, cwd }) {
 //    properties.
 //  - Instead, reporters should use logic to retrieve the history of each
 //    combination
-export const applySinceDelta = async function (metadataGroups, { since, cwd }) {
+export const applySinceDelta = async (metadataGroups, { since, cwd }) => {
   if (metadataGroups.length === 0) {
     return []
   }
@@ -101,7 +101,7 @@ export const applySinceDelta = async function (metadataGroups, { since, cwd }) {
   return metadataGroups.slice(index)
 }
 
-const findByDelta = async function ({ metadataGroups, delta, cwd, name }) {
+const findByDelta = async ({ metadataGroups, delta, cwd, name }) => {
   const format = findFormat(delta.type)
 
   try {

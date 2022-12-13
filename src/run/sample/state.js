@@ -7,24 +7,22 @@ import { handleRepeat } from './repeat.js'
 import { getTimeDuration } from './time_duration.js'
 
 // Returns initial `sampleState`
-export const getInitialSampleState = function () {
-  return {
-    measures: [],
-    unsortedMeasures: [],
-    allSamples: 0,
-    repeat: 1,
-    calibrated: false,
-    timeDurations: [],
-    coldLoopsTarget: 0,
-  }
-}
+export const getInitialSampleState = () => ({
+  measures: [],
+  unsortedMeasures: [],
+  allSamples: 0,
+  repeat: 1,
+  calibrated: false,
+  timeDurations: [],
+  coldLoopsTarget: 0,
+})
 
 // Update sampleState because on the return value from the last sample
-export const getSampleState = function (
+export const getSampleState = (
   { measures, unsortedMeasures, allSamples, repeat, calibrated, timeDurations },
   { measures: sampleMeasures },
   { minLoopDuration, measureDuration, targetSampleDuration },
-) {
+) => {
   const {
     sampleSortedMeasures,
     sampleUnsortedMeasures,
@@ -76,13 +74,13 @@ export const getSampleState = function (
 // sorting `measures` directly, which would be much slower.
 // Also appends `sampleUnsortedMeasures` to `unsortedMeasures` but without
 // sorting.
-const addSampleMeasures = function ({
+const addSampleMeasures = ({
   measures,
   unsortedMeasures,
   sampleSortedMeasures,
   sampleUnsortedMeasures,
   calibrated,
-}) {
+}) => {
   if (!calibrated) {
     return [measures, unsortedMeasures]
   }

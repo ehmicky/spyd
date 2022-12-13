@@ -26,7 +26,7 @@ import { resolveModuleLocation } from './module.js'
 //  - A file path starting with . or /
 //  - A `file:` URL
 //  - A Node module prefixed with `modulePrefix` (which is optional)
-export const getLocationType = function (originalLocation, { builtins }) {
+export const getLocationType = (originalLocation, { builtins }) => {
   if (originalLocation instanceof URL) {
     return 'fileUrl'
   }
@@ -42,7 +42,7 @@ export const getLocationType = function (originalLocation, { builtins }) {
   return getPathLocationType(originalLocation)
 }
 
-const getPathLocationType = function (originalLocation) {
+const getPathLocationType = (originalLocation) => {
   if (originalLocation.startsWith('.') || isAbsolute(originalLocation)) {
     return 'path'
   }
@@ -95,7 +95,7 @@ const normalizeModuleLocation = [
       minLength: 1,
       errorMessage: { minLength: 'must not be an empty string' },
     },
-    validate(value, { context: { modulePrefix } }) {
+    validate: (value, { context: { modulePrefix } }) => {
       if (modulePrefix === undefined) {
         throw new Error('must start with . or / when it is a file path.')
       }

@@ -1,7 +1,7 @@
 import { normalizePath } from 'wild-wild-parser'
 
 // Normalize string definition
-export const normalizeString = function (definition) {
+export const normalizeString = (definition) => {
   if (typeof definition !== 'string') {
     throw new TypeError('must be a string.')
   }
@@ -10,7 +10,7 @@ export const normalizeString = function (definition) {
 }
 
 // Normalize boolean definition
-export const normalizeBoolean = function (definition) {
+export const normalizeBoolean = (definition) => {
   if (typeof definition !== 'boolean') {
     throw new TypeError('must be a boolean.')
   }
@@ -19,7 +19,7 @@ export const normalizeBoolean = function (definition) {
 }
 
 // Normalize property path definition
-export const normalizePropertyPath = function (definition) {
+export const normalizePropertyPath = (definition) => {
   try {
     return normalizePath(definition)
   } catch (error) {
@@ -28,18 +28,18 @@ export const normalizePropertyPath = function (definition) {
 }
 
 // Validate input is a non-empty string
-export const validateDefinedString = function (value) {
+export const validateDefinedString = (value) => {
   validateString(value)
   validateNonEmptyString(value)
 }
 
-const validateString = function (value) {
+const validateString = (value) => {
   if (typeof value !== 'string') {
     throw new TypeError('must be a string.')
   }
 }
 
-const validateNonEmptyString = function (value) {
+const validateNonEmptyString = (value) => {
   if (typeof value === 'string' && value.trim() === '') {
     throw new Error('must not be an empty string.')
   }

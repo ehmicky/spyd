@@ -7,7 +7,7 @@
 //  - This also make the mode shake. Since the mode is used to scale the whole
 //    graph, this creates some additional (but separate) vertical shakiness on
 //    the whole graph.
-export const smoothHistogram = function (counts, smoothPercentage) {
+export const smoothHistogram = (counts, smoothPercentage) => {
   const weight = Math.max(counts.length * smoothPercentage, 1)
   const totalSmooth = (weight - 1) / 2
   const fullSmooth = Math.floor(totalSmooth)
@@ -18,14 +18,14 @@ export const smoothHistogram = function (counts, smoothPercentage) {
   )
 }
 
-// eslint-disable-next-line max-params
-const getSmoothedCount = function (
+const getSmoothedCount = (
   counts,
   countIndex,
   fullSmooth,
   partialSmooth,
   weight,
-) {
+  // eslint-disable-next-line max-params
+) => {
   const start = countIndex - fullSmooth - 1
   const end = countIndex + fullSmooth + 1
 
@@ -37,11 +37,10 @@ const getSmoothedCount = function (
 }
 
 // eslint-disable-next-line max-params
-const getPartialCounts = function (counts, start, end, partialSmooth) {
-  return (getCount(counts, start) + getCount(counts, end)) * partialSmooth
-}
+const getPartialCounts = (counts, start, end, partialSmooth) =>
+  (getCount(counts, start) + getCount(counts, end)) * partialSmooth
 
-const getFullCounts = function (counts, start, end) {
+const getFullCounts = (counts, start, end) => {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 
@@ -59,7 +58,7 @@ const getFullCounts = function (counts, start, end) {
 // would always look flat.
 // We do this extrapolation by mirroring the counts near the end, but in the
 // opposite direction, using the end count as pivot.
-const getCount = function (counts, index) {
+const getCount = (counts, index) => {
   const maxIndex = counts.length - 1
 
   if (index < MIN_INDEX) {
@@ -83,6 +82,5 @@ const getCount = function (counts, index) {
 
 const MIN_INDEX = 0
 
-const getOppositeCount = function (counts, pivotIndex, oppositeIndex) {
-  return 2 * counts[pivotIndex] - counts[oppositeIndex]
-}
+const getOppositeCount = (counts, pivotIndex, oppositeIndex) =>
+  2 * counts[pivotIndex] - counts[oppositeIndex]

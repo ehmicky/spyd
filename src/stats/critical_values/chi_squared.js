@@ -4,7 +4,7 @@ import { getCriticalValue, getCriticalValuesMap } from './map.js'
 // Return number to multiply variance with in order to get its confidence
 // interval for a given significance level and size.
 // Uses the chi-squared distribution's critical value.
-export const getChiSquaredValue = function (size, significanceLevel) {
+export const getChiSquaredValue = (size, significanceLevel) => {
   const degreesOfFreedom = size - 1
   const criticalValue = getCriticalValue(
     CHI_SQUARED_MAP,
@@ -21,9 +21,7 @@ export const getChiSquaredValue = function (size, significanceLevel) {
 const CHI_SQUARED_RAW = [
   {
     significanceLevel: 0.025,
-    getMaxValue(degreesOfFreedom) {
-      return degreesOfFreedom + 1
-    },
+    getMaxValue: (degreesOfFreedom) => degreesOfFreedom + 1,
     criticalValues: {
       1: 5.024,
       2: 7.378,
@@ -297,9 +295,7 @@ const CHI_SQUARED_RAW = [
   },
   {
     significanceLevel: 0.975,
-    getMaxValue(degreesOfFreedom) {
-      return degreesOfFreedom - 1
-    },
+    getMaxValue: (degreesOfFreedom) => degreesOfFreedom - 1,
     criticalValues: {
       1: 0.000982,
       2: 0.0506,

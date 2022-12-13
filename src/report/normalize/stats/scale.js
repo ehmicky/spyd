@@ -1,5 +1,5 @@
 // Divide stats by a scale so they don't show too many digits nor decimals.
-export const getScale = function (minMeasure, kind) {
+export const getScale = (minMeasure, kind) => {
   const scales = SCALES[kind]
   const scaleA = scales.find((scale) => minMeasure >= scale)
   return scaleA === undefined ? scales[scales.length - 1] : scaleA

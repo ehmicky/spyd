@@ -1,7 +1,7 @@
 import { isParentPath, isSamePath } from 'wild-wild-parser'
 
 // When a property is moved to another with `rename|path`
-export const addMove = function (moves, oldPath, newPath) {
+export const addMove = (moves, oldPath, newPath) => {
   // eslint-disable-next-line fp/no-mutating-methods
   moves.push({ oldPath, newPath })
 }
@@ -13,11 +13,9 @@ export const addMove = function (moves, oldPath, newPath) {
 // a `newProp` and `value` properties.
 // We automatically record those when we can: `rule.rename`, array
 // normalization, etc.
-export const applyMoves = function (moves, path) {
-  return moves.reduceRight(applyMove, path)
-}
+export const applyMoves = (moves, path) => moves.reduceRight(applyMove, path)
 
-const applyMove = function (path, { oldPath, newPath }) {
+const applyMove = (path, { oldPath, newPath }) => {
   if (isSamePath(newPath, path)) {
     return oldPath
   }

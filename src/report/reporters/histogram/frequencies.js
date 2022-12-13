@@ -3,7 +3,7 @@ import { smoothHistogram } from './smooth.js'
 
 // Smoothes the histogram by adjusting each of those heights.
 // Also resizes the columns to fit in the terminal width.
-export const getFrequencies = function (histogram, contentWidth, smooth) {
+export const getFrequencies = (histogram, contentWidth, smooth) => {
   const frequencies = histogram.map(getFrequency)
 
   if (!smooth) {
@@ -16,9 +16,7 @@ export const getFrequencies = function (histogram, contentWidth, smooth) {
   return frequenciesC
 }
 
-const getFrequency = function ({ frequency }) {
-  return frequency
-}
+const getFrequency = ({ frequency }) => frequency
 
 // We truncate the first|last percentiles of the histogram to remove outliers.
 // However, this means the first|last bucket of the truncated histogram are
@@ -27,9 +25,7 @@ const getFrequency = function ({ frequency }) {
 // This also makes the histogram not go to the bottom on both ends, which make
 // it look incomplete.
 // We fix this by adding `0` buckets on both ends.
-const smoothHistogramEnds = function (frequencies) {
-  return [0, ...frequencies, 0]
-}
+const smoothHistogramEnds = (frequencies) => [0, ...frequencies, 0]
 
 // Smooth each bucket, by using an arithmetic mean with the nearby buckets.
 // This is the number of neighbors to use, as a percentage to the total number

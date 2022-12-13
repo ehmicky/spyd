@@ -1,7 +1,7 @@
 import { isDeepStrictEqual } from 'node:util'
 
 // Compare two arrays deeply and unorderedly
-export const isSameArray = function (arrayA, arrayB) {
+export const isSameArray = (arrayA, arrayB) => {
   if (arrayA.length !== arrayB.length) {
     return false
   }
@@ -10,7 +10,7 @@ export const isSameArray = function (arrayA, arrayB) {
   return arrayA.every((value) => includesValue(arrayB, value, matchedIndexes))
 }
 
-const includesValue = function (arrayB, value, matchedIndexes) {
+const includesValue = (arrayB, value, matchedIndexes) => {
   const foundIndex = arrayB.findIndex(
     (valueB, index) =>
       !matchedIndexes.has(index) && isDeepStrictEqual(value, valueB),

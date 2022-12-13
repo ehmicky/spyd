@@ -1,15 +1,15 @@
 // Retrieve arithmetic mean of an array of floats (cannot be NaN nor Infinite).
 // Array must not be empty.
-export const getMean = function (
+export const getMean = (
   array,
   { minIndex = 0, maxIndex = array.length - 1 } = {},
-) {
+) => {
   const length = maxIndex - minIndex + 1
   return getSum(array, minIndex, maxIndex) / length
 }
 
 // Retrieve sum of array of floats.
-export const getSum = function (array, minIndex, maxIndex) {
+export const getSum = (array, minIndex, maxIndex) => {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 

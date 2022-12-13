@@ -11,10 +11,10 @@
 // programming patterns.
 /* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
-export const findClosestMean = function (
+export const findClosestMean = (
   array,
   { mean, minIndex, maxIndex, filter },
-) {
+) => {
   let sum = 0
   let filteredIndex = 0
   let closestMean = 0
@@ -50,10 +50,10 @@ export const findClosestMean = function (
 
 // Find the index of the first `incrementalMean` between `incrementalMeanMin`
 // and `incrementalMax`.
-export const findHotIndex = function (
+export const findHotIndex = (
   array,
   { minIndex, filter, incrementalMeanMin, incrementalMeanMax },
-) {
+) => {
   let sum = 0
   let filteredIndex = 0
   let incrementalMean = 0

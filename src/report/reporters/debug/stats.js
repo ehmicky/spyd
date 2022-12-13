@@ -1,24 +1,18 @@
 // Retrieve the list of columns, each corresponding to a stat.
 // Empty columns are not displayed.
-export const getStatNames = function (combinations, statNames, sparse) {
-  return sparse
+export const getStatNames = (combinations, statNames, sparse) =>
+  sparse
     ? statNames
     : statNames.filter((statName) => hasStat(combinations, statName))
-}
 
-const hasStat = function (combinations, statName) {
-  return combinations.some(
-    (combination) => getCell(statName, combination) !== '',
-  )
-}
+const hasStat = (combinations, statName) =>
+  combinations.some((combination) => getCell(statName, combination) !== '')
 
 // Retrieve a single cell
-export const getCell = function (
+export const getCell = (
   statName,
   { stats: { [statName]: { prettyColor = '' } = {} } },
-) {
-  return prettyColor
-}
+) => prettyColor
 
 // All available stats. Also the default value.
 export const ALL_STAT_NAMES = [

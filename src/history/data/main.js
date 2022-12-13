@@ -17,7 +17,7 @@ import {
 
 // Save rawResults so they can be compared or shown later.
 // We do not save stopped benchmarks.
-export const addToHistory = async function (rawResult, { save, cwd }) {
+export const addToHistory = async (rawResult, { save, cwd }) => {
   if (!save) {
     return
   }
@@ -30,7 +30,7 @@ export const addToHistory = async function (rawResult, { save, cwd }) {
 export const DEFAULT_SAVE = false
 
 // Remove a rawResult
-export const removeFromHistory = async function (rawResults, { cwd, force }) {
+export const removeFromHistory = async (rawResults, { cwd, force }) => {
   if (!(await shouldRemoveFromHistory(force))) {
     return
   }
@@ -40,12 +40,12 @@ export const removeFromHistory = async function (rawResults, { cwd, force }) {
 }
 
 // Retrieve the metadatum of a rawResult
-const getRawResultMetadatum = function ({ id, subId, timestamp }) {
+const getRawResultMetadatum = ({ id, subId, timestamp }) => {
   const idA = shortenId(id)
   return { id: idA, subId, timestamp }
 }
 
-const shouldRemoveFromHistory = async function (force) {
+const shouldRemoveFromHistory = async (force) => {
   if (force || !isTtyInput()) {
     return true
   }
@@ -60,7 +60,7 @@ const shouldRemoveFromHistory = async function (force) {
 
 // Find the target result using the main delta.
 // Then, list all history results, after applying the `since` delta.
-export const getFromHistory = async function (config) {
+export const getFromHistory = async (config) => {
   const metadataGroups = await listSortedMetadata(config)
   const metadataGroupsA = await applyMainDelta(metadataGroups, config)
   const [metadataGroupsB, targetMetadataGroup] = pickLast(metadataGroupsA)
@@ -72,14 +72,14 @@ export const getFromHistory = async function (config) {
 }
 
 // List all history results, after applying the `since` delta.
-export const listHistory = async function (config) {
+export const listHistory = async (config) => {
   const metadataGroups = await listSortedMetadata(config)
   const metadataGroupsA = await applySinceDelta(metadataGroups, config)
   const history = await fetchHistory(metadataGroupsA, config)
   return history
 }
 
-const listSortedMetadata = async function ({ cwd }) {
+const listSortedMetadata = async ({ cwd }) => {
   const metadata = await listMetadata(cwd)
   const metadataGroups = groupMetadata(metadata)
   return metadataGroups
@@ -90,7 +90,7 @@ const listSortedMetadata = async function ({ cwd }) {
 // This is performed at the beginning of all commands because this allows:
 //  - Failing fast if there is a problem with the history
 //  - Including previous|diff in rawResults preview
-const fetchHistory = async function (metadataGroups, { cwd }) {
+const fetchHistory = async (metadataGroups, { cwd }) => {
   const metadata = ungroupMetadata(metadataGroups)
   const rawResultsStrs = await fetchRawResults(metadata, cwd)
   const history = rawResultsStrs.map(normalizeRawResultLoad)

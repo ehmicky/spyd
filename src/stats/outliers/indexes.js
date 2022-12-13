@@ -27,7 +27,7 @@ import { THRESHOLDS, isOutlier } from './threshold.js'
 //     - This results in outliersMin|outliersMax being too high or too low
 //  - On the other side, if the range is too narrow, it will only work with
 //    smaller "stop points"
-export const getThresholdsIndexes = function (quantiles, quantilesCount) {
+export const getThresholdsIndexes = (quantiles, quantilesCount) => {
   // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
   const outliersLimit = getOutliersLimit(quantilesCount)
@@ -45,9 +45,8 @@ export const getThresholdsIndexes = function (quantiles, quantilesCount) {
   )
 }
 
-const getOutliersLimit = function (quantilesCount) {
-  return Math.max(Math.floor(quantilesCount * OUTLIERS_LIMIT), 1)
-}
+const getOutliersLimit = (quantilesCount) =>
+  Math.max(Math.floor(quantilesCount * OUTLIERS_LIMIT), 1)
 
 // Computes the index where outliers start on each side.
 // The main criteria to consider whether a quantile is likely to be an outlier
@@ -88,10 +87,10 @@ const getOutliersLimit = function (quantilesCount) {
 //  - Therefore, we need to compute outliersMin|outliersMax's side alternatively
 // We use imperative code for performance.
 /* eslint-disable fp/no-let, fp/no-loops, fp/no-mutation, no-param-reassign */
-const getThresholdIndexes = function (
+const getThresholdIndexes = (
   { maxIndex, minIndex, maxIndexSum, minIndexSum },
   { threshold, quantiles, reversedQuantiles, quantilesCount, outliersLimit },
-) {
+) => {
   let maxIncrement = 0
   let minIncrement = 0
 
@@ -144,14 +143,15 @@ const getThresholdIndexes = function (
 //  - This can lead to quantileRatio being much higher than it should just
 //    because the measures close to `minIndex` happen to be close to each other.
 // We use imperative code and positional arguments for performance.
-// eslint-disable-next-line max-statements, complexity, max-params
-const getOutliersIncrement = function (
+// eslint-disable-next-line max-statements, complexity
+const getOutliersIncrement = (
   quantiles,
   startIndex,
   endIndex,
   outliersLimit,
   threshold,
-) {
+  // eslint-disable-next-line max-params
+) => {
   const start = quantiles[startIndex]
   const end = quantiles[endIndex]
   const width = start - end

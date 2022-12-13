@@ -27,7 +27,7 @@ import { isRemainingCombination } from './remaining.js'
 //  - Their beforeEach|afterEach is very slow
 // In that case, the task complexity should be increased, for example by using
 // bigger `inputs`.
-export const performMeasureLoop = async function ({
+export const performMeasureLoop = async ({
   config: { precision, outliers },
   previewState,
   stopState,
@@ -36,7 +36,7 @@ export const performMeasureLoop = async function ({
   logsFd,
   minLoopDuration,
   startStat,
-}) {
+}) => {
   const { stats } = await pWhile(
     (state) => isRemainingCombination(state, { precision, stage, stopState }),
     (state) =>
@@ -61,7 +61,7 @@ export const performMeasureLoop = async function ({
 
 export const TARGET_SAMPLE_DURATION = 1e8
 
-const performSample = async function (
+const performSample = async (
   { sampleState, stats, durationState },
   {
     previewState,
@@ -73,7 +73,7 @@ const performSample = async function (
     targetSampleDuration,
     startStat,
   },
-) {
+) => {
   const sampleStart = startSample()
 
   const sampleStateA = await measureSample(

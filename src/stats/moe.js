@@ -3,7 +3,7 @@ import { applyEnvDev } from './env_dev/apply.js'
 import { IDENTICAL_VARIANCE_SHIFT, areIdenticalMeasures } from './variance.js'
 
 // Like `getMoe()` but taking `envDev` into account
-export const getAdjustedMoe = function (stdev, length, envDev) {
+export const getAdjustedMoe = (stdev, length, envDev) => {
   const adjustedLength = applyEnvDev(length, envDev)
   const adjustedLengthA = Math.max(Math.round(adjustedLength), MIN_LENGTH)
   return getMoe(stdev, adjustedLengthA)
@@ -75,7 +75,7 @@ export const getAdjustedMoe = function (stdev, length, envDev) {
 //  - this can still be added in the future with a reporter showing a list of
 //    too-close-to-compare combinations, using a welch's t-test between each
 //    combination pair
-export const getMoe = function (stdev, length) {
+export const getMoe = (stdev, length) => {
   const standardError = stdev / Math.sqrt(length)
   const tValue = getTvalue(length)
   const moe = standardError * tValue
@@ -104,16 +104,14 @@ export const getMoe = function (stdev, length) {
 //     - It is not a problem even when mean inaccuracy is high
 //        - Because that is only likely when rstdev is high and sample size low
 //        - Which is proportional to a higher `moe|rmoe`
-export const getRmoe = function (moe, mean) {
-  return moe / mean
-}
+export const getRmoe = (moe, mean) => moe / mean
 
 // Find the `length` that gets a specific `moe` with a given `stdev`.
 // This essentially applies the inverse function of `getMoe()`.
 // Since `length` is used in non-straight-forward ways (due to
 // `getStudentTvalue()`) in `getMoe()`, we need to do an iterative/heuristic
 // search until the value is found.
-export const getLengthForMoe = function ({ mean, stdev, min, max, precision }) {
+export const getLengthForMoe = ({ mean, stdev, min, max, precision }) => {
   const invertLength = areIdenticalMeasures(min, max)
     ? invertLengthIdentical.bind(undefined, precision)
     : invertLengthNormal.bind(undefined, { mean, stdev, precision })
@@ -133,20 +131,16 @@ export const getLengthForMoe = function ({ mean, stdev, min, max, precision }) {
   return length
 }
 
-const invertLengthIdentical = function (precision, tValue) {
-  return (tValue * IDENTICAL_VARIANCE_SHIFT) / precision
-}
+const invertLengthIdentical = (precision, tValue) =>
+  (tValue * IDENTICAL_VARIANCE_SHIFT) / precision
 
-const invertLengthNormal = function ({ mean, stdev, precision }, tValue) {
-  return ((tValue * stdev) / (precision * mean)) ** 2
-}
+const invertLengthNormal = ({ mean, stdev, precision }, tValue) =>
+  ((tValue * stdev) / (precision * mean)) ** 2
 
 // Minimal `length` with a defined t-value
 const MIN_LENGTH = 2
 
-const getTvalue = function (length) {
-  return getStudentTValue(length - 1, SIGNIFICANCE_LEVEL)
-}
+const getTvalue = (length) => getStudentTValue(length - 1, SIGNIFICANCE_LEVEL)
 
 // Significance level when computing the `moe`.
 // A lower value:

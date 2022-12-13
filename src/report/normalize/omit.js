@@ -5,21 +5,21 @@ import { excludeKeys } from 'filter-obj'
 // We use one boolean configuration property for each instead of a single array
 // configuration property because it makes it easier to enable/disable each
 // property both in CLI flags and in `reporter.*` properties.
-export const omitCombinationsProps = function (result, debugStats) {
+export const omitCombinationsProps = (result, debugStats) => {
   const combinations = result.combinations.map((combination) =>
     omitCombinationProps({ combination, debugStats }),
   )
   return { ...result, combinations }
 }
 
-const omitCombinationProps = function ({
+const omitCombinationProps = ({
   combination,
   combination: {
     config: { showPrecision, showDiff },
     stats,
   },
   debugStats,
-}) {
+}) => {
   const statsA = omitMeanProps(stats, showPrecision)
   const statsB = maybeOmit(statsA, showPrecision, PRECISION_STATS_PROPS)
   const statsC = maybeOmit(statsB, showDiff, DIFF_STAT_PROPS)
@@ -30,10 +30,7 @@ const omitCombinationProps = function ({
 // When `showPrecision` is `true`, we show `meanMin|meanMax` instead of `mean`.
 // However, we fall back to `mean` when those are not available due to not
 // enough measures.
-const omitMeanProps = function (
-  { mean, meanMin, meanMax, ...stats },
-  showPrecision,
-) {
+const omitMeanProps = ({ mean, meanMin, meanMax, ...stats }, showPrecision) => {
   if (showPrecision && meanMin !== undefined) {
     return { ...stats, meanMin, meanMax }
   }
@@ -77,8 +74,7 @@ const DEBUG_STATS_PROPS = [
   'runDuration',
 ]
 
-const maybeOmit = function (obj, showProp, propNames) {
-  return showProp ? obj : excludeKeys(obj, propNames)
-}
+const maybeOmit = (obj, showProp, propNames) =>
+  showProp ? obj : excludeKeys(obj, propNames)
 
 export const DEFAULT_SHOW_PRECISION = false

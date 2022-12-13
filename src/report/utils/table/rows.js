@@ -1,9 +1,9 @@
-export const getTablesRows = function ({
+export const getTablesRows = ({
   rows,
   availableWidth,
   columnsWidth,
   columnSeparator,
-}) {
+}) => {
   const separatorWidth = columnSeparator.length
   const columnsCountFloat =
     (availableWidth + separatorWidth) / (columnsWidth + separatorWidth)
@@ -15,16 +15,9 @@ export const getTablesRows = function ({
   )
 }
 
-const getRowLength = function ({ length }) {
-  return length
-}
+const getRowLength = ({ length }) => length
 
-const getTableRows = function ({
-  rows,
-  rowsMaxLength,
-  tableIndex,
-  columnsCount,
-}) {
+const getTableRows = ({ rows, rowsMaxLength, tableIndex, columnsCount }) => {
   const tableColumnsCount = Math.min(
     columnsCount,
     rowsMaxLength - columnsCount * tableIndex,
@@ -34,12 +27,7 @@ const getTableRows = function ({
   )
 }
 
-const getTableRow = function ({
-  row,
-  tableIndex,
-  columnsCount,
-  tableColumnsCount,
-}) {
+const getTableRow = ({ row, tableIndex, columnsCount, tableColumnsCount }) => {
   const tableRow = row.slice(
     columnsCount * tableIndex,
     columnsCount * (tableIndex + 1),

@@ -1,4 +1,4 @@
-export const pWhile = async function (condition, action, initialState) {
+export const pWhile = async (condition, action, initialState) => {
   // eslint-disable-next-line fp/no-let
   let state = initialState
 

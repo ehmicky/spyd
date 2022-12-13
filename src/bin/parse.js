@@ -13,7 +13,7 @@ import { mapValues } from '../utils/map.js'
 //  - `boolean`: this enables boolean flags to be followed by a command or
 //    another flag, while still allowing passing "true|false" to them
 //  - `string`: this enables values to be "true", "false" or "1"
-export const parseCliFlags = function (yargs) {
+export const parseCliFlags = (yargs) => {
   const {
     _: [command = DEFAULT_COMMAND],
     ...configFlags
@@ -28,9 +28,8 @@ const DEFAULT_COMMAND = 'run'
 // Remove `yargs`-specific properties and shortcuts.
 // We do not remove dasherized properties because user-defined identifiers can
 // use dashes and we disable yargs' `camel-case-expansion`.
-const isInternalProp = function (key, value) {
-  return value === undefined || INTERNAL_KEYS.has(key) || key.length === 1
-}
+const isInternalProp = (key, value) =>
+  value === undefined || INTERNAL_KEYS.has(key) || key.length === 1
 
 const INTERNAL_KEYS = new Set(['help', 'version', '_', '$0'])
 
@@ -40,9 +39,8 @@ const INTERNAL_KEYS = new Set(['help', 'version', '_', '$0'])
 //     with the `config`, `reporter`, `select` and `limit` configuration
 //     properties.
 //   - This requires not using `requiresArg: true`
-const handleEmptyArr = function (value, key) {
-  return value === '' && ARRAY_PROPERTIES.has(key) ? [] : value
-}
+const handleEmptyArr = (value, key) =>
+  value === '' && ARRAY_PROPERTIES.has(key) ? [] : value
 
 const ARRAY_PROPERTIES = new Set([
   'reporter',

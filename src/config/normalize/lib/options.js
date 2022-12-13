@@ -9,7 +9,7 @@ import { getRuleProps } from './rule/props.js'
 import { validateRuleProps } from './rule/validate.js'
 
 // Normalize `options`
-export const normalizeOpts = function (options = {}) {
+export const normalizeOpts = (options = {}) => {
   if (!isPlainObj(options)) {
     throw new DefinitionError(
       `Options must be a plain object: ${inspect(options)}`,
@@ -25,7 +25,7 @@ export const normalizeOpts = function (options = {}) {
   return { soft, all: allA, keywords: keywordsA, ruleProps, sync }
 }
 
-const validateSoft = function (soft) {
+const validateSoft = (soft) => {
   if (typeof soft !== 'boolean') {
     throw new DefinitionError(
       `Option "soft" must be a boolean: ${inspect(soft)}`,
@@ -33,7 +33,7 @@ const validateSoft = function (soft) {
   }
 }
 
-const normalizeAll = function (all, ruleProps, sync) {
+const normalizeAll = (all, ruleProps, sync) => {
   if (all === undefined) {
     return
   }
@@ -54,6 +54,4 @@ const normalizeAll = function (all, ruleProps, sync) {
   return allA
 }
 
-const isUndefined = function (key, value) {
-  return value === undefined
-}
+const isUndefined = (key, value) => value === undefined

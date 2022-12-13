@@ -1,11 +1,11 @@
 import { getSharedConfig } from './shared.js'
 
 // Normalize options for `addPlugins()`
-export const normalizeMultipleOpts = function ({
+export const normalizeMultipleOpts = ({
   name = 'plugins',
   duplicates = false,
   ...opts
-}) {
+}) => {
   const optsA = normalizeSingleOpts({ ...opts, name })
   return { ...optsA, duplicates }
 }
@@ -15,7 +15,7 @@ export const normalizeMultipleOpts = function ({
 //  - `undefined` means no validation is performed, including unknown properties
 //    check
 //  - While an empty array means we validate that no properties exist
-export const normalizeSingleOpts = function ({
+export const normalizeSingleOpts = ({
   name = 'plugin',
   modulePrefix,
   pluginProp = 'plugin',
@@ -28,7 +28,7 @@ export const normalizeSingleOpts = function ({
   context,
   cwd,
   keywords,
-}) {
+}) => {
   const { sharedConfig: sharedConfigA, sharedPropNames } = getSharedConfig(
     sharedConfig,
     shared,

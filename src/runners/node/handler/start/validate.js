@@ -10,9 +10,8 @@ import {
 } from '../../../common/validate/type.js'
 
 // Validate that the tasks file has correct shape
-export const validate = function (tasks) {
-  return validateTasks({ tasks, validators, normalizeTask })
-}
+export const validate = (tasks) =>
+  validateTasks({ tasks, validators, normalizeTask })
 
 const validators = {
   beforeAll: validateFunction,
@@ -24,7 +23,7 @@ const validators = {
 }
 
 // Tasks can be directly a function, which is a shortcut for `{ main }`
-const normalizeTask = function (task) {
+const normalizeTask = (task) => {
   if (typeof task === 'function') {
     return { main: task }
   }

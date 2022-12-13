@@ -3,7 +3,7 @@ import { serializePath } from 'wild-wild-parser'
 import { normalizePropertyPath } from '../normalize/common.js'
 
 // `normalizePath()` might throw if `parent` contains syntax errors.
-const main = function (definition, { originalPath }) {
+const main = (definition, { originalPath }) => {
   const originalPathA = [...definition, ...originalPath]
   const originalName = serializePath(originalPathA)
   return { info: { originalPath: originalPathA, originalName } }

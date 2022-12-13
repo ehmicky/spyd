@@ -2,21 +2,15 @@
 // Groups are divided into clusters of elements.
 // Each group has `CLUSTER_FACTOR` more elements per cluster than the previous
 // one.
-export const getGroupsCount = function (length) {
-  return Math.floor(
-    Math.log(length / MIN_GROUP_SIZE) / Math.log(CLUSTER_FACTOR),
-  )
-}
+export const getGroupsCount = (length) =>
+  Math.floor(Math.log(length / MIN_GROUP_SIZE) / Math.log(CLUSTER_FACTOR))
 
 // Retrieve the `clusterSize`, i.e. number of elements per cluster, of each
 // group.
-export const getClusterSizes = function (groupsCount) {
-  return Array.from({ length: groupsCount }, getClusterSize)
-}
+export const getClusterSizes = (groupsCount) =>
+  Array.from({ length: groupsCount }, getClusterSize)
 
-const getClusterSize = function (_, index) {
-  return CLUSTER_FACTOR ** (index + 1)
-}
+const getClusterSize = (_, index) => CLUSTER_FACTOR ** (index + 1)
 
 // Minimum `groupSize`
 // A higher value lowers accuracy:

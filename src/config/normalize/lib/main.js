@@ -20,7 +20,7 @@ import { logWarnings } from './warn.js'
 //  - Removes the possibility of cycles
 //  - Makes it clear to users what the order is
 // TODO: abstract this function to its own library
-export const normalizeInputs = async function (inputs, rules, opts) {
+export const normalizeInputs = async (inputs, rules, opts) => {
   const { soft, all, keywords, ruleProps, sync } = safeNormalizeOpts(opts)
 
   try {
@@ -36,7 +36,7 @@ export const normalizeInputs = async function (inputs, rules, opts) {
   }
 }
 
-const safeNormalizeOpts = function (opts) {
+const safeNormalizeOpts = (opts) => {
   try {
     return normalizeOpts(opts)
   } catch (error) {
@@ -44,12 +44,12 @@ const safeNormalizeOpts = function (opts) {
   }
 }
 
-const applyRules = async function ({
+const applyRules = async ({
   rules: { items, parallel },
   state,
   keywords,
   sync,
-}) {
+}) => {
   await (parallel
     ? applyParallelRules({ items, state, keywords, sync })
     : applySerialRules({ items, state, keywords, sync }))
@@ -57,7 +57,7 @@ const applyRules = async function ({
 
 // Parallel rules require sharing a common `state` object that is directly
 // mutated.
-const applyParallelRules = async function ({ items, state, keywords, sync }) {
+const applyParallelRules = async ({ items, state, keywords, sync }) => {
   const resolutions = await Promise.allSettled(
     items.map((item) => applyRulesOrRule({ state, item, keywords, sync })),
   )
@@ -67,7 +67,7 @@ const applyParallelRules = async function ({ items, state, keywords, sync }) {
 // Instead of using `Promise.all()`, we wait for all parallel rules to complete
 // with `Promise.allSettled()` and only throw the first failed rule, if any,
 // to ensure exceptions are predictable.
-const handleFailedRule = function (resolutions) {
+const handleFailedRule = (resolutions) => {
   const failedRule = resolutions.find(isFailedRule)
 
   if (failedRule !== undefined) {
@@ -75,11 +75,9 @@ const handleFailedRule = function (resolutions) {
   }
 }
 
-const isFailedRule = function ({ status }) {
-  return status === 'rejected'
-}
+const isFailedRule = ({ status }) => status === 'rejected'
 
-const applySerialRules = async function ({ items, state, keywords, sync }) {
+const applySerialRules = async ({ items, state, keywords, sync }) => {
   // eslint-disable-next-line fp/no-loops
   for (const item of items) {
     // eslint-disable-next-line no-await-in-loop
@@ -87,19 +85,19 @@ const applySerialRules = async function ({ items, state, keywords, sync }) {
   }
 }
 
-const applyRulesOrRule = async function ({ state, item, keywords, sync }) {
+const applyRulesOrRule = async ({ state, item, keywords, sync }) => {
   await (item.name === undefined
     ? applyRules({ state, rules: item, keywords, sync })
     : applyRule({ state, rule: item, keywords, sync }))
 }
 
-const applyRule = async function ({
+const applyRule = async ({
   state,
   state: { inputs },
   rule,
   keywords,
   sync,
-}) {
+}) => {
   const entries = list(inputs, rule.name, LIST_OPTS)
 
   // eslint-disable-next-line fp/no-loops
@@ -114,7 +112,7 @@ const LIST_OPTS = { childFirst: true, sort: true, missing: true, entries: true }
 
 // When in `sort` mode, input errors are returned instead of being thrown.
 // Other errors are always propagated.
-const handleError = function (error, soft) {
+const handleError = (error, soft) => {
   const errorA = BaseError.normalize(error, UnknownError)
 
   if (soft && errorA instanceof InputError) {

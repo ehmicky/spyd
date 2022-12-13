@@ -16,7 +16,7 @@ import { getMinLoopDuration } from './min_loop_duration.js'
 // `after` and `end` are called on exceptions.
 // If an exception happens inside those themselves, it is ignored because it
 // might be due to the runner being in a bad state due to the first exception.
-export const runEvents = async function ({ combination, ...args }) {
+export const runEvents = async ({ combination, ...args }) => {
   const taskIds = await startCombination(combination, args.server)
   const stats = await safeFinally(
     runMainEvents.bind(undefined, args),
@@ -28,7 +28,7 @@ export const runEvents = async function ({ combination, ...args }) {
 // Start combination, i.e. make it load the combination and run any
 // runner-defined start logic.
 // `task.id` is `undefined` during `init` stage.
-const startCombination = async function (
+const startCombination = async (
   {
     dimensions: {
       task: { id } = {},
@@ -38,7 +38,7 @@ const startCombination = async function (
     inputsList,
   },
   server,
-) {
+) => {
   const inputs = toInputsObject(inputsList)
   const { tasks: taskIds } = await sendAndReceive(
     {
@@ -54,12 +54,12 @@ const startCombination = async function (
 }
 
 // Run the runner-defined end logic
-const endCombination = async function (server) {
+const endCombination = async (server) => {
   await sendAndReceive({ event: 'end' }, server)
 }
 
 // Run user-defined logic: `before`, `main`, `after`
-const runMainEvents = async function (args) {
+const runMainEvents = async (args) => {
   if (args.stage === 'init') {
     return
   }
@@ -94,13 +94,13 @@ const runMainEvents = async function (args) {
 //  - Sharing state between tasks creates coupling between them
 //  - This makes the task DX/interface more complex
 //     - For example, this might create confusion with `before|after` hooks
-const beforeCombination = async function (server) {
+const beforeCombination = async (server) => {
   await sendAndReceive({ event: 'before' }, server)
 }
 
 // Run the user-defined `after` hooks
 // `after` is always called, for cleanup, providing `before` completed.
-const afterCombination = async function ({ server, previewState }) {
+const afterCombination = async ({ server, previewState }) => {
   await updateDescription(previewState, END_DESCRIPTION)
   await sendAndReceive({ event: 'after' }, server)
 }

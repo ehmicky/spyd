@@ -4,15 +4,13 @@ export const EXTERNAL_FORMAT = {
   // Name used to access the format
   name: 'external',
   // Return whether this format should be used, for a given output
-  detect(output) {
-    return output === 'external'
-  },
+  detect: (output) => output === 'external',
   // At least one of the following reporter methods must exist to use this
   // format
   methods: ['reportExternal'],
   // Call the reporter's methods and possibly return or manipulate its return
   // value
-  async report({ reportExternal }, reporterArgs) {
+  report: async ({ reportExternal }, reporterArgs) => {
     await reportExternal(...reporterArgs)
   },
   // Whether it is possible to use two reporters with this format and with the

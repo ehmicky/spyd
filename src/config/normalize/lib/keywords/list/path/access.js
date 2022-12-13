@@ -4,7 +4,7 @@ import { access } from 'node:fs/promises'
 import { READ_KEYWORD, WRITE_KEYWORD, EXEC_KEYWORD } from './normalize.js'
 
 // Check the "read|write|execute" keywords
-export const validateAccess = function (input, keywords) {
+export const validateAccess = (input, keywords) => {
   const accesses = listAccesses(keywords)
 
   if (accesses.length !== 0 && !hasValidAccess(input, accesses)) {
@@ -13,7 +13,7 @@ export const validateAccess = function (input, keywords) {
   }
 }
 
-export const validateAccessAsync = async function (input, keywords) {
+export const validateAccessAsync = async (input, keywords) => {
   const accesses = listAccesses(keywords)
 
   if (accesses.length !== 0 && !(await hasValidAccessAsync(input, accesses))) {
@@ -22,9 +22,8 @@ export const validateAccessAsync = async function (input, keywords) {
   }
 }
 
-const listAccesses = function (keywords) {
-  return ACCESS_METHODS.filter(({ keyword }) => keywords.has(keyword))
-}
+const listAccesses = (keywords) =>
+  ACCESS_METHODS.filter(({ keyword }) => keywords.has(keyword))
 
 const ACCESS_METHODS = [
   { keyword: READ_KEYWORD, flag: constants.R_OK, name: 'readable' },
@@ -32,52 +31,44 @@ const ACCESS_METHODS = [
   { keyword: EXEC_KEYWORD, flag: constants.X_OK, name: 'executable' },
 ]
 
-const hasValidAccess = function (input, accesses) {
+const hasValidAccess = (input, accesses) => {
   const flags = listFlags(accesses)
   return checkAccess(input, flags)
 }
 
-const hasValidAccessAsync = async function (input, accesses) {
+const hasValidAccessAsync = async (input, accesses) => {
   const flags = listFlags(accesses)
   return await checkAccessAsync(input, flags)
 }
 
-const listFlags = function (accesses) {
-  return accesses.reduce(orFlag, constants.F_OK)
-}
+const listFlags = (accesses) => accesses.reduce(orFlag, constants.F_OK)
 
-const orFlag = function (flags, { flag }) {
-  // eslint-disable-next-line no-bitwise
-  return flags | flag
-}
+// eslint-disable-next-line no-bitwise
+const orFlag = (flags, { flag }) => flags | flag
 
-const listInvalidAccesses = function (input, accesses) {
+const listInvalidAccesses = (input, accesses) => {
   const names = accesses.map(({ flag, name }) =>
     getInvalidAccess(input, flag, name),
   )
   return joinAccessNames(names)
 }
 
-const listInvalidAccessesAsync = async function (input, accesses) {
+const listInvalidAccessesAsync = async (input, accesses) => {
   const names = await Promise.all(
     accesses.map(({ flag, name }) => getInvalidAccessAsync(input, flag, name)),
   )
   return joinAccessNames(names)
 }
 
-const getInvalidAccess = function (input, flag, name) {
-  return checkAccess(input, flag) ? undefined : name
-}
+const getInvalidAccess = (input, flag, name) =>
+  checkAccess(input, flag) ? undefined : name
 
-const getInvalidAccessAsync = async function (input, flag, name) {
-  return (await checkAccessAsync(input, flag)) ? undefined : name
-}
+const getInvalidAccessAsync = async (input, flag, name) =>
+  (await checkAccessAsync(input, flag)) ? undefined : name
 
-const joinAccessNames = function (names) {
-  return names.filter(Boolean).join(' and ')
-}
+const joinAccessNames = (names) => names.filter(Boolean).join(' and ')
 
-export const checkAccess = function (input, flags) {
+export const checkAccess = (input, flags) => {
   try {
     accessSync(input, flags)
     return true
@@ -86,7 +77,7 @@ export const checkAccess = function (input, flags) {
   }
 }
 
-export const checkAccessAsync = async function (input, flags) {
+export const checkAccessAsync = async (input, flags) => {
   try {
     await access(input, flags)
     return true
@@ -95,6 +86,6 @@ export const checkAccessAsync = async function (input, flags) {
   }
 }
 
-const throwAccessError = function (invalidAccesses) {
+const throwAccessError = (invalidAccesses) => {
   throw new Error(`must be ${invalidAccesses}.`)
 }

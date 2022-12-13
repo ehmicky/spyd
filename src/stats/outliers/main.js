@@ -92,7 +92,7 @@ import { THRESHOLDS } from './threshold.js'
 //        - Tasks with custom units
 //     - When real `min|max` is important
 //     - When debugging
-export const getOutliersPercentage = function (measures, outliers) {
+export const getOutliersPercentage = (measures, outliers) => {
   if (measures.length <= 2 || outliers) {
     return { outliersMin: 0, outliersMax: 0 }
   }
@@ -110,12 +110,11 @@ export const getOutliersPercentage = function (measures, outliers) {
 }
 
 // Retrieve number of quantiles to use
-const getQuantilesCount = function (measures) {
-  return Math.min(OUTLIERS_GRANULARITY, measures.length - 1)
-}
+const getQuantilesCount = (measures) =>
+  Math.min(OUTLIERS_GRANULARITY, measures.length - 1)
 
 // Compute the final outliersMin|outliersMax percentage
-const computePercentage = function (indexSum, quantilesCount) {
+const computePercentage = (indexSum, quantilesCount) => {
   const indexMean = indexSum / THRESHOLDS.length
   return indexMean / quantilesCount
 }

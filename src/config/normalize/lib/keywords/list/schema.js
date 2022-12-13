@@ -4,7 +4,7 @@ import ajvKeywords from 'ajv-keywords'
 import Ajv from 'ajv/dist/2020.js'
 import { decodePointer } from 'json-ptr'
 
-const normalize = function (definition) {
+const normalize = (definition) => {
   try {
     return AJV.compile(definition)
   } catch {
@@ -15,7 +15,7 @@ const normalize = function (definition) {
   }
 }
 
-const getAjv = function () {
+const getAjv = () => {
   const ajvInstance = new Ajv(AJV_OPTIONS)
   ajvFormats(ajvInstance)
   ajvKeywords(ajvInstance)
@@ -33,13 +33,13 @@ const AJV_OPTIONS = {
 
 const AJV = getAjv()
 
-const main = function (validate, input) {
+const main = (validate, input) => {
   if (!validate(input)) {
     throw getValidationError(validate.errors)
   }
 }
 
-const getValidationError = function (errors) {
+const getValidationError = (errors) => {
   // eslint-disable-next-line fp/no-mutating-methods
   const message = [...errors].reverse().map(serializeAjvError).join(', ')
   const messageA = message.startsWith('must')
@@ -48,7 +48,7 @@ const getValidationError = function (errors) {
   return new Error(messageA)
 }
 
-const serializeAjvError = function ({ instancePath, message }) {
+const serializeAjvError = ({ instancePath, message }) => {
   const propPath = decodePointer(instancePath).join('.')
   const propPathA = propPath === '' ? propPath : `${propPath} `
   return `${propPathA}${message}`

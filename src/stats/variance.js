@@ -2,10 +2,10 @@
 // Rstdev is stdev relative to the mean.
 // This is more useful than stdev when comparing different combinations, or when
 // targetting a specific precision threshold.
-export const getVarianceStats = function (
+export const getVarianceStats = (
   array,
   { minIndex, maxIndex, min, max, mean },
-) {
+) => {
   const { variance, realVariance } = getVarianceStat(array, {
     minIndex,
     maxIndex,
@@ -20,10 +20,7 @@ export const getVarianceStats = function (
 
 // On identical measures, we keep the `realVariance` as `0` so we can pass it
 // to `envDev` since it should be based on it, making it be `1`.
-const getVarianceStat = function (
-  array,
-  { minIndex, maxIndex, min, max, mean },
-) {
+const getVarianceStat = (array, { minIndex, maxIndex, min, max, mean }) => {
   if (areIdenticalMeasures(min, max)) {
     return {
       variance: getIdenticalVariance({ minIndex, maxIndex, mean }),
@@ -57,11 +54,9 @@ const getVarianceStat = function (
 //     - It works well with floats
 // Outliers are excluded from this logic, i.e. they might not match the
 // identical measures.
-export const areIdenticalMeasures = function (min, max) {
-  return min === max
-}
+export const areIdenticalMeasures = (min, max) => min === max
 
-const getIdenticalVariance = function ({ minIndex, maxIndex, mean }) {
+const getIdenticalVariance = ({ minIndex, maxIndex, mean }) => {
   const sumDeviation = getIdenticalSumDeviation(mean)
   return computeVariance(sumDeviation, minIndex, maxIndex + 1)
 }
@@ -69,9 +64,8 @@ const getIdenticalVariance = function ({ minIndex, maxIndex, mean }) {
 // This is like `getSumDeviation()` with an array of repeated measures plus
 // an additional, slightly different one.
 // Since repeated measures have `0` deviations, we can simplify the formula.
-const getIdenticalSumDeviation = function (mean) {
-  return (mean * IDENTICAL_VARIANCE_SHIFT) ** 2
-}
+const getIdenticalSumDeviation = (mean) =>
+  (mean * IDENTICAL_VARIANCE_SHIFT) ** 2
 
 // Relative percentage of shift between the repeated measure and the additional
 // one.
@@ -89,16 +83,16 @@ export const IDENTICAL_VARIANCE_SHIFT = 5e-2
 //       (that are also not percentages)
 //  - On the flipside, it makes it harder to compare combinations (since they
 //    most likely have different means)
-export const getVariance = function (
+export const getVariance = (
   array,
   { minIndex = 0, maxIndex = array.length - 1, mean },
-) {
+) => {
   const sumDeviation = getSumDeviation({ array, minIndex, maxIndex, mean })
   return computeVariance(sumDeviation, minIndex, maxIndex)
 }
 
 // We use a separate function from `getSum()` because it is much more performant
-const getSumDeviation = function ({ array, minIndex, maxIndex, mean }) {
+const getSumDeviation = ({ array, minIndex, maxIndex, mean }) => {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 
@@ -111,7 +105,7 @@ const getSumDeviation = function ({ array, minIndex, maxIndex, mean }) {
   return sum
 }
 
-const computeVariance = function (sumDeviation, minIndex, maxIndex) {
+const computeVariance = (sumDeviation, minIndex, maxIndex) => {
   const length = maxIndex - minIndex + 1
   return sumDeviation / (length - 1)
 }

@@ -18,32 +18,27 @@ import { mergeVersions } from './versions/merge.js'
 //  - The `select` logic, so that excluded combinations do not report their
 //    systems
 //  - Default ids, to correctly handle system default ids
-export const mergeSystems = function ({ combinations }) {
+export const mergeSystems = ({ combinations }) => {
   const systems = combinations.map(getCombinationSystem)
   const systemsGroups = Object.values(groupBy(systems, getSystemDimensionsKey))
   return systemsGroups.map(mergeSystemsGroup)
 }
 
-const getCombinationSystem = function ({ dimensions, system, versions }) {
+const getCombinationSystem = ({ dimensions, system, versions }) => {
   const dimensionsA = includeKeys(dimensions, isSystemDimension)
   const dimensionsB = mapKeys(dimensionsA, removeSystemPrefix)
   const dimensionsC = mapValues(dimensionsB, useDimensionId)
   return { ...system, versions, dimensions: dimensionsC }
 }
 
-const isSystemDimension = function (dimensionName) {
-  return hasPrefix(dimensionName, 'system')
-}
+const isSystemDimension = (dimensionName) => hasPrefix(dimensionName, 'system')
 
-const removeSystemPrefix = function (dimensionName) {
-  return removePrefix(dimensionName, 'system')
-}
+const removeSystemPrefix = (dimensionName) =>
+  removePrefix(dimensionName, 'system')
 
-const useDimensionId = function ({ id }) {
-  return id
-}
+const useDimensionId = ({ id }) => id
 
-const getSystemDimensionsKey = function ({ dimensions }) {
+const getSystemDimensionsKey = ({ dimensions }) => {
   // eslint-disable-next-line fp/no-mutating-methods
   const dimensionNames = Object.keys(dimensions).sort()
   return dimensionNames
@@ -55,14 +50,13 @@ const getSystemDimensionsKey = function ({ dimensions }) {
 // in the array.
 // We rely on `systems` being sorted from most to least recent result, which
 // is based on `combinations` being sorted like this during results merging.
-const mergeSystemsGroup = function ([mostRecentSystem, ...previousSystems]) {
-  return previousSystems.reduce(mergeSystemsPair, mostRecentSystem)
-}
+const mergeSystemsGroup = ([mostRecentSystem, ...previousSystems]) =>
+  previousSystems.reduce(mergeSystemsPair, mostRecentSystem)
 
 // `system` objects should not contain `undefined`, so we can directly merge.
 // `git` and `machine` properties should not be deeply merged since their
 // properties relate to each other. However, `versions` should.
-const mergeSystemsPair = function (system, previousSystem) {
+const mergeSystemsPair = (system, previousSystem) => {
   const versions = mergeVersions(system.versions, previousSystem.versions)
   return { ...previousSystem, ...system, versions }
 }

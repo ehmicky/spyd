@@ -3,7 +3,7 @@ import { getCombinationTitlePad } from '../../utils/combination_title.js'
 import { getPaddedStatLength, getTickLength } from './abscissa.js'
 
 // Compute the width of each column.
-export const getWidths = function (combinations, mini, screenWidth) {
+export const getWidths = (combinations, mini, screenWidth) => {
   const titlesWidth = getCombinationTitlePad(combinations[0]).length
   const minBlockWidth = getMinMaxBlockWidth(combinations, mini, 'min')
   const maxBlockWidth = getMinMaxBlockWidth(combinations, mini, 'max')
@@ -14,16 +14,14 @@ export const getWidths = function (combinations, mini, screenWidth) {
   return { titlesWidth, minBlockWidth, contentWidth }
 }
 
-const getMinMaxBlockWidth = function (combinations, mini, statName) {
-  return mini
+const getMinMaxBlockWidth = (combinations, mini, statName) =>
+  mini
     ? 0
     : Math.max(
         ...combinations.map(
           ({ stats }) => getPaddedStatWidth(stats[statName]) + getTickLength(),
         ),
       )
-}
 
-const getPaddedStatWidth = function (stat) {
-  return stat === undefined ? 0 : getPaddedStatLength(stat)
-}
+const getPaddedStatWidth = (stat) =>
+  stat === undefined ? 0 : getPaddedStatLength(stat)

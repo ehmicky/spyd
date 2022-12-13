@@ -4,19 +4,19 @@ import now from 'precise-now'
 import { TasksRunError } from '../../common/error.js'
 
 // `beforeAll` and `afterAll`
-export const before = async function ({ task: { beforeAll }, env, shell }) {
+export const before = async ({ task: { beforeAll }, env, shell }) => {
   await performHook(beforeAll, { env, shell })
 }
 
-export const after = async function ({ task: { afterAll }, env, shell }) {
+export const after = async ({ task: { afterAll }, env, shell }) => {
   await performHook(afterAll, { env, shell })
 }
 
 // Measure how long a task takes.
-export const measure = async function (
+export const measure = async (
   { task: { main, beforeEach, afterEach }, env, shell },
   { repeat, maxLoops },
-) {
+) => {
   const measures = new Array(maxLoops)
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
@@ -35,14 +35,14 @@ export const measure = async function (
   return { measures }
 }
 
-const performLoop = async function ({
+const performLoop = async ({
   main,
   beforeEach,
   afterEach,
   env,
   shell,
   repeat,
-}) {
+}) => {
   await performHook(beforeEach, { repeat, env, shell })
   const duration = await getDuration(main, { repeat, env, shell })
   await performHook(afterEach, { repeat, env, shell })
@@ -50,7 +50,7 @@ const performLoop = async function ({
 }
 
 // Checking `repeat === 0` is only needed as a performance optimization
-const performHook = async function (hook, { repeat, env, shell }) {
+const performHook = async (hook, { repeat, env, shell }) => {
   if (hook === undefined || repeat === 0) {
     return
   }
@@ -58,13 +58,13 @@ const performHook = async function (hook, { repeat, env, shell }) {
   await spawnProcesses(hook, { repeat, env, shell })
 }
 
-const getDuration = async function (main, { repeat, env, shell }) {
+const getDuration = async (main, { repeat, env, shell }) => {
   const start = now()
   await spawnProcesses(main, { repeat, env, shell })
   return now() - start
 }
 
-const spawnProcesses = async function (command, { repeat, env, shell }) {
+const spawnProcesses = async (command, { repeat, env, shell }) => {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = 0; index < repeat; index += 1) {
     // eslint-disable-next-line no-await-in-loop
@@ -81,7 +81,7 @@ const spawnProcesses = async function (command, { repeat, env, shell }) {
 // More advanced logic can be achieved by either:
 //  - Using shell features (subshells, variables, etc.)
 //  - Adding the logic to the command internal logic
-const spawnProcess = async function (command, { env, shell }) {
+const spawnProcess = async (command, { env, shell }) => {
   try {
     return shell === 'none'
       ? await execaCommand(command, { ...EXECA_OPTIONS, env })

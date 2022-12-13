@@ -7,7 +7,7 @@ import { measureCombination } from './single.js'
 
 // Measure all combinations and add results to `combinations`.
 // Also used when starting combinations to retrieve their tasks and steps.
-export const measureCombinations = async function (combinations, args) {
+export const measureCombinations = async (combinations, args) => {
   const stopState = await addStopHandler(args.previewState)
 
   try {
@@ -18,7 +18,7 @@ export const measureCombinations = async function (combinations, args) {
 }
 
 // Start server to communicate with combinations, then measure them.
-const startServerAndMeasure = async function (args) {
+const startServerAndMeasure = async (args) => {
   const { server, serverUrl } = await startServer()
 
   try {
@@ -39,10 +39,9 @@ const startServerAndMeasure = async function (args) {
 //  - The downside is that users do not get early results of all combinations
 //    at once. However, the `precision` configuration property can be used for
 //    this.
-const measureEachCombination = async function ({ combinations, ...args }) {
-  return await pMapSeries(
+const measureEachCombination = async ({ combinations, ...args }) =>
+  await pMapSeries(
     combinations,
     (combination, index) => measureCombination({ ...args, combination, index }),
     [],
   )
-}

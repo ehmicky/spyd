@@ -29,9 +29,7 @@ const sharedRules = [
   {
     name: 'tasks',
     pick,
-    transform(value) {
-      return value.flat()
-    },
+    transform: (value) => value.flat(),
   },
 ]
 

@@ -18,12 +18,12 @@ import { startPreview, endPreview } from './preview/start_end/main.js'
 //     subsequent editing experience
 //   - It would require either guessing imported files, or asking user to
 //     specify them with a separate configuration property
-export const performRun = async function ({
+export const performRun = async ({
   newResult,
   history,
   previewState,
   config,
-}) {
+}) => {
   const rawResult = normalizeNewResult(newResult)
   const {
     result: resultA,
@@ -48,14 +48,14 @@ export const performRun = async function ({
   }
 }
 
-const previewAndMeasure = async function ({
+const previewAndMeasure = async ({
   newResult,
   result,
   sinceResult,
   noDimensions,
   previewState,
   config,
-}) {
+}) => {
   const previewStateA = await startPreview({
     newResult,
     result,

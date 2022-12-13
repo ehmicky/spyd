@@ -20,7 +20,7 @@ import { findClosestMean, findHotIndex } from './find.js'
 //    the `mean` was approximately halfway through the run.
 //  - The benchmark only ends when this percentage is below the same threshold
 //    as the one used by `stats.rmoe`.
-export const getColdStats = function (
+export const getColdStats = (
   array,
   {
     precision,
@@ -28,7 +28,7 @@ export const getColdStats = function (
     filter = defaultFilter,
     length = array.filter(filter).length,
   },
-) {
+) => {
   const cold = getCold(array, { mean, filter, length })
   const coldLoopsTarget = getColdLoopsTarget(array, {
     precision,
@@ -39,11 +39,9 @@ export const getColdStats = function (
   return { cold, coldLoopsTarget }
 }
 
-const defaultFilter = function () {
-  return true
-}
+const defaultFilter = () => true
 
-const getCold = function (array, { mean, filter, length }) {
+const getCold = (array, { mean, filter, length }) => {
   if (mean === 0) {
     return 0
   }
@@ -83,10 +81,7 @@ const getCold = function (array, { mean, filter, length }) {
 // However, this value is still useful because:
 //  - When cold, it indicates that the benchmark is not done yet
 //  - Most of the time, the `moeLoopsTarget` is larger than `coldLoopsTarget`
-const getColdLoopsTarget = function (
-  array,
-  { precision, mean, filter, length },
-) {
+const getColdLoopsTarget = (array, { precision, mean, filter, length }) => {
   const minIndex = getIndexFromLength(COLD_MIN_PERCENTAGE, length)
   const incrementalMeanMin = mean * (1 - precision)
   const incrementalMeanMax = mean * (1 + precision)
@@ -102,13 +97,11 @@ const getColdLoopsTarget = function (
   return coldLoopsTarget
 }
 
-const getIndexFromLength = function (percentage, length) {
-  return Math.floor(percentage * (length - 1))
-}
+const getIndexFromLength = (percentage, length) =>
+  Math.floor(percentage * (length - 1))
 
-const getLengthFromIndex = function (percentage, index) {
-  return Math.ceil(index / percentage) + 1
-}
+const getLengthFromIndex = (percentage, index) =>
+  Math.ceil(index / percentage) + 1
 
 // The very first measures are sometimes abnormally fast.
 //  - This will make `cold` abnormally low as well, which can make the benchmark

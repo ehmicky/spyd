@@ -9,10 +9,7 @@ import { getScreenWidth } from '../tty.js'
 //  - If reporters are not responsive to terminal width, their output to files
 //    would create long lines, while others would not, which can be odd when
 //    mixed together
-export const wrapRows = function (string) {
-  return wrapString(string, getScreenWidth())
-}
+export const wrapRows = (string) => wrapString(string, getScreenWidth())
 
-const wrapString = function (string, width) {
-  return wrapAnsi(string, width, { hard: true, trim: false })
-}
+const wrapString = (string, width) =>
+  wrapAnsi(string, width, { hard: true, trim: false })

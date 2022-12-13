@@ -39,14 +39,13 @@ import { getMaxMeasuresLeft } from './max_measures.js'
 //   - Due to the above point, the real sample duration is less close to the
 //     target.
 // The value does not impact `stats.mean` much though.
-export const getMaxLoops = function ({
+export const getMaxLoops = ({
   newRepeat,
   measures,
   timeDurationMean,
   targetSampleDuration,
-}) {
-  return Math.min(
+}) =>
+  Math.min(
     Math.ceil(targetSampleDuration / (timeDurationMean * newRepeat)),
     getMaxMeasuresLeft(measures),
   )
-}

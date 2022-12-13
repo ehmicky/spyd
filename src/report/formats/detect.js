@@ -19,7 +19,7 @@ import { FORMATS } from './list.js'
 //    `spyd-reporter-{reporter}-{format}` because this:
 //     - Requires uninstalling/installing to change format
 //     - Is harder for publisher
-export const computeFormat = function ({ inputs: { output } }) {
+export const computeFormat = ({ inputs: { output } }) => {
   const { name: format } = Object.values(FORMATS).find(({ detect }) =>
     detect(output),
   )
@@ -27,7 +27,7 @@ export const computeFormat = function ({ inputs: { output } }) {
 }
 
 // Validate that a reporter supports the `format` specified by a given `output`
-export const validateOutputFormat = function (
+export const validateOutputFormat = (
   output,
   {
     inputs: { format },
@@ -36,7 +36,7 @@ export const validateOutputFormat = function (
       plugin: { id },
     },
   },
-) {
+) => {
   const hasMethod = FORMATS[format].methods.some(
     (method) => plugin[method] !== undefined,
   )

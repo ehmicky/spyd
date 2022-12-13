@@ -6,19 +6,18 @@ import { DefinitionError } from '../../error.js'
 // Keywords can define the same method both sync|async to allow using it in
 // sync mode, while still getting performance benefits in async mode.
 //  - All builtin keywords work both sync|async
-export const normalizeAsyncMethods = function (keyword, sync) {
-  return METHOD_NAMES.reduce(
+export const normalizeAsyncMethods = (keyword, sync) =>
+  METHOD_NAMES.reduce(
     (keywordA, methodName) => normalizeAsyncMethod(sync, methodName, keywordA),
     keyword,
   )
-}
 
 // Keyword methods which can be either sync or async
 const METHOD_NAMES = ['test', 'normalize', 'main']
 
 // Normalize `test[Async]()` (and so on) into only `test()` together with a
 // `testSync` boolean property
-const normalizeAsyncMethod = function (
+const normalizeAsyncMethod = (
   sync,
   methodName,
   {
@@ -26,7 +25,7 @@ const normalizeAsyncMethod = function (
     [`${methodName}${ASYNC_SUFFIX}`]: asyncMethod,
     ...keyword
   },
-) {
+) => {
   if (syncMethod === undefined && asyncMethod === undefined) {
     return keyword
   }
@@ -46,12 +45,7 @@ const normalizeAsyncMethod = function (
 const ASYNC_SUFFIX = 'Async'
 const SYNC_SUFFIX = 'Sync'
 
-const requireSyncMethod = function ({
-  methodName,
-  syncMethod,
-  keyword,
-  syncProp,
-}) {
+const requireSyncMethod = ({ methodName, syncMethod, keyword, syncProp }) => {
   if (syncMethod === undefined) {
     throw new DefinitionError(
       `The "async: true" option must be used because they keyword "${keyword.name}" is async.`,
@@ -61,14 +55,13 @@ const requireSyncMethod = function ({
   return { ...keyword, [methodName]: syncMethod, [syncProp]: true }
 }
 
-const preferAsyncMethod = function ({
+const preferAsyncMethod = ({
   methodName,
   syncMethod,
   asyncMethod,
   keyword,
   syncProp,
-}) {
-  return asyncMethod === undefined
+}) =>
+  asyncMethod === undefined
     ? { ...keyword, [methodName]: syncMethod, [syncProp]: true }
     : { ...keyword, [methodName]: asyncMethod, [syncProp]: false }
-}

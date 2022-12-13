@@ -1,6 +1,6 @@
 import { findConcatDimension } from './find.js'
 
-export const loopFirstDimensions = function (dimensionsArray) {
+export const loopFirstDimensions = (dimensionsArray) => {
   // eslint-disable-next-line fp/no-loops
   for (
     // eslint-disable-next-line fp/no-let
@@ -20,13 +20,13 @@ export const loopFirstDimensions = function (dimensionsArray) {
   }
 }
 
-// eslint-disable-next-line max-params
-const loopSecondDimensions = function (
+const loopSecondDimensions = (
   dimensionsArray,
   firstIndex,
   firstDimensions,
   dimensionNames,
-) {
+  // eslint-disable-next-line max-params
+) => {
   // eslint-disable-next-line fp/no-loops
   for (
     // eslint-disable-next-line fp/no-let
@@ -61,14 +61,15 @@ const loopSecondDimensions = function (
 }
 
 // Merge the values of two `dimensions`
-// eslint-disable-next-line max-params
-const concatValues = function (
+
+const concatValues = (
   dimensionsArray,
   firstDimensions,
   secondDimensions,
   concatDimensionName,
   secondIndex,
-) {
+  // eslint-disable-next-line max-params
+) => {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   firstDimensions[concatDimensionName] = [
     ...firstDimensions[concatDimensionName],

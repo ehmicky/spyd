@@ -6,8 +6,8 @@ import { handleError } from './error.js'
 //  - This is because `test()` is called before definition function, which might
 //    return `undefined`, i.e. might skip the keyword
 //  - Inputs must be validated in `main()` instead
-export const callTest = async function ({ test, testSync, ...params }) {
-  return await callFunc({
+export const callTest = async ({ test, testSync, ...params }) =>
+  await callFunc({
     ...params,
     func: test,
     hasInput: true,
@@ -15,31 +15,29 @@ export const callTest = async function ({ test, testSync, ...params }) {
     errorType: 'keyword',
     bugType: 'keyword',
   })
-}
 
 // Call definition function.
 // Exceptions starting with "must" can be thrown for invalid input.
 // Other exceptions are considered invalid definitions.
-export const callDefinition = async function ({ definition, sync, ...params }) {
-  return await callFunc({
+export const callDefinition = async ({ definition, sync, ...params }) =>
+  await callFunc({
     ...params,
     func: definition,
     sync,
     errorType: 'input',
     bugType: 'definition',
   })
-}
 
 // Call `keyword.normalize()`.
 // Exceptions starting with "must" can be thrown for invalid definitions.
 // Other exceptions are considered keyword bugs.
-export const callNormalize = async function ({
+export const callNormalize = async ({
   normalize,
   normalizeSync,
   definition,
   ...params
-}) {
-  return await callFunc({
+}) =>
+  await callFunc({
     ...params,
     func: () => normalize(definition),
     definition,
@@ -48,25 +46,23 @@ export const callNormalize = async function ({
     errorType: 'definition',
     bugType: 'keyword',
   })
-}
 
 // Call `keyword.main()`
 // Exceptions starting with "must" can be thrown for invalid input.
 // Other exceptions are considered keyword bugs.
-export const callMain = async function ({
+export const callMain = async ({
   main,
   mainSync,
   normalizedDefinition,
   ...params
-}) {
-  return await callFunc({
+}) =>
+  await callFunc({
     ...params,
     func: main.bind(undefined, normalizedDefinition),
     sync: mainSync,
     errorType: 'input',
     bugType: 'keyword',
   })
-}
 
 // Call a function from `test()`, `main()` or a definition.
 // They are all:
@@ -74,13 +70,13 @@ export const callMain = async function ({
 //  - Called with similar arguments
 //  - Error handled
 // Synchronous functions do not use `await`, for performance
-const callFunc = async function ({
+const callFunc = async ({
   func,
   info: { originalName },
   info: { example, prefix, ...info },
   sync,
   ...params
-}) {
+}) => {
   const { input, hasInput } = params
 
   try {

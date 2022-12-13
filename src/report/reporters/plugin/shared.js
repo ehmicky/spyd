@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { amongCommands } from '../../../config/normalize/pick.js'
 import { validateJson } from '../../../config/normalize/validate/json.js'
 import { normalizeConfigSelectors } from '../../../config/select/normalize.js'
@@ -30,13 +29,11 @@ const sharedRules = [
       {
         name: 'output',
         pick,
-        default({
+        default: ({
           context: {
             plugin: { defaultOutput },
           },
-        }) {
-          return defaultOutput
-        },
+        }) => defaultOutput,
         path: normalizeOutputPath,
       },
       {
@@ -55,33 +52,25 @@ const sharedRules = [
       {
         name: 'tty',
         pick,
-        compute({ inputs }) {
-          return inputs.output === 'stdout' && isTtyOutput()
-        },
+        compute: ({ inputs }) => inputs.output === 'stdout' && isTtyOutput(),
       },
       new Set([
         {
           name: 'colors',
           pick,
-          default({ inputs }) {
-            return inputs.tty
-          },
+          default: ({ inputs }) => inputs.tty,
           schema: { type: 'boolean' },
         },
         {
           name: 'quiet',
           pick: amongCommands(['run']),
-          default({ inputs }) {
-            return !inputs.tty
-          },
+          default: ({ inputs }) => !inputs.tty,
           schema: { type: 'boolean' },
         },
         {
           name: 'showDiff',
           pick,
-          default({ inputs }) {
-            return inputs.tty
-          },
+          default: ({ inputs }) => inputs.tty,
           schema: { type: 'boolean' },
         },
       ]),
@@ -113,4 +102,3 @@ const sharedRules = [
 ]
 
 export const shared = normalizeConfigSelectors(sharedRules)
-/* eslint-enable max-lines */

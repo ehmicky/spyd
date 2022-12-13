@@ -7,7 +7,7 @@ import { CORE_PROPS_SET } from '../../rule/props.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 
 // Validate `keyword.name` and `keyword.aliases[*]`
-export const validateName = function (name, parent, prefix) {
+export const validateName = (name, parent, prefix) => {
   if (name === undefined) {
     throw new KeywordError(`${prefix} must be defined: ${inspect(parent)}`)
   }
@@ -23,16 +23,15 @@ export const validateName = function (name, parent, prefix) {
   }
 }
 
-const isValidName = function (nameOrAlias) {
-  return typeof nameOrAlias === 'string' && nameOrAlias !== ''
-}
+const isValidName = (nameOrAlias) =>
+  typeof nameOrAlias === 'string' && nameOrAlias !== ''
 
 // Keyword names must be lowercase letters.
 // This ensures npm package name matches the property name.
 const NAME_REGEXP = /^[a-z]+$/u
 
 // Do not allow redefining builtin keywords
-export const validateNotBuiltin = function ({ name }) {
+export const validateNotBuiltin = ({ name }) => {
   if (BUILTIN_NAMES.has(name)) {
     throw new DefinitionError('must not be a builtin keyword.')
   }
@@ -42,13 +41,9 @@ export const validateNotBuiltin = function ({ name }) {
   }
 }
 
-const getBuiltinNames = function () {
-  return new Set(BUILTIN_KEYWORDS.map(getKeywordName))
-}
+const getBuiltinNames = () => new Set(BUILTIN_KEYWORDS.map(getKeywordName))
 
-const getKeywordName = function ({ name }) {
-  return name
-}
+const getKeywordName = ({ name }) => name
 
 const BUILTIN_NAMES = getBuiltinNames()
 
@@ -56,7 +51,7 @@ const BUILTIN_NAMES = getBuiltinNames()
 // configuring them ambiguous.
 // Custom keywords may export a function returning different `keyword.name`
 // based on options though.
-export const validateDuplicateKeyword = function (keywordA, indexA, keywords) {
+export const validateDuplicateKeyword = (keywordA, indexA, keywords) => {
   const isDuplicate = keywords.some(
     (keywordB, indexB) =>
       indexA < indexB &&

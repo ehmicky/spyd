@@ -6,12 +6,12 @@ import { START_DESCRIPTION } from './description.js'
 import { updatePreview } from './update/main.js'
 
 // Done when combination starts
-export const startCombinationPreview = async function ({
+export const startCombinationPreview = async ({
   previewState,
   combination,
   index,
   noDimensions,
-}) {
+}) => {
   if (previewState.quiet) {
     return
   }
@@ -33,7 +33,7 @@ export const startCombinationPreview = async function ({
 }
 
 // Done when combination ends
-export const endCombinationPreview = async function (previewState) {
+export const endCombinationPreview = async (previewState) => {
   if (previewState.quiet) {
     return
   }

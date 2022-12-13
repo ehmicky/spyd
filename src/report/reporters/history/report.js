@@ -5,17 +5,13 @@ import { STATS_SEPARATOR_COLORED } from '../../utils/separator.js'
 import { getTables } from '../../utils/table/main.js'
 
 // Show `result.history` as a table
-export const reportTerminal = function ({
-  combinations,
-  history,
-  screenWidth,
-}) {
+export const reportTerminal = ({ combinations, history, screenWidth }) => {
   const headerRows = getHeaderRows(history)
   const bodyRows = getBodyRows(combinations, history)
   return getTables([...headerRows, ...bodyRows], screenWidth)
 }
 
-const getHeaderRows = function (history) {
+const getHeaderRows = (history) => {
   const timestamps = history.map(getTimestamp)
   return [
     ['', ...timestamps.map(getResultDay)],
@@ -24,23 +20,16 @@ const getHeaderRows = function (history) {
   ]
 }
 
-const getTimestamp = function ({ timestamp }) {
-  return timestamp.split(' ')
-}
+const getTimestamp = ({ timestamp }) => timestamp.split(' ')
 
-const getResultDay = function ([day]) {
-  return fieldColor(day)
-}
+const getResultDay = ([day]) => fieldColor(day)
 
-const getResultTime = function ([, ...time]) {
-  return fieldColor(time.join(' '))
-}
+const getResultTime = ([, ...time]) => fieldColor(time.join(' '))
 
-const getBodyRows = function (combinations, history) {
-  return combinations.map((combination) => getBodyRow(combination, history))
-}
+const getBodyRows = (combinations, history) =>
+  combinations.map((combination) => getBodyRow(combination, history))
 
-const getBodyRow = function (combination, history) {
+const getBodyRow = (combination, history) => {
   const leftCell = getCombinationTitleColor(combination)
   const rightCells = history.map((historyResult) =>
     getCell(historyResult, combination),
@@ -48,7 +37,7 @@ const getBodyRow = function (combination, history) {
   return [leftCell, ...rightCells]
 }
 
-const getCell = function (historyResult, combination) {
+const getCell = (historyResult, combination) => {
   const historyCombinationA = historyResult.combinations.find(
     (historyCombination) =>
       hasSameCombinationIds(historyCombination, combination),

@@ -17,7 +17,7 @@
 //    other on the same iteration. This is because repeat loops perform several
 //    beforeEach/main/afterEach in batches, not in order, so they cannot modify
 //    some shared global state.
-export const addContext = function (inputs, repeat) {
+export const addContext = (inputs, repeat) => {
   const allInputs = new Array(repeat)
 
   // Using `new Array()` and a `for` loop is the most performant

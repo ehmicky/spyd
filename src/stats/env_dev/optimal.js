@@ -37,7 +37,7 @@ import { SIGNIFICANCE_LEVEL } from './groups.js'
 //        even though the mean over a long period of time remains stable
 //      - It also tends to change a lot each time the number of groups
 //        increments, i.e. every `CLUSTER_FACTOR ** n` elements
-export const getOptimalVarianceRatio = function (groups) {
+export const getOptimalVarianceRatio = (groups) => {
   const varianceRatios = groups.map(getGroupVarianceRatio)
   const maxVarianceRatio = Math.max(...varianceRatios)
   const maxIndex = varianceRatios.indexOf(maxVarianceRatio)
@@ -49,15 +49,13 @@ export const getOptimalVarianceRatio = function (groups) {
   return optionalVarianceRatio
 }
 
-const getGroupVarianceRatio = function ({ varianceRatio }) {
-  return varianceRatio
-}
+const getGroupVarianceRatio = ({ varianceRatio }) => varianceRatio
 
 // Look for groups contiguous to the group at `maxIndex` with the same
 // `varianceRatio`, according to confidence intervals, then take their mean.
 // This uses imperative logic for performance reasons.
 //  - This includes performing the mean incrementally
-const findOptimalVarianceRatio = function (groups, varianceRatios, maxIndex) {
+const findOptimalVarianceRatio = (groups, varianceRatios, maxIndex) => {
   const startIndex = 0
   // eslint-disable-next-line fp/no-let
   let varianceRatioSum = getSum(varianceRatios, startIndex, maxIndex)
@@ -87,26 +85,13 @@ const findOptimalVarianceRatio = function (groups, varianceRatios, maxIndex) {
 //  - However, we require each end of the collection of groups to fit, since
 //    having wrong ends does not make sense
 // eslint-disable-next-line max-params
-const areSimilarGroups = function (
-  groups,
-  varianceRatioMean,
-  maxIndex,
-  minIndex,
-) {
-  return (
-    isSimilarGroup(groups[maxIndex], varianceRatioMean) &&
-    isSimilarGroup(groups[minIndex], varianceRatioMean) &&
-    areSimilarMidGroups(groups, varianceRatioMean, maxIndex, minIndex)
-  )
-}
+const areSimilarGroups = (groups, varianceRatioMean, maxIndex, minIndex) =>
+  isSimilarGroup(groups[maxIndex], varianceRatioMean) &&
+  isSimilarGroup(groups[minIndex], varianceRatioMean) &&
+  areSimilarMidGroups(groups, varianceRatioMean, maxIndex, minIndex)
 
 // eslint-disable-next-line max-params
-const areSimilarMidGroups = function (
-  groups,
-  varianceRatioMean,
-  maxIndex,
-  minIndex,
-) {
+const areSimilarMidGroups = (groups, varianceRatioMean, maxIndex, minIndex) => {
   const collLength = maxIndex + 1 - minIndex
   // eslint-disable-next-line fp/no-let
   let invalidMax = Math.floor(collLength * (1 - SIGNIFICANCE_LEVEL))
@@ -129,12 +114,8 @@ const areSimilarMidGroups = function (
 }
 
 // Check confidence interval of `varianceRatio` against a specific group
-const isSimilarGroup = function (
+const isSimilarGroup = (
   { varianceRatioMin, varianceRatioMax },
   varianceRatioMean,
-) {
-  return (
-    varianceRatioMean >= varianceRatioMin &&
-    varianceRatioMean <= varianceRatioMax
-  )
-}
+) =>
+  varianceRatioMean >= varianceRatioMin && varianceRatioMean <= varianceRatioMax

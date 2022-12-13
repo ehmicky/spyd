@@ -5,7 +5,7 @@ import { UserError } from '../error/main.js'
 //  - For new results with `run|dev`, we fail since it would not make sense
 //  - For history results, we ignore and just report results without any
 //    combinations
-export const validateSelectMatches = function (combinations, select) {
+export const validateSelectMatches = (combinations, select) => {
   if (combinations.length === 0) {
     throwValidationError(
       'No combinations match the selection.',
@@ -16,13 +16,13 @@ export const validateSelectMatches = function (combinations, select) {
 }
 
 // Validation error of `select` and config selectors
-export const throwValidationError = function (message, rawSelectors, name) {
+export const throwValidationError = (message, rawSelectors, name) => {
   const rawSelectorsStr = serializeRawSelectors(rawSelectors)
   throw new UserError(`The "${name}" configuration property is invalid: ${rawSelectorsStr}
 ${message}`)
 }
 
-const serializeRawSelectors = function (rawSelectors) {
+const serializeRawSelectors = (rawSelectors) => {
   if (rawSelectors.length === 0) {
     return '[]'
   }
@@ -34,6 +34,4 @@ const serializeRawSelectors = function (rawSelectors) {
   return rawSelectors.map(quoteRawSelector).join(' or ')
 }
 
-const quoteRawSelector = function (rawSelector) {
-  return `"${rawSelector}"`
-}
+const quoteRawSelector = (rawSelector) => `"${rawSelector}"`

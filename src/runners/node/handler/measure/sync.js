@@ -3,14 +3,14 @@ import now from 'precise-now'
 import { addContext } from './context.js'
 
 // Perform measuring loops iteratively
-export const performLoopsSync = function ({
+export const performLoopsSync = ({
   main,
   beforeEach,
   afterEach,
   inputs,
   maxLoops,
   repeat,
-}) {
+}) => {
   const measures = new Array(maxLoops)
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let
@@ -28,13 +28,7 @@ export const performLoopsSync = function ({
   return measures
 }
 
-const performLoopSync = function ({
-  main,
-  beforeEach,
-  afterEach,
-  inputs,
-  repeat,
-}) {
+const performLoopSync = ({ main, beforeEach, afterEach, inputs, repeat }) => {
   const allInputs = addContext(inputs, repeat)
 
   performHookSync(beforeEach, allInputs)
@@ -45,7 +39,7 @@ const performLoopSync = function ({
 
 // Task `beforeEach()`/`afterEach()`. Performed outside measurements.
 // `beforeEach`, `main` and `afterEach` should communicate using context objects
-const performHookSync = function (hook, allInputs) {
+const performHookSync = (hook, allInputs) => {
   if (hook === undefined) {
     return
   }
@@ -56,7 +50,7 @@ const performHookSync = function (hook, allInputs) {
   }
 }
 
-const getDurationSync = function (main, allInputs) {
+const getDurationSync = (main, allInputs) => {
   const start = now()
 
   // eslint-disable-next-line fp/no-loops

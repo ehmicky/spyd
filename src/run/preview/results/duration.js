@@ -12,7 +12,7 @@ import { MAX_MEASURES } from '../../sample/max_measures.js'
 //   - With user impatience or with planning other things while measuring is
 //     ongoing
 // Done when combination's sample starts
-export const updateCombinationEnd = function ({
+export const updateCombinationEnd = ({
   stats,
   stats: { stdev },
   previewState,
@@ -20,7 +20,7 @@ export const updateCombinationEnd = function ({
   durationState: { sampleDurationMean },
   sampleState: { coldLoopsTarget },
   precision,
-}) {
+}) => {
   if (sampleDurationMean === undefined || stdev === undefined || stdev === 0) {
     return
   }
@@ -42,11 +42,11 @@ export const updateCombinationEnd = function ({
 
 // Estimate how many samples are left to reach the rmoe target for the current
 // `precision`.
-const getSamplesLeft = function (
+const getSamplesLeft = (
   { samples, loops, mean, stdev, min, max, outliersMin, outliersMax },
   precision,
   coldLoopsTarget,
-) {
+) => {
   const moeLengthTarget = getLengthForMoe({
     mean,
     stdev,
@@ -67,14 +67,14 @@ const getSamplesLeft = function (
   return samplesLeft
 }
 
-const computeSamplesLeft = function (loopsTarget, loops, samples) {
+const computeSamplesLeft = (loopsTarget, loops, samples) => {
   const loopsLeft = Math.max(loopsTarget - loops, 0)
   const sampleLoopsMean = loops / samples
   return Math.ceil(loopsLeft / sampleLoopsMean)
 }
 
 // Estimate `combinationEnd` based on the current data
-const getCombinationEnd = function (samplesLeft, sampleDurationMean) {
+const getCombinationEnd = (samplesLeft, sampleDurationMean) => {
   const durationLeft = samplesLeft * sampleDurationMean
   return now() + durationLeft
 }
@@ -101,12 +101,12 @@ const getCombinationEnd = function (samplesLeft, sampleDurationMean) {
 //    going backward
 // `previousCombinationEnd` might be in the past due to that smoothing, so we
 // need to use `Math.max(..., now())` on it.
-const smoothCombinationEnd = function ({
+const smoothCombinationEnd = ({
   combinationEnd,
   previousCombinationEnd,
   previewSamples,
   samplesLeft,
-}) {
+}) => {
   if (previewSamples === 0 || samplesLeft === 0) {
     return combinationEnd
   }
@@ -139,7 +139,7 @@ const smoothCombinationEnd = function ({
 //       weight compared to the second one.
 //     - We track this by incrementing `previewSamples` to excluded non-preview
 //       samples
-const getSmoothRatio = function (previewSamples, samplesLeft) {
+const getSmoothRatio = (previewSamples, samplesLeft) => {
   const samplesToEdge = Math.min(previewSamples, samplesLeft)
   const smoothSamples = samplesToEdge * ADJUSTED_SMOOTH_PERIOD
   return SMOOTH_CLOSENESS ** (1 / smoothSamples)

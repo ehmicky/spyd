@@ -1,5 +1,5 @@
 // Ensure the `path` definition is correct
-export const normalize = function (definition) {
+export const normalize = (definition) => {
   if (!Array.isArray(definition)) {
     throw new TypeError('must be an array.')
   }
@@ -8,7 +8,7 @@ export const normalize = function (definition) {
   return new Set(definition)
 }
 
-const checkKeyword = function (keyword) {
+const checkKeyword = (keyword) => {
   if (typeof keyword !== 'string') {
     throw new TypeError('must have string keywords.')
   }
@@ -19,9 +19,7 @@ const checkKeyword = function (keyword) {
   }
 }
 
-const quoteWord = function (keyword) {
-  return `"${keyword}"`
-}
+const quoteWord = (keyword) => `"${keyword}"`
 
 export const EXIST_KEYWORD = 'exist'
 export const FILE_KEYWORD = 'file'

@@ -46,13 +46,13 @@
 //  - The best way to benchmark those very fast functions is to increase their
 //    complexity. Since the runner already runs those in a "for" loop, the only
 //    thing that a task should do is increase the size of its inputs.
-export const handleRepeat = function ({
+export const handleRepeat = ({
   repeat,
   sampleMedian,
   minLoopDuration,
   allSamples,
   calibrated,
-}) {
+}) => {
   if (minLoopDuration === 0) {
     return { newRepeat: 1, calibrated: true }
   }
@@ -123,25 +123,16 @@ const FAST_MEDIAN_RATE = 10
 //     - Switching between `precision: 0` and others `precision` should show the
 //       same results when lasting the same amount of time.
 // Calibration is based on the difference between `repeat` and `newRepeat`.
-const getCalibrated = function ({
-  repeat,
-  newRepeat,
-  newRepeatFloat,
-  allSamples,
-}) {
-  return (
-    !isColdStart(allSamples, newRepeatFloat) &&
-    newRepeat / repeat <= MAX_REPEAT_DIFF
-  )
-}
+const getCalibrated = ({ repeat, newRepeat, newRepeatFloat, allSamples }) =>
+  !isColdStart(allSamples, newRepeatFloat) &&
+  newRepeat / repeat <= MAX_REPEAT_DIFF
 
 // The first sample (cold start) is usually much slower due to engine
 // optimization and/or memoization. This can make hinder `repeat` calibration
 // by indicating that the first sample needs no `repeat` loop (due to being
 // much slower than it really is) while it actually does.
-const isColdStart = function (allSamples, newRepeatFloat) {
-  return allSamples === 0 && newRepeatFloat > MIN_REPEAT_COLD_START
-}
+const isColdStart = (allSamples, newRepeatFloat) =>
+  allSamples === 0 && newRepeatFloat > MIN_REPEAT_COLD_START
 
 // When the first sample is that close to using the repeat loop, we continue
 // calibrating.

@@ -4,19 +4,11 @@ import now from 'precise-now'
 // based on the current `rmoe` and `precision`.
 // During calibration, this can be quite changing, so we only keep the last
 // sample then.
-export const getInitialDurationState = function () {
-  return { totalDuration: 0 }
-}
+export const getInitialDurationState = () => ({ totalDuration: 0 })
 
-export const startSample = function () {
-  return now()
-}
+export const startSample = () => now()
 
-export const endSample = function (
-  sampleStart,
-  { totalDuration },
-  { samples },
-) {
+export const endSample = (sampleStart, { totalDuration }, { samples }) => {
   const sampleDuration = now() - sampleStart
 
   if (samples === 0) {
@@ -36,11 +28,9 @@ export const endSample = function (
 //  - `previewState.combinationStart|End`, meant for user preview.
 //     - This focuses on user code, not system code.
 //        - E.g. this excludes `start|end` and `minLoopDuration`.
-export const startRunDuration = function () {
-  return now()
-}
+export const startRunDuration = () => now()
 
-export const endRunDuration = function (startStat, stats) {
+export const endRunDuration = (startStat, stats) => {
   const runDuration = now() - startStat
   return { ...stats, runDuration }
 }

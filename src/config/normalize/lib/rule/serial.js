@@ -3,7 +3,7 @@ import { inspect } from 'node:util'
 import { DefinitionError } from '../error.js'
 
 // Parallel rules and nested rules do not make sense in sync mode
-export const validateSerialRules = function (rules) {
+export const validateSerialRules = (rules) => {
   if (rules instanceof Set) {
     throw new DefinitionError(
       `Rules must not be a Set unless the "async" option is true: ${inspect(
@@ -19,7 +19,7 @@ export const validateSerialRules = function (rules) {
   rules.forEach(validateSerialRule)
 }
 
-const validateSerialRule = function (rule) {
+const validateSerialRule = (rule) => {
   if (Array.isArray(rule) || rule instanceof Set) {
     throw new DefinitionError(
       `Rules must not be nested unless the "async" option is true: ${inspect(

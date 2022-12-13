@@ -5,7 +5,7 @@ import { UserError } from '../../../error/main.js'
 import { findByTime } from './find.js'
 
 // Deltas can be git commits, tags or branches.
-const parseGit = function (delta) {
+const parseGit = (delta) => {
   if (typeof delta !== 'string') {
     return
   }
@@ -14,7 +14,7 @@ const parseGit = function (delta) {
 }
 
 // Find a rawResult by git reference (commit/branch/tag).
-const findByGit = async function (metadataGroups, gitRef, cwd) {
+const findByGit = async (metadataGroups, gitRef, cwd) => {
   const { stdout, stderr, message, failed } = await execa(
     'git',
     [
@@ -36,7 +36,7 @@ const findByGit = async function (metadataGroups, gitRef, cwd) {
 const SECS_TO_MSECS = 1e3
 
 // Error handling when looking for the `git` reference
-const checkTimestamp = function ({ timestamp, stderr, message, failed, cwd }) {
+const checkTimestamp = ({ timestamp, stderr, message, failed, cwd }) => {
   if (stderr.includes(NOT_REPOSITORY_MESSAGE)) {
     throw new UserError(
       `is invalid because no git repository could be found in ${cwd}`,
@@ -57,9 +57,8 @@ const checkTimestamp = function ({ timestamp, stderr, message, failed, cwd }) {
 const NOT_REPOSITORY_MESSAGE = 'not a git repository'
 const UNKNOWN_REV_MESSAGE = 'unknown revision'
 
-const isTimestamp = function (timestamp, failed) {
-  return !failed && Number.isInteger(timestamp) && timestamp > 0
-}
+const isTimestamp = (timestamp, failed) =>
+  !failed && Number.isInteger(timestamp) && timestamp > 0
 
 export const gitFormat = {
   type: 'git',

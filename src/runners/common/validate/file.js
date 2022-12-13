@@ -6,7 +6,7 @@ import { mapValues } from '../../../utils/map.js'
 import { BaseError, TasksSyntaxError } from '../error.js'
 
 // Validate that the tasks file has correct shape
-export const validateTasks = function ({ tasks, validators, normalizeTask }) {
+export const validateTasks = ({ tasks, validators, normalizeTask }) => {
   if (!isPlainObj(tasks)) {
     throw new TasksSyntaxError(
       `Tasks file should export an object not: ${inspect(tasks)}`,
@@ -18,7 +18,7 @@ export const validateTasks = function ({ tasks, validators, normalizeTask }) {
   )
 }
 
-const validateTask = function ({ taskId, task, validators, normalizeTask }) {
+const validateTask = ({ taskId, task, validators, normalizeTask }) => {
   try {
     return eValidateTask({ task, validators, normalizeTask })
   } catch (cause) {
@@ -26,7 +26,7 @@ const validateTask = function ({ taskId, task, validators, normalizeTask }) {
   }
 }
 
-const eValidateTask = function ({ task, validators, normalizeTask }) {
+const eValidateTask = ({ task, validators, normalizeTask }) => {
   const taskA = normalizeTask(task)
 
   validateRequiredMain(taskA)
@@ -38,13 +38,13 @@ const eValidateTask = function ({ task, validators, normalizeTask }) {
   return taskA
 }
 
-const validateRequiredMain = function ({ main }) {
+const validateRequiredMain = ({ main }) => {
   if (main === undefined) {
     throw new TasksSyntaxError(`must have a "main" property`)
   }
 }
 
-const validateProp = function ({ validators, propName, prop }) {
+const validateProp = ({ validators, propName, prop }) => {
   const validator = validators[propName]
 
   if (validator === undefined) {

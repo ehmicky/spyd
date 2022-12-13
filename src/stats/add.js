@@ -1,9 +1,7 @@
 import { computeStats } from './compute.js'
 
 // Returns initial `stats`
-export const getInitialStats = function () {
-  return { samples: 0, loops: 0, times: 0 }
-}
+export const getInitialStats = () => ({ samples: 0, loops: 0, times: 0 })
 
 // Compute new `stats` based on the `sampleState`.
 // We perform this after each sample, not after several samples because:
@@ -43,14 +41,14 @@ export const getInitialStats = function () {
 //        last/current result and if the unit is `boolean`)
 //   - outliersMin, outliersMax: >=0 <=1
 //   - histogram[*].end: <=1
-export const addStats = function ({
+export const addStats = ({
   stats,
   sampleState,
   sampleState: { measures, unsortedMeasures, sampleLoops, sampleTimes },
   minLoopDuration,
   outliers,
   precision,
-}) {
+}) => {
   if (measures.length === 0) {
     return { stats, sampleState }
   }
@@ -76,10 +74,10 @@ export const addStats = function ({
 // `times` is the number of times `main()` was called
 // `loops` is the number of repeat loops
 // `repeat` is the average number of iterations inside those repeat loops
-const getCountStats = function (
+const getCountStats = (
   { samples, loops, times },
   { sampleLoops, sampleTimes, minLoopDuration },
-) {
+) => {
   const samplesA = samples + 1
   const loopsA = loops + sampleLoops
   const timesA = times + sampleTimes

@@ -7,14 +7,14 @@ import {
 } from '../../utils/colors.js'
 
 // Add `stat.prettyColor` and `stat.prettyPaddedColor`
-export const addStatColor = function ({
+export const addStatColor = ({
   name,
   combination,
   combination: {
     stats,
     stats: { [name]: stat },
   },
-}) {
+}) => {
   if (stat === undefined) {
     return combination
   }
@@ -25,18 +25,18 @@ export const addStatColor = function ({
   return { ...combination, stats: { ...stats, [name]: statA } }
 }
 
-const addItemsColor = function ({
+const addItemsColor = ({
   stat,
   stat: { raw, pretty, prettyPadded },
   name,
   stats,
-}) {
+}) => {
   const prettyColor = addItemColor(pretty, { raw, name, stats })
   const prettyPaddedColor = addItemColor(prettyPadded, { raw, name, stats })
   return { ...stat, prettyColor, prettyPaddedColor }
 }
 
-const addItemColor = function (pretty, { raw, name, stats }) {
+const addItemColor = (pretty, { raw, name, stats }) => {
   if (pretty === '') {
     return ''
   }
@@ -48,7 +48,7 @@ const addItemColor = function (pretty, { raw, name, stats }) {
 
 // Add colors to suffixes (units, exponents, %) so they are easy to distinguish
 // from the number they are attached to.
-const addSuffixColors = function (pretty) {
+const addSuffixColors = (pretty) => {
   const [, number, suffix] = SUFFIX_REGEXP.exec(pretty)
   return `${number}${suffixColor(suffix)}`
 }
@@ -56,7 +56,7 @@ const addSuffixColors = function (pretty) {
 const SUFFIX_REGEXP = /^([^a-z%]*)(.*)$/u
 
 // Add stat-specific colors, e.g. on `diff`
-const addSpecificColors = function (pretty, { raw, name, stats }) {
+const addSpecificColors = (pretty, { raw, name, stats }) => {
   if (raw === undefined) {
     return pretty
   }
@@ -76,7 +76,7 @@ const addSpecificColors = function (pretty, { raw, name, stats }) {
   return color(pretty)
 }
 
-const getDiffColor = function (diff, { diffPrecise, diffLimit }) {
+const getDiffColor = (diff, { diffPrecise, diffLimit }) => {
   if (!diffPrecise) {
     return
   }
@@ -87,13 +87,11 @@ const getDiffColor = function (diff, { diffPrecise, diffLimit }) {
     : getGoodDiffColor(hasDiffLimit)
 }
 
-const getBadDiffColor = function (hasDiffLimit) {
-  return hasDiffLimit ? badHighlightColor : badColor
-}
+const getBadDiffColor = (hasDiffLimit) =>
+  hasDiffLimit ? badHighlightColor : badColor
 
-const getGoodDiffColor = function (hasDiffLimit) {
-  return hasDiffLimit ? goodHighlightColor : goodColor
-}
+const getGoodDiffColor = (hasDiffLimit) =>
+  hasDiffLimit ? goodHighlightColor : goodColor
 
 const STAT_COLORS = {
   diff: getDiffColor,

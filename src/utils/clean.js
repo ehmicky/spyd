@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
 // Deeply remove `undefined` values in an object
-export const cleanObject = function (obj) {
+export const cleanObject = (obj) => {
   if (Array.isArray(obj)) {
     return obj.map(cleanObject)
   }
@@ -15,10 +15,6 @@ export const cleanObject = function (obj) {
   )
 }
 
-const isDefined = function ([, value]) {
-  return value !== undefined
-}
+const isDefined = ([, value]) => value !== undefined
 
-const cleanField = function ([name, value]) {
-  return [name, cleanObject(value)]
-}
+const cleanField = ([name, value]) => [name, cleanObject(value)]

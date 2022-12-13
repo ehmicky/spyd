@@ -8,7 +8,7 @@ import { importJsDefault } from '../../utils/import.js'
 import { loadYamlFile } from '../../utils/yaml.js'
 
 // Load and parse `spyd.*` file contents
-export const loadConfigContents = async function (configPath) {
+export const loadConfigContents = async (configPath) => {
   const loadFunc = EXTENSIONS[extname(configPath)]
 
   if (loadFunc === undefined) {
@@ -28,7 +28,7 @@ export const loadConfigContents = async function (configPath) {
   return configContents
 }
 
-const loadContents = async function (loadFunc, configPath) {
+const loadContents = async (loadFunc, configPath) => {
   try {
     return await loadFunc(configPath)
   } catch (cause) {
@@ -55,7 +55,7 @@ const EXTENSIONS = {
 }
 
 // Return filenames looked up by the default value of the `config` flag
-const getConfigFilenames = function () {
+const getConfigFilenames = () => {
   const configFilenames = Object.keys(EXTENSIONS).map(
     (extName) => `${DEFAULT_CONFIG_BASENAME}${extName}`,
   )

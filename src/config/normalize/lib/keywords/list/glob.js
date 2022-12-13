@@ -5,7 +5,7 @@ import { isNotJunk } from 'junk'
 
 import { validateDefinedString, normalizeBoolean } from '../normalize/common.js'
 
-const main = function (definition, input, { cwd }) {
+const main = (definition, input, { cwd }) => {
   if (!definition) {
     return
   }
@@ -15,7 +15,7 @@ const main = function (definition, input, { cwd }) {
   return returnFilePaths(filePaths)
 }
 
-const mainAsync = async function (definition, input, { cwd }) {
+const mainAsync = async (definition, input, { cwd }) => {
   if (!definition) {
     return
   }
@@ -25,18 +25,19 @@ const mainAsync = async function (definition, input, { cwd }) {
   return returnFilePaths(filePaths)
 }
 
-const getFastGlobOpts = function (cwd) {
-  return { cwd, absolute: true, unique: true, onlyFiles: true }
-}
+const getFastGlobOpts = (cwd) => ({
+  cwd,
+  absolute: true,
+  unique: true,
+  onlyFiles: true,
+})
 
-const returnFilePaths = function (filePaths) {
+const returnFilePaths = (filePaths) => {
   const input = filePaths.filter(shouldKeepFilePath)
   return { input }
 }
 
-const shouldKeepFilePath = function (filePath) {
-  return isNotJunk(basename(filePath))
-}
+const shouldKeepFilePath = (filePath) => isNotJunk(basename(filePath))
 
 // Apply `glob[(input, info)]` which resolves the input as a globbing pattern
 // when `true` (default: `false`).

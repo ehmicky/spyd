@@ -4,7 +4,7 @@ import { normalizeInputs } from './lib/main.js'
 
 // Normalize the configuration properties, including default values and
 // validation.
-export const normalizeConfig = async function (config, rules, opts) {
+export const normalizeConfig = async (config, rules, opts) => {
   const { inputs, error } = await normalizeInputs(config, rules, {
     ...opts,
     all: { ...opts.all, prefix: PREFIX },

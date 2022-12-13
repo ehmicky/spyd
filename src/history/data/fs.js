@@ -6,12 +6,10 @@ import { isDirectory, isFile } from 'path-type'
 import { UserError } from '../../error/main.js'
 
 // Find all filenames of the history directory
-export const listFilenames = async function (historyDir) {
-  return await readdir(historyDir)
-}
+export const listFilenames = async (historyDir) => await readdir(historyDir)
 
 // Read a rawResult's contents
-export const readRawResult = async function (path) {
+export const readRawResult = async (path) => {
   try {
     return await readFile(path, 'utf8')
   } catch (cause) {
@@ -20,7 +18,7 @@ export const readRawResult = async function (path) {
 }
 
 // Write a rawResult's contents
-export const writeRawResult = async function (path, rawResultStr) {
+export const writeRawResult = async (path, rawResultStr) => {
   try {
     return await writeFile(path, rawResultStr)
   } catch (cause) {
@@ -29,7 +27,7 @@ export const writeRawResult = async function (path, rawResultStr) {
 }
 
 // Delete a rawResult from the filesystem
-export const deleteRawResult = async function (path) {
+export const deleteRawResult = async (path) => {
   try {
     await unlink(path)
   } catch (cause) {
@@ -38,12 +36,10 @@ export const deleteRawResult = async function (path) {
 }
 
 // Check if a rawResult is on the filesystem
-export const hasHistoryDir = async function (historyDir) {
-  return await pathExists(historyDir)
-}
+export const hasHistoryDir = async (historyDir) => await pathExists(historyDir)
 
 // Ensure that the history directory exists on the filesystem
-export const ensureHistoryDir = async function (historyDir) {
+export const ensureHistoryDir = async (historyDir) => {
   if (await pathExists(historyDir)) {
     return
   }
@@ -58,7 +54,7 @@ export const ensureHistoryDir = async function (historyDir) {
 }
 
 // Ensure that the history directory is valid
-export const checkHistoryDir = async function (historyDir) {
+export const checkHistoryDir = async (historyDir) => {
   if (!(await isDirectory(historyDir))) {
     throw new UserError(
       `The history location must be a directory, not a regular file: ${historyDir}`,
@@ -67,7 +63,7 @@ export const checkHistoryDir = async function (historyDir) {
 }
 
 // Ensure that a history file is valid
-export const checkHistoryFile = async function (path) {
+export const checkHistoryFile = async (path) => {
   if (!(await isFile(path))) {
     throw new UserError(`History file must be a regular file: ${path}`)
   }

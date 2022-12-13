@@ -5,7 +5,7 @@ import { PluginError, UserError } from '../../error/main.js'
 // Throws when process exit as it spawns.
 // We distinguish it from process exits after spawning, since this is a
 // plugin error, not a user error.
-export const throwOnSpawnExit = async function (childProcess) {
+export const throwOnSpawnExit = async (childProcess) => {
   const { message = DEFAULT_SPAWN_ERROR } = await childProcess
   throw new PluginError(message)
 }
@@ -17,7 +17,7 @@ const DEFAULT_SPAWN_ERROR = 'The runner exited while starting.'
 //  - The task made the process exit, which is improper since it prevents proper
 //    cleanup and orchestration.
 //  - The runner crashed due to a bug.
-export const throwOnTaskExit = async function (childProcess) {
+export const throwOnTaskExit = async (childProcess) => {
   const { failed, message } = await childProcess
   const exitMessage = getProcessExitMessage(failed, message)
   throw new UserError(exitMessage)
@@ -25,7 +25,7 @@ export const throwOnTaskExit = async function (childProcess) {
 
 // Replace "Command" by "Task" and remove the runner process argv from
 // the error message
-const getProcessExitMessage = function (failed, message) {
+const getProcessExitMessage = (failed, message) => {
   if (!failed) {
     return TASK_EXIT_MESSAGE
   }
@@ -37,6 +37,4 @@ const TASK_EXIT_MESSAGE = 'The task must not make the process exit.'
 const EXECA_MESSAGE_REGEXP = /^Command ([^:]+): .*/u
 
 // Make any stream `error` event throw
-export const throwOnStreamError = function (stream) {
-  return once(stream, 'dummy_event')
-}
+export const throwOnStreamError = (stream) => once(stream, 'dummy_event')

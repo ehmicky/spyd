@@ -1,36 +1,28 @@
 import sortOn from 'sort-on'
 
-export const sortDimensionsArray = function (dimensionsArray) {
+export const sortDimensionsArray = (dimensionsArray) =>
   // eslint-disable-next-line fp/no-mutating-methods
-  return dimensionsArray
-    .map(sortDimensionsEntries)
-    .sort(compareDimensionsEntries)
-}
+  dimensionsArray.map(sortDimensionsEntries).sort(compareDimensionsEntries)
 
 // Sort each dimension within a given `dimensions` by its dimension name.
 // Then sort each dimension value's array item.
-const sortDimensionsEntries = function (dimensionsEntries) {
+const sortDimensionsEntries = (dimensionsEntries) => {
   const dimensionsEntriesA = sortOn(dimensionsEntries, ['0'])
   return dimensionsEntriesA.map(sortDimensionValueArray)
 }
 
-const sortDimensionValueArray = function ([
+const sortDimensionValueArray = ([dimensionName, dimensionValueArray]) => [
   dimensionName,
-  dimensionValueArray,
-]) {
   // eslint-disable-next-line fp/no-mutating-methods
-  return [dimensionName, [...dimensionValueArray].sort()]
-}
+  [...dimensionValueArray].sort(),
+]
 
 // Sort the `dimensions` in each system's title, when it has several:
 //  - Sets with fewer `dimensions` are shown first
 //  - Then, we compare the first dimension of each set by name, then value
 //  - Then the second dimension, and so on
 // eslint-disable-next-line complexity
-const compareDimensionsEntries = function (
-  dimensionsEntriesA,
-  dimensionsEntriesB,
-) {
+const compareDimensionsEntries = (dimensionsEntriesA, dimensionsEntriesB) => {
   if (dimensionsEntriesA.length > dimensionsEntriesB.length) {
     return 1
   }
@@ -56,10 +48,10 @@ const compareDimensionsEntries = function (
 }
 
 // eslint-disable-next-line complexity
-const compareDimensionsEntry = function (
+const compareDimensionsEntry = (
   [dimensionNameA, dimensionValueArrayA],
   [dimensionNameB, dimensionValueArrayB],
-) {
+) => {
   if (dimensionNameA > dimensionNameB) {
     return 1
   }
@@ -90,7 +82,7 @@ const compareDimensionsEntry = function (
 }
 
 // `dimensionValueA|B` might be `undefined`, but this logic still works
-const compareDimensionsValue = function (dimensionValueA, dimensionValueB) {
+const compareDimensionsValue = (dimensionValueA, dimensionValueB) => {
   if (dimensionValueA < dimensionValueB) {
     return -1
   }

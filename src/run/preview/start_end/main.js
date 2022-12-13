@@ -14,7 +14,7 @@ import { startHandleResize, stopHandleResize } from './resize.js'
 import { getPreviewState, addResultPreviewState } from './state.js'
 
 // Initialize the preview before the result has been loaded.
-export const initPreview = function (config) {
+export const initPreview = (config) => {
   const previewState = getPreviewState(config)
   printPreviewStarting(previewState)
   return previewState
@@ -23,7 +23,7 @@ export const initPreview = function (config) {
 // Loading combinations can be slow if the task is long to load.
 // We print a message so the user knows something is happening.
 // We print it before clearing the screen to avoid a screen flash.
-const printPreviewStarting = function ({ quiet }) {
+const printPreviewStarting = ({ quiet }) => {
   if (quiet) {
     return
   }
@@ -32,14 +32,14 @@ const printPreviewStarting = function ({ quiet }) {
 }
 
 // Start the preview mode once the result has been loaded
-export const startPreview = async function ({
+export const startPreview = async ({
   newResult,
   result,
   sinceResult,
   noDimensions,
   previewState,
   config,
-}) {
+}) => {
   if (previewState.quiet) {
     return previewState
   }
@@ -70,7 +70,7 @@ export const startPreview = async function ({
 //  - This allows users to stop a benchmark without losing information,
 //    including the duration that was left
 //  - This is unlike other errors, which clear it
-export const endPreview = async function (previewState, error = {}) {
+export const endPreview = async (previewState, error = {}) => {
   if (previewState.quiet) {
     return
   }

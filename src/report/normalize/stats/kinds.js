@@ -29,14 +29,13 @@ export const STAT_KINDS = [
 // Some stats have multiple kinds, depending on their scale.
 // This is useful to show when a different scale|unit is more proper depending
 // on how low|high the value is.
-export const getSingleKind = function (minMeasure, kind) {
+export const getSingleKind = (minMeasure, kind) => {
   const getKind = MULTIPLE_KINDS[kind]
   return getKind === undefined ? kind : getKind(minMeasure)
 }
 
-const getPercentageCountKind = function (minMeasure) {
-  return minMeasure >= PERCENTAGE_MIN_VALUE ? 'percentage' : 'count'
-}
+const getPercentageCountKind = (minMeasure) =>
+  minMeasure >= PERCENTAGE_MIN_VALUE ? 'percentage' : 'count'
 
 // Chosen so that `cold` can represent the threshold of the highest `precision`
 // as percentage, but represent anything lower as count, to avoid showing too

@@ -5,10 +5,10 @@ import { sendAndReceive } from '../process/ipc.js'
 import { getSampleState } from './state.js'
 
 // Measure a new sample for a given combination
-export const measureSample = async function (
+export const measureSample = async (
   { server, minLoopDuration, targetSampleDuration },
   sampleState,
-) {
+) => {
   const payload = getPayload(sampleState, minLoopDuration)
   const { returnValue, measureDuration } = await measureNewSample(
     payload,
@@ -24,7 +24,7 @@ export const measureSample = async function (
 
 // Compute event payload to send to the measuring sample
 // When estimating `measureCost`, we pass `repeat: 0` to the runner
-const getPayload = function ({ repeat, maxLoops }, minLoopDuration) {
+const getPayload = ({ repeat, maxLoops }, minLoopDuration) => {
   const repeatPayload = minLoopDuration === 0 ? 0 : repeat
   return { event: 'measure', repeat: repeatPayload, maxLoops }
 }
@@ -37,7 +37,7 @@ const getPayload = function ({ repeat, maxLoops }, minLoopDuration) {
 // be slow.
 // We only keep the last `measureDuration` instead of taking the mean of all
 // previous ones, so that `measureDuration` quickly adapts to machine slowdowns.
-const measureNewSample = async function (payload, server) {
+const measureNewSample = async (payload, server) => {
   const measureDurationStart = now()
   const returnValue = await sendAndReceive(payload, server)
   const measureDuration = now() - measureDurationStart

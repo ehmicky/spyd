@@ -9,7 +9,7 @@ import { SELECTABLE_PROPS, isConfigSelectorShape } from './normalize.js'
 // This method transforms each of those configuration selectors to single values
 // based on each given combination.
 //  - Each resolved configuration is set to `combinations[*].config`.
-export const useResultConfigSelectors = async function (result, config) {
+export const useResultConfigSelectors = async (result, config) => {
   const combinations = await Promise.all(
     result.combinations.map((combination) =>
       useCombConfigSelectors(combination, config),
@@ -18,27 +18,28 @@ export const useResultConfigSelectors = async function (result, config) {
   return { ...result, combinations }
 }
 
-const useCombConfigSelectors = async function (combination, config) {
+const useCombConfigSelectors = async (combination, config) => {
   const configA = await useConfigSelectors(combination, config)
   return { ...combination, config: configA }
 }
 
 // Same for a single combination
-export const useConfigSelectors = async function (combination, config) {
-  return await normalizeConfig(config, RULES, {
+export const useConfigSelectors = async (combination, config) =>
+  await normalizeConfig(config, RULES, {
     all: { context: { combination } },
   })
-}
 
 // Some values might not be using selectors. Those do not need to be transformed
-const getRule = function (name) {
-  return { name, condition: isConfigSelectorShape, transform }
-}
+const getRule = (name) => ({
+  name,
+  condition: isConfigSelectorShape,
+  transform,
+})
 
-const transform = function (
+const transform = (
   { default: defaultValue, ...values },
   { name, context: { combination } },
-) {
+) => {
   const matchingSelector = Object.keys(values).find((selector) =>
     matchCombination(combination, [selector], `${name}.${selector}`),
   )

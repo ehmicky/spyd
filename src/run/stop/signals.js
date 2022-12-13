@@ -3,7 +3,7 @@ import process from 'node:process'
 // Ensure default handlers for those signals are not used.
 // Create a new `noop` function at each call, in case this function is called
 // several times in parallel.
-export const removeDefaultHandlers = function () {
+export const removeDefaultHandlers = () => {
   const signalHandler = noop.bind()
   STOP_SIGNALS.forEach((signal) => {
     process.on(signal, signalHandler)
@@ -12,9 +12,9 @@ export const removeDefaultHandlers = function () {
 }
 
 // eslint-disable-next-line no-empty-function
-const noop = function () {}
+const noop = () => {}
 
-export const restoreDefaultHandlers = function (signalHandler) {
+export const restoreDefaultHandlers = (signalHandler) => {
   STOP_SIGNALS.forEach((signal) => {
     process.off(signal, signalHandler)
   })

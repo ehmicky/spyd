@@ -13,9 +13,10 @@
 // The programmatic reporter's configuration ensures:
 //  - All properties users might want are available
 //  - Internal properties like `debugStats` are not returned
-export const addProgrammaticReporter = function (reporters) {
-  return [PROGRAMMATIC_REPORTER, ...reporters]
-}
+export const addProgrammaticReporter = (reporters) => [
+  PROGRAMMATIC_REPORTER,
+  ...reporters,
+]
 
 const PROGRAMMATIC_REPORTER = {
   id: 'programmatic',

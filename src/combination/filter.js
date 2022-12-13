@@ -12,24 +12,22 @@ import { excludeKeys } from 'filter-obj'
 //  - We do filter `noDimensions` inside the `result` passed to reporters though
 //     - So they do not have to
 //     - To ensure they do not report them
-export const getNoDimensions = function (combinations) {
+export const getNoDimensions = (combinations) => {
   const dimensionsArray = combinations.map(getCombinationDimensions)
   return getCombsNoDimensions(dimensionsArray)
 }
 
-const getCombinationDimensions = function ({ dimensions }) {
-  return dimensions
-}
+const getCombinationDimensions = ({ dimensions }) => dimensions
 
 // Same with already computed dimensions
-export const getCombsNoDimensions = function (dimensionsArray) {
+export const getCombsNoDimensions = (dimensionsArray) => {
   const dimensionNames = [...new Set(dimensionsArray.flatMap(Object.keys))]
   return dimensionNames.filter((dimensionName) =>
     isNoDimensions(dimensionsArray, dimensionName),
   )
 }
 
-const isNoDimensions = function (dimensionsArray, dimensionName) {
+const isNoDimensions = (dimensionsArray, dimensionName) => {
   const isSparseDimension = dimensionsArray.some(
     (dimensions) => dimensions[dimensionName] === undefined,
   )
@@ -49,7 +47,7 @@ const isNoDimensions = function (dimensionsArray, dimensionName) {
 //   - Retrieving `noDimensions` can be performed once per run
 //   - But applying `noDimensions` might be repeated on many results or many
 //     previews
-export const omitNoDimensions = function (result, noDimensions) {
+export const omitNoDimensions = (result, noDimensions) => {
   const combinations = result.combinations.map((combination) =>
     omitCombNoDimensions(combination, noDimensions),
   )
@@ -57,7 +55,7 @@ export const omitNoDimensions = function (result, noDimensions) {
 }
 
 // Same for a single combination
-export const omitCombNoDimensions = function (combination, noDimensions) {
+export const omitCombNoDimensions = (combination, noDimensions) => {
   const dimensions = excludeKeys(combination.dimensions, noDimensions)
   return { ...combination, dimensions }
 }

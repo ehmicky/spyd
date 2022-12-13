@@ -20,7 +20,7 @@ import { throwIfStopped } from '../stop/error.js'
 import { runEvents } from './events.js'
 
 // Measure a single combination
-export const measureCombination = async function ({ index, config, ...args }) {
+export const measureCombination = async ({ index, config, ...args }) => {
   const { previewState, combination, noDimensions } = args
   const configA = await useConfigSelectors(combination, config)
 
@@ -46,7 +46,7 @@ export const measureCombination = async function ({ index, config, ...args }) {
   }
 }
 
-const logAndMeasure = async function (args) {
+const logAndMeasure = async (args) => {
   if (!hasLogs(args.stage)) {
     return await spawnAndMeasure(args)
   }
@@ -62,7 +62,7 @@ const logAndMeasure = async function (args) {
   }
 }
 
-const logStreamAndMeasure = async function (args) {
+const logStreamAndMeasure = async (args) => {
   const logsStream = startLogsStream(args.logsFd)
 
   try {
@@ -73,7 +73,7 @@ const logStreamAndMeasure = async function (args) {
 }
 
 // Spawn combination processes, then measure them
-const spawnAndMeasure = async function ({ serverUrl, logsStream, ...args }) {
+const spawnAndMeasure = async ({ serverUrl, logsStream, ...args }) => {
   const { childProcess, onTaskExit } = await spawnRunnerProcess({
     ...args,
     serverUrl,
@@ -94,7 +94,7 @@ const spawnAndMeasure = async function ({ serverUrl, logsStream, ...args }) {
 //    performed
 //  - This ensures that all initializers and finalizers are always called
 //    and in order
-const handleStopAndMeasure = async function (args) {
+const handleStopAndMeasure = async (args) => {
   const { stopState } = args
   const returnValue = await Promise.race([stopState.onAbort, handleError(args)])
   throwIfStopped(stopState)
@@ -103,7 +103,7 @@ const handleStopAndMeasure = async function (args) {
 
 // When an error happens while a measuring a specific combination, display its
 // dimensions in the error message
-const handleError = async function ({ onTaskExit, noDimensions, ...args }) {
+const handleError = async ({ onTaskExit, noDimensions, ...args }) => {
   try {
     return await Promise.race([onTaskExit, runEvents(args)])
   } catch (error) {

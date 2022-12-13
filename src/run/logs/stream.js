@@ -2,12 +2,11 @@ import { createWriteStream } from 'node:fs'
 import { promisify } from 'node:util'
 
 // Start file stream for the runner process to write to
-export const startLogsStream = function (logsFd) {
-  return createWriteStream(undefined, { fd: logsFd })
-}
+export const startLogsStream = (logsFd) =>
+  createWriteStream(undefined, { fd: logsFd })
 
 // Ensure the stream buffer is flushed, i.e. we do not miss the last characters
-export const stopLogsStream = async function (logsStream) {
+export const stopLogsStream = async (logsStream) => {
   if (!logsStream.writable) {
     return
   }
@@ -28,7 +27,7 @@ export const stopLogsStream = async function (logsStream) {
 // since:
 //  - When logs are low, `stat()` is roughly as slow as `truncate()`
 //  - When logs are high, we most likely want to truncate
-export const truncateLogs = async function (logsFd) {
+export const truncateLogs = async (logsFd) => {
   if (logsFd === undefined) {
     return
   }

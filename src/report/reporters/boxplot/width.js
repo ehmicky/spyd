@@ -5,13 +5,13 @@ import { isMeasuredCombination } from './normalize.js'
 import { getIndex } from './position.js'
 
 // Compute the width of each column.
-export const getWidths = function ({
+export const getWidths = ({
   combinations,
   mini,
   screenWidth,
   minAll,
   maxAll,
-}) {
+}) => {
   const titlesWidth = getCombinationTitlePad(combinations[0]).length
   const combinationsA = combinations.filter(isMeasuredCombination)
   const contentWidth = subtractToContentWidth(screenWidth, titlesWidth)
@@ -36,23 +36,22 @@ export const getWidths = function ({
   return { titlesWidth, minBlockWidth, contentWidth: contentWidthB }
 }
 
-const subtractToContentWidth = function (contentWidth, columnWidth) {
-  return Math.max(contentWidth - columnWidth, 1)
-}
+const subtractToContentWidth = (contentWidth, columnWidth) =>
+  Math.max(contentWidth - columnWidth, 1)
 
 // Finds the smallest `minBlockWidth`/`maxBlockWidth` that fits all `min`/`max`
 // labels. Computing it depends on the position on the screen of each
 // combination's `min`/`max`. However, this in turns depends on `minBlockWidth`
 // and `maxBlockWidth` since those change `contentWidth`. Therefore, we compute
 // it iteratively until the final number stabilizes.
-const getMinMaxBlockWidth = function ({
+const getMinMaxBlockWidth = ({
   statName,
   combinations,
   mini,
   minAll,
   maxAll,
   contentWidth,
-}) {
+}) => {
   if (mini || combinations.length === 0) {
     return 0
   }
@@ -88,7 +87,7 @@ const getMinMaxBlockWidth = function ({
 
 // Computes the minimum size for `minWidth`/`maxWidth` where a given
 // combination's `min` or `max` label does not display beyond its borders.
-const getMinMaxWidth = function ({
+const getMinMaxWidth = ({
   statName,
   combination: {
     quantiles: {
@@ -98,7 +97,7 @@ const getMinMaxWidth = function ({
   minAll,
   maxAll,
   contentWidth,
-}) {
+}) => {
   const index = getIndex({ raw, minAll, maxAll, contentWidth })
   const indexShift = statName === 'min' ? index : contentWidth - 1 - index
   return Math.max(getPaddedStatLength(pretty) - indexShift, 0)

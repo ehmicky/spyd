@@ -6,16 +6,11 @@ import { prettifyValue } from '../../utils/prettify_value.js'
 // Used as the fallback format.
 export const TERMINAL_FORMAT = {
   name: 'terminal',
-  detect() {
-    return true
-  },
+  detect: () => true,
   methods: ['reportTerminal'],
-  async report({ reportTerminal }, reporterArgs) {
-    return await reportTerminal(...reporterArgs)
-  },
+  report: async ({ reportTerminal }, reporterArgs) =>
+    await reportTerminal(...reporterArgs),
   concat: true,
-  footer(footer) {
-    return `\n${getLineSeparator()}\n${prettifyValue(footer)}\n`
-  },
+  footer: (footer) => `\n${getLineSeparator()}\n${prettifyValue(footer)}\n`,
   padding: true,
 }

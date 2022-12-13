@@ -55,7 +55,7 @@ import { pickLast } from '../../utils/last.js'
 // `rawResults` is already sorted by timestamp.
 //  - However, grouping can remove this sorting order, so we sort again to
 //    ensure the last result is still the target result
-export const mergeResults = function (history, targetResult) {
+export const mergeResults = (history, targetResult) => {
   const rawResultsGroups = Object.values(
     groupBy([...history, targetResult], 'id'),
   )
@@ -65,7 +65,7 @@ export const mergeResults = function (history, targetResult) {
   return { history: historyA, targetResult: targetResultB }
 }
 
-const mergeRawResultsGroup = function (rawResults) {
+const mergeRawResultsGroup = (rawResults) => {
   const rawResultsA = rawResults.map(omitUnmergedProps)
   const [rawResultsB, lastRawResult] = pickLast(rawResultsA)
   return rawResultsB.reduceRight(mergeResultsPair, lastRawResult)
@@ -73,9 +73,7 @@ const mergeRawResultsGroup = function (rawResults) {
 
 // `subId` should be merged as an array of `subIds`. However, since it is not
 // used except for filenames at the moment, we just omit it.
-const omitUnmergedProps = function (rawResult) {
-  return excludeKeys(rawResult, UNMERGED_PROPS)
-}
+const omitUnmergedProps = (rawResult) => excludeKeys(rawResult, UNMERGED_PROPS)
 
 const UNMERGED_PROPS = ['subId']
 
@@ -89,7 +87,7 @@ const UNMERGED_PROPS = ['subId']
 //  - Multiple timestamps because:
 //     - It is too verbose
 //     - Users might mistake it for the benchmark's duration
-const mergeResultsPair = function (rawResult, previousRawResult) {
+const mergeResultsPair = (rawResult, previousRawResult) => {
   const [rawResultA, previousRawResultA] = mergeDimensions(
     rawResult,
     previousRawResult,
@@ -107,14 +105,13 @@ const mergeResultsPair = function (rawResult, previousRawResult) {
 // We add default ids to ensure:
 //  - Both results' combinations can be compared
 //  - The merged result has all dimensions
-const mergeDimensions = function (rawResult, previousRawResult) {
-  return addDefaultIds(
+const mergeDimensions = (rawResult, previousRawResult) =>
+  addDefaultIds(
     [rawResult, previousRawResult],
     [...rawResult.combinations, ...previousRawResult.combinations],
   )
-}
 
-const mergeCombinations = function (rawResult, previousRawResult) {
+const mergeCombinations = (rawResult, previousRawResult) => {
   const previousCombinations = removeSameCombinations(
     previousRawResult.combinations,
     rawResult.combinations,
@@ -124,7 +121,7 @@ const mergeCombinations = function (rawResult, previousRawResult) {
 }
 
 // Retrieve all rawResults part of the merged targetResult
-export const getTargetRawResults = function (targetResult, history) {
+export const getTargetRawResults = (targetResult, history) => {
   const historyA = history.filter(({ id }) => id === targetResult.id)
   return [...historyA, targetResult]
 }

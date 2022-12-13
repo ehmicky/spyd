@@ -1,12 +1,12 @@
 import { goodColor, separatorColor } from '../../utils/colors.js'
 
 // Retrieve the box plot
-export const getBox = function ({
+export const getBox = ({
   positions: { min, q1, median, q3, max },
   minBlockWidth,
   combinationTitles,
   mini,
-}) {
+}) => {
   // Empty space before the box plot
   const leftSpace = getLeftSpace(min, minBlockWidth, mini)
   // `min` stat number
@@ -26,30 +26,28 @@ export const getBox = function ({
   return `${combinationTitles}${leftSpace}${minPadded}${minLine}${q1Box}${medianCharacter}${q3Box}${maxLine}${maxPadded}\n`
 }
 
-const getLeftSpace = function (min, minBlockWidth, mini) {
+const getLeftSpace = (min, minBlockWidth, mini) => {
   const minWidth = getPaddedStat(min.pretty, mini).length
   return repeatCharacter(' ', minBlockWidth + min.index - minWidth)
 }
 
-const getMinLine = function (min, q1) {
+const getMinLine = (min, q1) => {
   const leftLine = fillCharacter(HORIZONTAL_LINE, min, q1)
   return leftLine === '' ? leftLine : `${MIN_CHARACTER}${leftLine.slice(1)}`
 }
 
-const getMaxLine = function (q3, max) {
+const getMaxLine = (q3, max) => {
   const rightLine = fillCharacter(HORIZONTAL_LINE, q3, max)
   return rightLine === ''
     ? rightLine
     : `${rightLine.slice(0, -1)}${MAX_CHARACTER}`
 }
 
-const fillCharacter = function (character, start, end) {
-  return repeatCharacter(character, end.index - start.index)
-}
+const fillCharacter = (character, start, end) =>
+  repeatCharacter(character, end.index - start.index)
 
-const repeatCharacter = function (character, width) {
-  return character.repeat(Math.max(width, 0))
-}
+const repeatCharacter = (character, width) =>
+  character.repeat(Math.max(width, 0))
 
 // Works on most terminals
 const MIN_CHARACTER = '\u251C'
@@ -59,13 +57,11 @@ const MEDIAN_CHARACTER = '\u2588'
 const MAX_CHARACTER = '\u2524'
 
 // Surround stats with padding
-const getPaddedStat = function (string, mini) {
-  return mini ? '' : `${STAT_PADDING}${string}${STAT_PADDING}`
-}
+const getPaddedStat = (string, mini) =>
+  mini ? '' : `${STAT_PADDING}${string}${STAT_PADDING}`
 
-export const getPaddedStatLength = function (string) {
-  return string.length + STAT_PADDING_WIDTH * 2
-}
+export const getPaddedStatLength = (string) =>
+  string.length + STAT_PADDING_WIDTH * 2
 
 const STAT_PADDING_WIDTH = 1
 const STAT_PADDING = ' '.repeat(STAT_PADDING_WIDTH)

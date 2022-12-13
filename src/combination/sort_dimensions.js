@@ -13,12 +13,12 @@ import { findDimensionIndex } from './dimensions.js'
 // However, reporters are external, so we sort `combination.dimensions` on their
 // behalf.
 //  - This is used for example for combination titles in reporters
-export const sortDimensions = function (result) {
+export const sortDimensions = (result) => {
   const combinations = result.combinations.map(sortCombDimensions)
   return { ...result, combinations }
 }
 
-const sortCombDimensions = function (combination) {
+const sortCombDimensions = (combination) => {
   const { dimensions } = combination
   // eslint-disable-next-line fp/no-mutating-methods
   const dimensionNames = Object.keys(dimensions).sort(compareDimensionNames)
@@ -32,7 +32,7 @@ const sortCombDimensions = function (combination) {
 }
 
 // eslint-disable-next-line complexity, max-statements
-const compareDimensionNames = function (dimensionNameA, dimensionNameB) {
+const compareDimensionNames = (dimensionNameA, dimensionNameB) => {
   const indexA = findDimensionIndex(dimensionNameA)
   const indexB = findDimensionIndex(dimensionNameB)
 

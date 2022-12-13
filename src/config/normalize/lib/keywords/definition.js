@@ -4,7 +4,7 @@ import { callDefinition, callNormalize } from '../call/main.js'
 // `aliases` can be defined to either:
 //   - Augment the behavior of another keyword
 //   - Rename a keyword
-export const getDefinition = function (rule, keyword, aliases) {
+export const getDefinition = (rule, keyword, aliases) => {
   const definition = rule[keyword]
 
   if (definition !== undefined || aliases === undefined) {
@@ -22,7 +22,7 @@ export const getDefinition = function (rule, keyword, aliases) {
 //    might return a Promise
 //  - Requiring user to declare sync|async would be poorer developer experience
 //    and error-prone
-export const callDefinitionFunc = async function ({
+export const callDefinitionFunc = async ({
   definition,
   input,
   info,
@@ -31,8 +31,8 @@ export const callDefinitionFunc = async function ({
   keyword,
   exampleDefinition,
   sync,
-}) {
-  return typeof definition === 'function'
+}) =>
+  typeof definition === 'function'
     ? await callDefinition({
         definition,
         input,
@@ -44,18 +44,17 @@ export const callDefinitionFunc = async function ({
         sync,
       })
     : definition
-}
 
 // Apply `keyword.normalize(definition)`
-export const normalizeDefinition = async function ({
+export const normalizeDefinition = async ({
   definition,
   normalize,
   normalizeSync,
   info,
   keyword,
   exampleDefinition,
-}) {
-  return normalize === undefined
+}) =>
+  normalize === undefined
     ? definition
     : await callNormalize({
         normalize,
@@ -65,4 +64,3 @@ export const normalizeDefinition = async function ({
         keyword,
         exampleDefinition,
       })
-}

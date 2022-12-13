@@ -7,7 +7,7 @@ import { FORMATS } from './formats/main.js'
 // Several configuration properties targets a previous rawResult using a delta,
 // which can an integer, "first", date/time/duration, rawResult.id or git
 // reference.
-export const transformDelta = function (deltaOriginal) {
+export const transformDelta = (deltaOriginal) => {
   if (deltaOriginal === '') {
     throw new Error('must not be an empty string.')
   }
@@ -26,7 +26,7 @@ export const transformDelta = function (deltaOriginal) {
   return { type, value, original: deltaOriginal }
 }
 
-const parseDelta = function ({ parse, type }, deltaOriginal) {
+const parseDelta = ({ parse, type }, deltaOriginal) => {
   try {
     const value = parse(deltaOriginal)
     return value === undefined ? undefined : { type, value }

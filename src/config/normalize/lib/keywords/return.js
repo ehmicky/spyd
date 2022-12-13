@@ -5,13 +5,13 @@ import { applyRename } from './rename.js'
 import { transformInput } from './transform.js'
 
 // Apply a keyword's return value, if any
-export const applyReturnValue = function ({
+export const applyReturnValue = ({
   returnValue,
   memo,
   memo: { input, info },
   state,
   state: { warnings, moves },
-}) {
+}) => {
   if (returnValue === undefined) {
     return memo
   }
@@ -27,7 +27,7 @@ export const applyReturnValue = function ({
 // Keywords can change the `info` by returning an `info` property.
 // Some `info` properties cannot be changed since they are too internal and
 // might create issues.
-const applyInfo = function (returnValue, info) {
+const applyInfo = (returnValue, info) => {
   if (returnValue.info === undefined) {
     return info
   }

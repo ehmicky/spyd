@@ -15,12 +15,12 @@ import { prettifyStats, prettifyHistoryStats } from './stats/main.js'
 // performing anything which can be initially computing only once at the
 // beginning of the command in `normalizeHistory()` and
 // `normalizeTargetResult()`
-export const normalizeComputedResult = async function ({
+export const normalizeComputedResult = async ({
   result: initialResult,
   sinceResult,
   noDimensions,
   config,
-}) {
+}) => {
   const result = await normalizeCombAll(initialResult, {
     sinceResult,
     noDimensions,
@@ -45,14 +45,14 @@ export const normalizeComputedResult = async function ({
 
 // Add report-specific properties to the target result that are `combinations`
 // related and reporter-specific.
-const normalizeComputedEach = async function ({
+const normalizeComputedEach = async ({
   result,
   initialResult,
   sinceResult,
   noDimensions,
   reporter: { history, resultProps, footerParams, ...reporter },
   config,
-}) {
+}) => {
   const resultA = await addLastResult({
     result,
     initialResult,
@@ -71,7 +71,7 @@ const normalizeComputedEach = async function ({
 // The last history result is identical to the target result except it uses
 // history result's normalization, not target result.
 // Therefore, we need to merge the combinations of the target result.
-const addLastResult = async function ({
+const addLastResult = async ({
   result,
   initialResult: { combinations },
   sinceResult,
@@ -80,7 +80,7 @@ const addLastResult = async function ({
   reporter,
   reporter: { capabilities },
   config,
-}) {
+}) => {
   if (!capabilities.history) {
     return result
   }

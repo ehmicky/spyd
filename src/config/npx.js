@@ -12,7 +12,7 @@ import { isConfigFileModule } from './load/resolve.js'
 // This behaves as if `--config={spydConfig}` had been specified:
 //  - Additional `--config` flags are kept
 //  - The `--config` flag does not use its default value
-export const addNpxShortcut = function (configFlags) {
+export const addNpxShortcut = (configFlags) => {
   if (!isNpxCall()) {
     return configFlags
   }
@@ -30,14 +30,10 @@ export const addNpxShortcut = function (configFlags) {
   return { ...configFlags, config: configOptA }
 }
 
-const isNpxCall = function () {
-  return (
-    env.npm_command === 'exec' &&
-    env.npm_config_package !== undefined &&
-    env.npm_config_package !== ''
-  )
-}
+const isNpxCall = () =>
+  env.npm_command === 'exec' &&
+  env.npm_config_package !== undefined &&
+  env.npm_config_package !== ''
 
-const getNpxConfigs = function () {
-  return env.npm_config_package.split('\n').filter(isConfigFileModule)
-}
+const getNpxConfigs = () =>
+  env.npm_config_package.split('\n').filter(isConfigFileModule)

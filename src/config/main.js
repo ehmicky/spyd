@@ -13,7 +13,7 @@ import { addNpxShortcut } from './npx.js'
 import { normalizePluginsConfig } from './plugin/main.js'
 
 // Retrieve configuration
-export const getConfig = async function (command, configFlags = {}) {
+export const getConfig = async (command, configFlags = {}) => {
   const { config, cwd } = await resolveConfig(configFlags)
   const context = { command }
   const configA = await normalizeConfig(config, RULES, {
@@ -37,7 +37,7 @@ export const getConfig = async function (command, configFlags = {}) {
 //    case-sensitiveness (due to Windows) and fewer allowed delimiters (due
 //    to underscores only being allowed in Unix)
 // We purposely remove the `config` property during this step.
-const resolveConfig = async function (configFlags) {
+const resolveConfig = async (configFlags) => {
   const configFlagsA = addNpxShortcut(configFlags)
   const { configWithBases, bases } = await loadConfig(
     configFlagsA,

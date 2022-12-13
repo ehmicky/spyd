@@ -7,7 +7,7 @@ import { getHistogramColumns } from './columns.js'
 import { getFrequencies } from './frequencies.js'
 
 // Serialize the main part of the histogram, i.e. rows and columns
-export const getHistogramRows = function ({
+export const getHistogramRows = ({
   histogram,
   combinationTitles,
   titlesWidth,
@@ -17,7 +17,7 @@ export const getHistogramRows = function ({
   medianIndex,
   mini,
   smooth,
-}) {
+}) => {
   const frequencies = getFrequencies(histogram, contentWidth, smooth)
   const columns = getHistogramColumns({
     frequencies,
@@ -39,7 +39,7 @@ export const getHistogramRows = function ({
 }
 
 // Serialize a single row, i.e. terminal line
-const getHistogramRow = function ({
+const getHistogramRow = ({
   index,
   columns,
   combinationTitles,
@@ -47,7 +47,7 @@ const getHistogramRow = function ({
   minBlockWidth,
   height,
   mini,
-}) {
+}) => {
   const titlesSpace =
     mini && index === height - 1 ? combinationTitles : ' '.repeat(titlesWidth)
   const minSpace = ' '.repeat(minBlockWidth)
@@ -59,10 +59,7 @@ const getHistogramRow = function ({
 }
 
 // Retrieve the character to display for a specific row and column
-const getHistogramCell = function (
-  { heightLevel, charIndex, color },
-  inverseIndex,
-) {
+const getHistogramCell = ({ heightLevel, charIndex, color }, inverseIndex) => {
   if (heightLevel < inverseIndex) {
     return EMPTY_HISTOGRAM_CHAR
   }

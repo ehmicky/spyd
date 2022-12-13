@@ -1,7 +1,7 @@
 // Create `stat.prettyPadded`, i.e. `stat.pretty` padded on the left so they
 // vertically align.
 // Right padding was already performed when setting the number of decimals.
-export const addStatPadded = function (combinations, name) {
+export const addStatPadded = (combinations, name) => {
   const padding = getPadding(combinations, name)
   return combinations.map((combination) =>
     addItemsPadded({ name, combination, padding }),
@@ -9,7 +9,7 @@ export const addStatPadded = function (combinations, name) {
 }
 
 // Retrieve the maximum length of any measures for each stat
-const getPadding = function (combinations, name) {
+const getPadding = (combinations, name) => {
   const statLengths = combinations
     .flatMap(({ stats }) => stats[name])
     .filter(Boolean)
@@ -22,11 +22,9 @@ const getPadding = function (combinations, name) {
   return Math.max(...statLengths)
 }
 
-const getLength = function ({ pretty }) {
-  return pretty.length
-}
+const getLength = ({ pretty }) => pretty.length
 
-const addItemsPadded = function ({
+const addItemsPadded = ({
   name,
   combination,
   combination: {
@@ -34,7 +32,7 @@ const addItemsPadded = function ({
     stats: { [name]: stat },
   },
   padding,
-}) {
+}) => {
   if (stat === undefined) {
     return combination
   }
@@ -45,7 +43,7 @@ const addItemsPadded = function ({
   return { ...combination, stats: { ...stats, [name]: statA } }
 }
 
-const addItemPadded = function (stat, padding) {
+const addItemPadded = (stat, padding) => {
   const prettyPadded = stat.pretty.padStart(padding)
   return { ...stat, prettyPadded }
 }

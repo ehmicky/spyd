@@ -19,7 +19,7 @@ import { TARGET_SAMPLE_DURATION } from './loop.js'
 //    `keepAliveTimeout`
 // We use the default `requestTimeout` since we are using long polling.
 // Keeping the default `headersTimeout` (1 minute) is fine though.
-export const startServer = async function () {
+export const startServer = async () => {
   const server = createServer()
   // eslint-disable-next-line fp/no-mutation
   server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT
@@ -43,6 +43,6 @@ const KEEP_ALIVE_TIMEOUT =
 const HTTP_SERVER_OPTS = { host: 'localhost', port: 0 }
 
 // End the HTTP server
-export const endServer = async function (server) {
+export const endServer = async (server) => {
   await promisify(server.close.bind(server))()
 }

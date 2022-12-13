@@ -1,9 +1,5 @@
 // When a new warning is returned, add it to the list
-export const addWarning = function (
-  { warning },
-  warnings,
-  { prefix, originalName },
-) {
+export const addWarning = ({ warning }, warnings, { prefix, originalName }) => {
   if (warning !== undefined) {
     // eslint-disable-next-line fp/no-mutating-methods
     warnings.push(`${prefix} "${originalName}" ${warning}`)
@@ -18,7 +14,7 @@ export const addWarning = function (
 //    `soft` mode
 // We sort warnings so their output is predictable even when using parallel
 // rules.
-export const logWarnings = function (warnings, soft) {
+export const logWarnings = (warnings, soft) => {
   if (soft || warnings.length === 0) {
     return
   }

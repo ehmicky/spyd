@@ -31,7 +31,7 @@ import { receiveReturnValue } from './ipc.js'
 //  - `cleanup: true` to ensure processes are cleaned up in case this
 //    library is called programmatically and the caller terminates the parent
 //    process.
-export const spawnRunnerProcess = async function ({
+export const spawnRunnerProcess = async ({
   combination: {
     dimensions: {
       runner: {
@@ -45,7 +45,7 @@ export const spawnRunnerProcess = async function ({
   server,
   serverUrl,
   logsStream,
-}) {
+}) => {
   try {
     const childProcess = spawnProcess(
       [file, ...args, serverUrl],
@@ -72,14 +72,13 @@ export const spawnRunnerProcess = async function ({
 // However, the `dev` command is meant to be run in an interactive terminal.
 // Therefore, not using a TTY would impact the developer experience: not
 // printing colors, progress bars, etc.
-const getStdio = function (logsStream) {
-  return logsStream === undefined
+const getStdio = (logsStream) =>
+  logsStream === undefined
     ? ['ignore', 'inherit', 'inherit']
     : ['ignore', logsStream, logsStream]
-}
 
 // Wait for IPC to be initialized. Throw if process exits before that.
-const waitForIpcSetup = async function (childProcess, server) {
+const waitForIpcSetup = async (childProcess, server) => {
   await Promise.race([
     throwOnSpawnExit(childProcess),
     receiveReturnValue(server),
@@ -101,6 +100,6 @@ const waitForIpcSetup = async function (childProcess, server) {
 //        - If an exception is thrown in afterAll, it should be reported instead
 //          since bugs in error handling logic is more critical.
 //  - Core bug
-export const terminateRunnerProcess = function (childProcess) {
+export const terminateRunnerProcess = (childProcess) => {
   childProcess.kill('SIGKILL')
 }

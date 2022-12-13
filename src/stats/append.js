@@ -1,5 +1,5 @@
 // Append two arrays in a performant way
-export const appendArray = function (bigArray, smallArray) {
+export const appendArray = (bigArray, smallArray) => {
   const smallArrayLength = smallArray.length
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation

@@ -8,14 +8,14 @@ import { getUnit } from './unit.js'
 // Create:
 //  - `stat.simple`: stringifies, scales, rounds, adds decimals and adds a unit.
 //  - `stats.pretty`: also adds informative prefixes/suffixes
-export const addStatsPretty = function ({
+export const addStatsPretty = ({
   combinations,
   allCombinations,
   name,
   kind,
   signed,
   ownScale,
-}) {
+}) => {
   const minMeasure = getMinMeasure({ allCombinations, name, kind, ownScale })
   const kindA = getSingleKind(minMeasure, kind)
   const scale = getScale(minMeasure, kindA)
@@ -35,7 +35,7 @@ export const addStatsPretty = function ({
 //     - there are only a few measures
 //       (for all the precision-based stats like `stdev`)
 // Additionally, at the beginning of the preview, all `stats` are `undefined`
-const addStatPretty = function ({
+const addStatPretty = ({
   name,
   combination,
   combination: {
@@ -46,7 +46,7 @@ const addStatPretty = function ({
   scale,
   unit,
   decimals,
-}) {
+}) => {
   if (raw === undefined) {
     return combination
   }
@@ -59,7 +59,7 @@ const addStatPretty = function ({
   return { ...combination, stats: { ...stats, [name]: stat } }
 }
 
-const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {
+const addItemPretty = ({ raw, signed, scale, unit, decimals, stats }) => {
   const scaledRaw = raw / scale
   const roundedRaw = roundItem(scaledRaw, decimals)
   const simple = `${roundedRaw}${unit}`
@@ -69,7 +69,7 @@ const addItemPretty = function ({ raw, signed, scale, unit, decimals, stats }) {
 
 // `toFixed()` removes the minus sign of -0, which we want to keep, since
 // `diffLimit` distinguishes +0 and -0
-const roundItem = function (scaledRaw, decimals) {
+const roundItem = (scaledRaw, decimals) => {
   const roundedRaw = scaledRaw.toFixed(decimals)
   return Object.is(scaledRaw, -0) ? `-${roundedRaw}` : roundedRaw
 }

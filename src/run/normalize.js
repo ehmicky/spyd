@@ -4,24 +4,17 @@ import { setArray } from '../utils/set.js'
 // Transform:
 //  - A `newResult`: used by the measuring logic
 //  - To a `rawResult`: persisted in result files
-export const normalizeNewResult = function (newResult) {
+export const normalizeNewResult = (newResult) => {
   const combinations = newResult.combinations.map(normalizeNewCombination)
   return { ...newResult, combinations }
 }
 
-const normalizeNewCombination = function ({
-  dimensions,
-  stats,
-  system,
-  versions,
-}) {
+const normalizeNewCombination = ({ dimensions, stats, system, versions }) => {
   const dimensionsA = mapValues(dimensions, getIdProp)
   return { dimensions: dimensionsA, stats, system, versions }
 }
 
-const getIdProp = function ({ id }) {
-  return { id }
-}
+const getIdProp = ({ id }) => ({ id })
 
 // Update:
 //  - `result`'s stats
@@ -37,19 +30,14 @@ const getIdProp = function ({ id }) {
 // This assumes that the newResult -> rawResult -> result normalization logic
 // does not change `combinations` array order, except for appending new ones.
 // Done after measuring all combinations.
-export const updateCombinationsStats = function (result, combinations) {
-  return combinations
-    .map(getCombinationStats)
-    .reduce(updateCombinationStats, result)
-}
+export const updateCombinationsStats = (result, combinations) =>
+  combinations.map(getCombinationStats).reduce(updateCombinationStats, result)
 
-const getCombinationStats = function ({ stats }) {
-  return stats
-}
+const getCombinationStats = ({ stats }) => stats
 
 // Same for a single combination.
 // Done before each preview.
-export const updateCombinationStats = function (result, stats, index) {
+export const updateCombinationStats = (result, stats, index) => {
   const combination = { ...result.combinations[index], stats }
   const combinations = setArray(result.combinations, index, combination)
   return { ...result, combinations }

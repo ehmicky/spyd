@@ -8,7 +8,7 @@ import { addTopSystem } from './top.js'
 //  - As few systems as possible are shown
 // The logic relies on all system properties values being strings, which is
 // done by the serialization logic previously applied.
-export const addSharedSystems = function (footer) {
+export const addSharedSystems = (footer) => {
   const propEntries = listPropEntries(footer.systems)
   const propGroups = getPropGroups(propEntries)
   const propGroupsA = simplifyPropGroups(propGroups, footer.systems)
@@ -18,15 +18,11 @@ export const addSharedSystems = function (footer) {
 }
 
 // Transform `propGroups` back to `systems`
-const finalizeSystems = function (propGroups) {
-  return propGroups.map(finalizeSystem)
-}
+const finalizeSystems = (propGroups) => propGroups.map(finalizeSystem)
 
-const finalizeSystem = function ({ propEntries, dimensionsArray }) {
+const finalizeSystem = ({ propEntries, dimensionsArray }) => {
   const props = Object.fromEntries(propEntries.map(getPropEntry))
   return { dimensions: dimensionsArray, props }
 }
 
-const getPropEntry = function ({ propName, propValue }) {
-  return [propName, propValue]
-}
+const getPropEntry = ({ propName, propValue }) => [propName, propValue]

@@ -7,18 +7,18 @@ import { refreshPreview } from '../update/main.js'
 // thing but without relying on specific streams.
 // We purposely use `bind()` so that this function can be called several times
 // concurrently.
-export const startHandleResize = function (previewState) {
+export const startHandleResize = (previewState) => {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.handleResize = handleResize.bind(undefined, previewState)
   process.on('SIGWINCH', previewState.handleResize)
 }
 
-export const stopHandleResize = function (previewState) {
+export const stopHandleResize = (previewState) => {
   process.off('SIGWINCH', previewState.handleResize)
   // eslint-disable-next-line fp/no-delete, no-param-reassign
   delete previewState.handleResize
 }
 
-const handleResize = function (previewState) {
+const handleResize = (previewState) => {
   refreshPreview(previewState)
 }

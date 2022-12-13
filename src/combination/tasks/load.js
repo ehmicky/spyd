@@ -3,11 +3,11 @@ import { computeRunnerVersions } from '../../top/system/versions/compute.js'
 
 // Select the runners and retrieve their related spawn options using
 // `runner.launch()`
-export const loadRunner = async function (
+export const loadRunner = async (
   { id, config, launch, bugs },
   cwd,
   commonVersions,
-) {
+) => {
   const {
     spawn,
     spawnOptions = {},
@@ -26,7 +26,7 @@ export const loadRunner = async function (
 // Fire `runner.launch()`.
 // Errors are always considered plugin errors.
 // User errors should be captured in `plugin.config` instead.
-const launchRunner = async function ({ id, config, launch }) {
+const launchRunner = async ({ id, config, launch }) => {
   try {
     return await launch(config)
   } catch (cause) {

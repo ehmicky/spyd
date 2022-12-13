@@ -11,7 +11,7 @@ import isPlainObj from 'is-plain-obj'
 //  - For example, using a "default" selector when no selectors are used
 //  - Because configuration properties get added later on by some internal logic
 //     - It is simpler to specify those without selectors
-export const normalizeConfigSelectors = function (rulesOrRule) {
+export const normalizeConfigSelectors = (rulesOrRule) => {
   if (rulesOrRule instanceof Set) {
     return new Set([...rulesOrRule].map(normalizeConfigSelectors))
   }
@@ -23,7 +23,7 @@ export const normalizeConfigSelectors = function (rulesOrRule) {
   return normalizeRule(rulesOrRule)
 }
 
-const normalizeRule = function (rule) {
+const normalizeRule = (rule) => {
   const { name, condition } = rule
 
   if (!SELECTABLE_PROPS.includes(name)) {
@@ -51,18 +51,13 @@ const normalizeRule = function (rule) {
 }
 
 // When selectors are used, validate them
-const selectorCondition = function ({ condition, isSelector }, value, opts) {
-  return (
-    (condition === undefined || condition(value, opts)) &&
-    isConfigSelectorShape(value) === isSelector
-  )
-}
+const selectorCondition = ({ condition, isSelector }, value, opts) =>
+  (condition === undefined || condition(value, opts)) &&
+  isConfigSelectorShape(value) === isSelector
 
 // We distinguish selectors by the usage of a plain object.
 // This means selectable properties' value cannot currently be plain objects.
-export const isConfigSelectorShape = function (value) {
-  return isPlainObj(value)
-}
+export const isConfigSelectorShape = (value) => isPlainObj(value)
 
 // We validate that at least one selector is named "default"
 //  - This ensures users understand that this selector is used as a fallback
@@ -72,7 +67,7 @@ export const isConfigSelectorShape = function (value) {
 //  - However, we do not validate its order, since it might be hard in some
 //    situations to order, e.g. when merging shared configs.
 //  - Regardless, it is always checked last, even if it is not the last key
-const validateConfigSelector = function (value) {
+const validateConfigSelector = (value) => {
   if (Object.keys(value).length === 0) {
     throw new Error(
       'must have at least one property when using configuration selectors.',

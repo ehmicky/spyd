@@ -2,10 +2,10 @@
 //  - Top-level system first
 //  - Then sorted to follow a specific order for the props
 // eslint-disable-next-line complexity
-export const compareSystems = function (
+export const compareSystems = (
   { isTopSystem: isTopSystemA, propEntries: propEntriesA },
   { isTopSystem: isTopSystemB, propEntries: propEntriesB },
-) {
+) => {
   if (isTopSystemA) {
     return -1
   }
@@ -28,7 +28,7 @@ export const compareSystems = function (
 }
 
 // eslint-disable-next-line complexity, max-statements
-const comparePropEntries = function (propEntryA, propEntryB) {
+const comparePropEntries = (propEntryA, propEntryB) => {
   if (propEntryB === undefined) {
     return 1
   }

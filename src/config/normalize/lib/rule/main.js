@@ -24,13 +24,12 @@ import { validateSerialRules } from './serial.js'
 //    frequent
 //  - Multiple parent rules are only supported by the current syntax by running
 //    each parent serially
-export const normalizeRules = function ({ rules, all, ruleProps, sync }) {
-  return sync
+export const normalizeRules = ({ rules, all, ruleProps, sync }) =>
+  sync
     ? normalizeSerialRules(rules, all, ruleProps)
     : normalizeParallelRules(rules, all, ruleProps)
-}
 
-const normalizeSerialRules = function (rules, all, ruleProps) {
+const normalizeSerialRules = (rules, all, ruleProps) => {
   validateSerialRules(rules)
   const items = rules.map((rule) =>
     normalizeRule({ rule, all, ruleProps, sync: true }),
@@ -38,13 +37,13 @@ const normalizeSerialRules = function (rules, all, ruleProps) {
   return { items, parallel: false }
 }
 
-const normalizeParallelRules = function (rules, all, ruleProps) {
+const normalizeParallelRules = (rules, all, ruleProps) => {
   const { items, parallel } = normalizeParallel(rules, all, ruleProps)
   validateTopRules(items, rules)
   return { items, parallel }
 }
 
-const normalizeParallel = function (rules, all, ruleProps) {
+const normalizeParallel = (rules, all, ruleProps) => {
   if (Array.isArray(rules)) {
     return {
       items: normalizeNestedRules({ rules, all, ruleProps, parallel: false }),
@@ -67,22 +66,15 @@ const normalizeParallel = function (rules, all, ruleProps) {
   return {}
 }
 
-const normalizeNestedRules = function ({ rules, all, ruleProps, parallel }) {
-  return rules.reduce(
+const normalizeNestedRules = ({ rules, all, ruleProps, parallel }) =>
+  rules.reduce(
     (rulesA, rule) =>
       normalizeNestedRule({ rules: rulesA, rule, all, ruleProps, parallel }),
     [],
   )
-}
 
 // Nested rules of the same parallel|serial type are flattened to their parent
-const normalizeNestedRule = function ({
-  rules,
-  rule,
-  all,
-  ruleProps,
-  parallel,
-}) {
+const normalizeNestedRule = ({ rules, rule, all, ruleProps, parallel }) => {
   const { items, parallel: nestedParallel } = normalizeParallel(
     rule,
     all,
@@ -101,7 +93,7 @@ const normalizeNestedRule = function ({
   return [...rules, { items, parallel: nestedParallel }]
 }
 
-const validateTopRules = function (rules, originalRules) {
+const validateTopRules = (rules, originalRules) => {
   if (rules === undefined) {
     throw new DefinitionError(
       `Rules must be an array or a Set: ${inspect(originalRules)}`,

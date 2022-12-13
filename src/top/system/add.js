@@ -36,34 +36,32 @@ import { groupBy } from '../../utils/group.js'
 //  - I.e. `system` is an empty object
 //  - Results without system dimensions still persist their system information
 //    and show them in the footer.
-export const addSystem = function (combinations, { cwd }) {
+export const addSystem = (combinations, { cwd }) => {
   const system = getSystem(cwd)
   return combinations.map((combination) => ({ ...combination, system }))
 }
 
-const getSystem = function (cwd) {
+const getSystem = (cwd) => {
   const machine = getMachine()
   const { git, ci } = getEnvInfo(cwd)
   return cleanObject({ machine, git, ci })
 }
 
-const getMachine = function () {
+const getMachine = () => {
   const os = osName()
   const cpus = getCpus()
   const memory = totalmem()
   return { os, cpus, memory }
 }
 
-const getCpus = function () {
+const getCpus = () => {
   const cpus = listCpus()
   return Object.entries(groupBy(cpus, 'model')).map(getCpu)
 }
 
-const getCpu = function ([model, cores]) {
-  return { model, cores: cores.length }
-}
+const getCpu = ([model, cores]) => ({ model, cores: cores.length })
 
-const getEnvInfo = function (cwd) {
+const getEnvInfo = (cwd) => {
   const { branch, tag, commit, pr, prBranch, buildUrl } = envCi({ cwd })
   return {
     git: { branch, tag, commit, prNumber: pr, prBranch },

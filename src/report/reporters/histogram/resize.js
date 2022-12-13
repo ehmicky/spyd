@@ -11,7 +11,7 @@
 //     - `getSimpleSum()` not needed
 //     - if oldSize % newSize === 0, last part of `getComplexSum()` not needed
 // eslint-disable-next-line max-statements, complexity
-export const resizeHistogram = function (counts, newSize) {
+export const resizeHistogram = (counts, newSize) => {
   const oldSize = counts.length
 
   if (newSize === 0 || oldSize === 0) {
@@ -59,14 +59,8 @@ export const resizeHistogram = function (counts, newSize) {
 }
 
 // eslint-disable-next-line max-params
-const getSum = function (
-  previousInteger,
-  integer,
-  previousFraction,
-  fraction,
-  counts,
-) {
-  return integer === previousInteger
+const getSum = (previousInteger, integer, previousFraction, fraction, counts) =>
+  integer === previousInteger
     ? getSimpleSum(integer, previousFraction, fraction, counts)
     : getComplexSum(
         previousInteger,
@@ -75,21 +69,19 @@ const getSum = function (
         fraction,
         counts,
       )
-}
 
 // eslint-disable-next-line max-params
-const getSimpleSum = function (integer, previousFraction, fraction, counts) {
-  return counts[integer] * (fraction - previousFraction)
-}
+const getSimpleSum = (integer, previousFraction, fraction, counts) =>
+  counts[integer] * (fraction - previousFraction)
 
-// eslint-disable-next-line max-params
-const getComplexSum = function (
+const getComplexSum = (
   previousInteger,
   integer,
   previousFraction,
   fraction,
   counts,
-) {
+  // eslint-disable-next-line max-params
+) => {
   // eslint-disable-next-line fp/no-let
   let sum = 0
 

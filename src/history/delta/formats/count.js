@@ -3,7 +3,7 @@ import { UserError } from '../../../error/main.js'
 // Delta can be an integer, to find the {integer}-th last rawResult.
 // Can be 0 to target no results.
 // Default deltas are 1, i.e. last rawResult.
-const parseCount = function (delta) {
+const parseCount = (delta) => {
   if (typeof delta !== 'number') {
     return
   }
@@ -15,7 +15,7 @@ const parseCount = function (delta) {
   return delta
 }
 
-const findByCount = function (metadataGroups, count) {
+const findByCount = (metadataGroups, count) => {
   if (count === 0) {
     return -1
   }

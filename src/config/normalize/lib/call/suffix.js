@@ -3,36 +3,31 @@ import { inspect } from 'node:util'
 import { BaseError } from '../error.js'
 
 // Add the current definition as error suffix
-export const addCurrentDefinition = function (error, definition) {
-  return definition === undefined
+export const addCurrentDefinition = (error, definition) =>
+  definition === undefined
     ? error
     : addSuffix(error, 'Current definition', definition)
-}
 
 // Add the example definition as error suffix
-export const addExampleDefinition = function (error, exampleDefinition) {
-  return exampleDefinition === undefined
+export const addExampleDefinition = (error, exampleDefinition) =>
+  exampleDefinition === undefined
     ? error
     : addSuffix(error, 'Example definition', exampleDefinition)
-}
 
 // Add the current input as error suffix
-export const addCurrentInput = function (error, input, hasInput) {
-  return hasInput ? addSuffix(error, 'Current input', input) : error
-}
+export const addCurrentInput = (error, input, hasInput) =>
+  hasInput ? addSuffix(error, 'Current input', input) : error
 
 // Add the example input as error suffix
-export const addExampleInput = function ({ error, example, hasInput, test }) {
-  return example !== undefined && (hasInput || test !== undefined)
+export const addExampleInput = ({ error, example, hasInput, test }) =>
+  example !== undefined && (hasInput || test !== undefined)
     ? addSuffix(error, 'Example input', example)
     : error
-}
 
-const addSuffix = function (error, name, value) {
-  return new BaseError(`${name}:${serializeValue(value)}`, { cause: error })
-}
+const addSuffix = (error, name, value) =>
+  new BaseError(`${name}:${serializeValue(value)}`, { cause: error })
 
-const serializeValue = function (value) {
+const serializeValue = (value) => {
   const valueStr = inspect(value)
   const separator = valueStr.includes('\n') ? '\n' : ' '
   return `${separator}${valueStr}`

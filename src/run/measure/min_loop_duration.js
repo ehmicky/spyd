@@ -38,7 +38,7 @@ import { getInitialSampleState } from '../sample/state.js'
 //    due to de-optimizing it
 //  - This also prevents the opposite, which means changing the tasks logic
 //    should not impact `measureCost`
-export const getMinLoopDuration = async function ({ server, stage }) {
+export const getMinLoopDuration = async ({ server, stage }) => {
   if (stage === 'dev') {
     return
   }
@@ -59,7 +59,7 @@ export const getMinLoopDuration = async function ({ server, stage }) {
 // Runners should correctly handle `repeat: 0`:
 //  - Every logic should execute except the task itself
 //  - Nothing should be printed to `stdout` nor `stderr`
-const getMeasureCost = async function (server) {
+const getMeasureCost = async (server) => {
   const sampleState = getInitialSampleState()
   const end = now() + TARGET_DURATION
   return await pWhile(
@@ -73,11 +73,8 @@ const getMeasureCost = async function (server) {
   )
 }
 
-const shouldKeepMeasuring = function (end, { measures }) {
-  return (
-    !hasMaxMeasures(measures) && !(hasEnoughMeasures(measures) && now() >= end)
-  )
-}
+const shouldKeepMeasuring = (end, { measures }) =>
+  !hasMaxMeasures(measures) && !(hasEnoughMeasures(measures) && now() >= end)
 
 // We need enough measures so that both `measureCost` and `resolution` are
 // precise.
@@ -88,11 +85,8 @@ const shouldKeepMeasuring = function (end, { measures }) {
 // This check is mostly needed when either:
 //  - The time resolution is very high
 //  - The task is very slow
-const hasEnoughMeasures = function (measures) {
-  return (
-    measures.length >= MIN_TIMES && measures[measures.length - MIN_TIMES] !== 0
-  )
-}
+const hasEnoughMeasures = (measures) =>
+  measures.length >= MIN_TIMES && measures[measures.length - MIN_TIMES] !== 0
 
 // A higher value makes it more likely for the `measureCost` estimation to last
 // too long.
@@ -144,7 +138,7 @@ const TARGET_SAMPLE_COUNT = 10
 // Mean duration of each sample
 const TARGET_SAMPLE_DURATION = TARGET_DURATION / TARGET_SAMPLE_COUNT
 
-const computeMinLoopDuration = function (measures) {
+const computeMinLoopDuration = (measures) => {
   const minMeasureCost = getMinMeasureCost(measures)
   const minResolution = getMinResolution(measures)
   return Math.max(minMeasureCost, minResolution)
@@ -154,9 +148,8 @@ const computeMinLoopDuration = function (measures) {
 //  - It is more precise by being more resistent against slow outliers
 //  - The "typical" `measureCost` per loop is more important than the worst
 //    case ones
-const getMinMeasureCost = function (measures) {
-  return getSortedMedian(measures) * MEASURE_COST_RATIO
-}
+const getMinMeasureCost = (measures) =>
+  getSortedMedian(measures) * MEASURE_COST_RATIO
 
 // How many times slower each repeat loop must last compared to `measureCost`.
 // A lower value makes loops duration too close to `measureCost`, which
@@ -176,9 +169,8 @@ const MEASURE_COST_RATIO = 1e2
 // If `measureCost` is lower than `resolution`, some measures might be `0`
 //  - However, `resolution` will then be used to compute `minLoopDuration`
 //    thanks to the `Math.max()` logic, so this is not a problem.
-const getMinResolution = function (measures) {
-  return timeResolution(measures) * RESOLUTION_RATIO
-}
+const getMinResolution = (measures) =>
+  timeResolution(measures) * RESOLUTION_RATIO
 
 // Like `MEASURE_COST_RATIO` but for `resolution`.
 // We use a higher ratio because:

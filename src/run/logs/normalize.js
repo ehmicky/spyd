@@ -3,7 +3,7 @@ import stripFinalNewline from 'strip-final-newline'
 import { findLastIndex } from '../../utils/find.js'
 
 // Normalize task logs
-export const normalizeLogs = function (taskLogs, truncated) {
+export const normalizeLogs = (taskLogs, truncated) => {
   const taskLogsA = stripFinalNewline(taskLogs.trim())
 
   if (taskLogsA === '') {
@@ -18,7 +18,7 @@ export const normalizeLogs = function (taskLogs, truncated) {
 
 // Remove the first line if it is incomplete.
 // If there is only one line, do not do it.
-const stripPartialLine = function (taskLogs, truncated) {
+const stripPartialLine = (taskLogs, truncated) => {
   if (!truncated) {
     return taskLogs
   }
@@ -34,7 +34,7 @@ const stripPartialLine = function (taskLogs, truncated) {
 
 // Only keep the lines starting from the first non-duplicate lines.
 // Duplicate lines are very likely since the task is repeated.
-const removeDuplicateLines = function (taskLogs) {
+const removeDuplicateLines = (taskLogs) => {
   const lines = taskLogs.split('\n')
   const duplicateIndex = findLastIndex(lines, isDuplicateLine)
 
@@ -45,9 +45,6 @@ const removeDuplicateLines = function (taskLogs) {
   return lines.slice(duplicateIndex).join('\n')
 }
 
-const isDuplicateLine = function (line, index, lines) {
-  return (
-    line.trim() !== '' &&
-    lines.some((lineA, indexA) => indexA < index && lineA === line)
-  )
-}
+const isDuplicateLine = (line, index, lines) =>
+  line.trim() !== '' &&
+  lines.some((lineA, indexA) => indexA < index && lineA === line)

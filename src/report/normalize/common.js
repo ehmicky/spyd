@@ -11,16 +11,14 @@ import { addCombinationsTitles } from './titles_add.js'
 
 // Add report-specific properties to a result that are not in `combinations` nor
 // reporter-specific
-export const normalizeNonCombAll = function (result) {
-  return pickTopProps(result)
-}
+export const normalizeNonCombAll = (result) => pickTopProps(result)
 
 // Add report-specific properties to a result that are in `combinations`, are
 // not reporter-specific
-export const normalizeCombAll = async function (
+export const normalizeCombAll = async (
   result,
   { sinceResult, noDimensions, config },
-) {
+) => {
   const resultA = await useResultConfigSelectors(result, config)
   const resultB = addCombinationsDiff(resultA, sinceResult)
   const resultC = omitNoDimensions(resultB, noDimensions)
@@ -31,22 +29,23 @@ export const normalizeCombAll = async function (
 
 // Add report-specific properties to a result that are not in `combinations` but
 // are reporter-specific
-export const normalizeNonCombEach = function (result, { config: { tty } }) {
+export const normalizeNonCombEach = (result, { config: { tty } }) => {
   const timestamp = normalizeTimestamp(result, tty)
   return { timestamp }
 }
 
-export const mergeResultProps = function (result, resultProps) {
-  return { ...result, ...resultProps }
-}
+export const mergeResultProps = (result, resultProps) => ({
+  ...result,
+  ...resultProps,
+})
 
 // Add report-specific properties to a result that are in `combinations` and
 // reporter-specific
-export const normalizeCombEach = async function (
+export const normalizeCombEach = async (
   result,
   { capabilities: { debugStats }, config: reporterConfig },
   { titles },
-) {
+) => {
   const resultA = await useResultConfigSelectors(result, reporterConfig)
   const resultB = addCombinationsTitles(resultA, titles)
   const resultC = omitCombinationsProps(resultB, debugStats)

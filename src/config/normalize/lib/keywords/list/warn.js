@@ -1,8 +1,6 @@
 import { normalizeString } from '../normalize/common.js'
 
-const main = function (definition) {
-  return { warning: definition }
-}
+const main = (definition) => ({ warning: definition })
 
 // Apply `warn[(input, info)]` which can return a string to print as warning
 // eslint-disable-next-line import/no-default-export

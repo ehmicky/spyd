@@ -18,7 +18,7 @@ import {
 // We fail on the first error, as opposed to aggregating all errors
 //  - Otherwise, a failed property might be used by another property, which
 //    would also appear as failed, even if it has no issues
-export const handleError = function ({ error, errorType, bugType, ...params }) {
+export const handleError = ({ error, errorType, bugType, ...params }) => {
   const errorA = normalizeException(error)
   const isValidation = isValidateError(errorA)
   const type = isValidation ? errorType : bugType
@@ -30,11 +30,9 @@ export const handleError = function ({ error, errorType, bugType, ...params }) {
 // We detect this using the error message instead of the error class because:
 //  - It is simpler for users
 //  - It ensures the error message looks good
-const isValidateError = function (error) {
-  return error.message.startsWith('must')
-}
+const isValidateError = (error) => error.message.startsWith('must')
 
-const handleInputError = function ({
+const handleInputError = ({
   error,
   input,
   example,
@@ -42,14 +40,14 @@ const handleInputError = function ({
   originalName,
   hasInput,
   test,
-}) {
+}) => {
   const errorA = addInputPrefix(error, prefix, originalName)
   const errorB = addCurrentInput(errorA, input, hasInput)
   const errorC = addExampleInput({ error: errorB, example, hasInput, test })
   return new InputError('', { cause: errorC })
 }
 
-const handleDefinitionError = function ({
+const handleDefinitionError = ({
   error,
   prefix,
   originalName,
@@ -57,7 +55,7 @@ const handleDefinitionError = function ({
   definition,
   exampleDefinition,
   isValidation,
-}) {
+}) => {
   const errorA = addDefinitionPrefix({
     error,
     prefix,
@@ -70,7 +68,7 @@ const handleDefinitionError = function ({
   return new DefinitionError('', { cause: errorC })
 }
 
-const handleKeywordError = function ({
+const handleKeywordError = ({
   error,
   input,
   prefix,
@@ -78,7 +76,7 @@ const handleKeywordError = function ({
   hasInput,
   keyword,
   definition,
-}) {
+}) => {
   const errorA = addKeywordPrefix({ error, prefix, originalName, keyword })
   const errorB = addCurrentDefinition(errorA, definition)
   const errorC = addCurrentInput(errorB, input, hasInput)

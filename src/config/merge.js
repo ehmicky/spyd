@@ -30,28 +30,21 @@ import { test as isUpdatesObject } from 'set-array'
 //  - To be deep, e.g. `--a.b.c=true`
 //  - To set non-existing properties, even if deep
 //  - To set arrays of objects, e.g. `--0.a.1.b=true`
-export const deepMerge = function ([firstObject, ...objects]) {
-  return objects.reduce(deepMergePair, firstObject)
-}
+export const deepMerge = ([firstObject, ...objects]) =>
+  objects.reduce(deepMergePair, firstObject)
 
-export const deepMergePair = function (firstObject, secondObject) {
-  return declarativeMerge(firstObject, secondObject)
-}
+export const deepMergePair = (firstObject, secondObject) =>
+  declarativeMerge(firstObject, secondObject)
 
 // This is the value for `declarative-merge`.
 // We expose it so other pieces of logic which need to work alongside the
 // merging logic can mimic it.
-export const isRecurseObject = function (value) {
-  return isPlainObj(value)
-}
+export const isRecurseObject = (value) => isPlainObj(value)
 
 // This is the value for `declarative-merge`.
-export const isArrayUpdatesObject = function (value) {
-  return isUpdatesObject(value) && Object.keys(value).length !== 0
-}
+export const isArrayUpdatesObject = (value) =>
+  isUpdatesObject(value) && Object.keys(value).length !== 0
 
-export const isMergeProp = function (key) {
-  return key === MERGE_PROP
-}
+export const isMergeProp = (key) => key === MERGE_PROP
 
 const MERGE_PROP = '_merge'

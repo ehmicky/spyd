@@ -1,14 +1,14 @@
 import { padString } from '../pad.js'
 import { TITLE_SEPARATOR_COLORED } from '../separator.js'
 
-export const getSingleTable = function ({
+export const getSingleTable = ({
   tableRows,
   rowsLeft,
   leftWidth,
   columnsWidth,
   columnSeparatorColored,
-}) {
-  return tableRows
+}) =>
+  tableRows
     .map((row, rowIndex) =>
       getRow({
         row,
@@ -19,15 +19,14 @@ export const getSingleTable = function ({
       }),
     )
     .join('')
-}
 
-const getRow = function ({
+const getRow = ({
   row,
   leftCell,
   leftWidth,
   columnsWidth,
   columnSeparatorColored,
-}) {
+}) => {
   const rowA = row
     .map((cell) => padString(cell, columnsWidth))
     .join(columnSeparatorColored)

@@ -8,7 +8,7 @@ import { refreshPreview } from '../update/main.js'
 // We purposely use `bind()` so that this function can be called several times
 // concurrently.
 // The keypress logic would fail when stdin is not interactive.
-export const startHandleKeypress = function (previewState) {
+export const startHandleKeypress = (previewState) => {
   if (!isTtyInput()) {
     return
   }
@@ -23,7 +23,7 @@ export const startHandleKeypress = function (previewState) {
   process.stdin.resume()
 }
 
-export const stopHandleKeypress = function (previewState) {
+export const stopHandleKeypress = (previewState) => {
   if (!isTtyInput()) {
     return
   }
@@ -37,7 +37,7 @@ export const stopHandleKeypress = function (previewState) {
   delete previewState.stdinIsRaw
 }
 
-const handleKeypress = function (previewState, keyString, key) {
+const handleKeypress = (previewState, keyString, key) => {
   const keyHandlerA = KEY_HANDLERS.find((keyHandler) =>
     matchesKey(keyHandler, key),
   )
@@ -49,46 +49,44 @@ const handleKeypress = function (previewState, keyString, key) {
   keyHandlerA.handler(previewState)
 }
 
-const matchesKey = function ({ keys }, { name, ctrl, meta }) {
-  return keys.some(
+const matchesKey = ({ keys }, { name, ctrl, meta }) =>
+  keys.some(
     (key) =>
       key.name === name &&
       Boolean(key.ctrl) === ctrl &&
       Boolean(key.meta) === meta,
   )
-}
 
-const scrollUp = function (previewState) {
+const scrollUp = (previewState) => {
   scroll(-1, previewState)
 }
 
-const scrollDown = function (previewState) {
+const scrollDown = (previewState) => {
   scroll(1, previewState)
 }
 
-const scrollUpPage = function (previewState) {
+const scrollUpPage = (previewState) => {
   scroll(-getPageAmount(previewState), previewState)
 }
 
-const scrollDownPage = function (previewState) {
+const scrollDownPage = (previewState) => {
   scroll(getPageAmount(previewState), previewState)
 }
 
-const getPageAmount = function (previewState) {
-  return Math.max(previewState.availableHeight - 2, 1)
-}
+const getPageAmount = (previewState) =>
+  Math.max(previewState.availableHeight - 2, 1)
 
-const scroll = function (scrollAmount, previewState) {
+const scroll = (scrollAmount, previewState) => {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.scrollTop += scrollAmount
   refreshPreview(previewState)
 }
 
-const sigint = function () {
+const sigint = () => {
   process.emit('SIGINT')
 }
 
-const sigbreak = function () {
+const sigbreak = () => {
   process.emit('SIGBREAK')
 }
 

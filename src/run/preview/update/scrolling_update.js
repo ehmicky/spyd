@@ -13,7 +13,7 @@ import { getScreenHeight } from '../../../report/tty.js'
 //    size shrinks
 //  - This prevents jittering when the scrolling completely down and the report
 //    size shrinks
-export const updateScrolling = function (previewState, bottomBar) {
+export const updateScrolling = (previewState, bottomBar) => {
   const availableHeight = getAvailableHeight(bottomBar)
   const { report, scrollTop, maxScrollTop } = applyScrolling(
     previewState,
@@ -25,13 +25,13 @@ export const updateScrolling = function (previewState, bottomBar) {
 }
 
 // Terminals print the row after the last newline, i.e. we need to subtract 1
-const getAvailableHeight = function (bottomBar) {
+const getAvailableHeight = (bottomBar) => {
   const screenHeight = getScreenHeight()
   const bottomBarHeight = getNewlineIndexes(bottomBar).length
   return Math.max(screenHeight - bottomBarHeight - 1, 0)
 }
 
-const applyScrolling = function ({ report, scrollTop }, availableHeight) {
+const applyScrolling = ({ report, scrollTop }, availableHeight) => {
   if (availableHeight === 0) {
     return { report: '', scrollTop: 0, maxScrollTop: 0 }
   }
@@ -54,7 +54,7 @@ const applyScrolling = function ({ report, scrollTop }, availableHeight) {
 }
 
 // Uses imperative code for performance
-const getNewlineIndexes = function (previewContent) {
+const getNewlineIndexes = (previewContent) => {
   const newlineIndexes = []
 
   // eslint-disable-next-line fp/no-loops, fp/no-mutation, fp/no-let, unicorn/no-for-loop
@@ -70,12 +70,12 @@ const getNewlineIndexes = function (previewContent) {
 }
 
 // Remove rows from report to apply scrolling effect
-const sliceReport = function ({
+const sliceReport = ({
   report,
   scrollTop,
   availableHeight,
   newlineIndexes,
-}) {
+}) => {
   const topIndex = scrollTop === 0 ? 0 : newlineIndexes[scrollTop - 1] + 1
   const bottomRowIndex = scrollTop + availableHeight - 1
   const bottomIndex = newlineIndexes[bottomRowIndex] + 1

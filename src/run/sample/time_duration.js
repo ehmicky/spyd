@@ -10,12 +10,12 @@ import { getMean } from '../../stats/sum.js'
 //    very slow or fast.
 // We soften the second problem by basing our estimation on multiple previous
 // samples instead of a single one.
-export const getTimeDuration = function ({
+export const getTimeDuration = ({
   timeDurations,
   measureDuration,
   sampleTimes,
   calibrated,
-}) {
+}) => {
   const timeDuration = measureDuration / sampleTimes
   const timeDurationsA = getTimeDurations(timeDurations, calibrated)
   const timeDurationsB = [...timeDurationsA, timeDuration]
@@ -25,7 +25,7 @@ export const getTimeDuration = function ({
 
 // Retrieve previous `timeDurations`.
 // We never keep uncalibrated ones.
-const getTimeDurations = function (timeDurations, calibrated) {
+const getTimeDurations = (timeDurations, calibrated) => {
   if (!calibrated) {
     return []
   }

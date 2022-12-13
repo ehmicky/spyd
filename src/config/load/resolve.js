@@ -10,12 +10,11 @@ import { BaseError } from '../../error/main.js'
 //  - We should then a "resolver:arg" syntax
 //     - `resolver should be lowercase and at least 2 characters long, to avoid
 //       confusion with Windows drive letters
-export const resolveConfig = function (configOpt, { cwd }) {
-  return isConfigFileModule(configOpt) ? resolveNpm(configOpt, cwd) : configOpt
-}
+export const resolveConfig = (configOpt, { cwd }) =>
+  isConfigFileModule(configOpt) ? resolveNpm(configOpt, cwd) : configOpt
 
 // TODO: use import.meta.resolve() when available
-const resolveNpm = function (configOpt, cwd) {
+const resolveNpm = (configOpt, cwd) => {
   try {
     return createRequire(`${cwd}/`).resolve(configOpt)
   } catch (error) {
@@ -27,12 +26,10 @@ This Node module was not found, please ensure it is installed:\n`,
   }
 }
 
-export const normalizeConfigFilePath = function (configOpt) {
-  return isConfigFileModule(configOpt) ? undefined : ['exist', 'file', 'read']
-}
+export const normalizeConfigFilePath = (configOpt) =>
+  isConfigFileModule(configOpt) ? undefined : ['exist', 'file', 'read']
 
-export const isConfigFileModule = function (configOpt) {
-  return typeof configOpt === 'string' && configOpt.includes(CONFIG_NPM_PREFIX)
-}
+export const isConfigFileModule = (configOpt) =>
+  typeof configOpt === 'string' && configOpt.includes(CONFIG_NPM_PREFIX)
 
 export const CONFIG_NPM_PREFIX = 'spyd-config-'

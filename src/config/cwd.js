@@ -33,9 +33,8 @@ import { isRecurseObject, isArrayUpdatesObject, isMergeProp } from './merge.js'
 //     example using the current file's path (e.g. `import.meta.url`)
 // We purposely use `originalPath` instead of `path` to ensure this works even
 // if the property is normalized.
-export const getDefaultBase = function ([defaultBase = DEFAULT_VALUES_BASE]) {
-  return defaultBase
-}
+export const getDefaultBase = ([defaultBase = DEFAULT_VALUES_BASE]) =>
+  defaultBase
 
 // Base used to resolve file paths in default values when there is no config
 // file
@@ -56,19 +55,17 @@ export const CLI_FLAGS_BASE = '.'
 //  - Items bases are kept in a separate base property on the parent object,
 //    since using sibling properties on an array is not possible.
 // The logic works with `_merge` and array updates objects.
-export const addBases = function (configContents, base) {
-  return map(configContents, '**', (value) => addBaseProps(value, base))
-}
+export const addBases = (configContents, base) =>
+  map(configContents, '**', (value) => addBaseProps(value, base))
 
-const addBaseProps = function (value, base) {
-  return isRecurseObject(value) && !isArrayUpdatesObject(value)
+const addBaseProps = (value, base) =>
+  isRecurseObject(value) && !isArrayUpdatesObject(value)
     ? Object.fromEntries(
         Object.entries(value).flatMap(addBaseProp.bind(undefined, base)),
       )
     : value
-}
 
-const addBaseProp = function (base, [key, value]) {
+const addBaseProp = (base, [key, value]) => {
   const currentEntry = [key, value]
   const baseEntry = [`${key}${BASE_KEY_SUFFIX}`, base]
 
@@ -95,20 +92,17 @@ const addBaseProp = function (base, [key, value]) {
   return [currentEntry, baseEntry]
 }
 
-const addUpdatesBases = function (updatesObject, base) {
-  return mapValues(updatesObject, (value) => addUpdatesBase(value, base))
-}
+const addUpdatesBases = (updatesObject, base) =>
+  mapValues(updatesObject, (value) => addUpdatesBase(value, base))
 
-const addUpdatesBase = function (value, base) {
-  return Array.isArray(value) ? value.map(() => base) : base
-}
+const addUpdatesBase = (value, base) =>
+  Array.isArray(value) ? value.map(() => base) : base
 
 // Remove the base properties after they've been used
-export const removeBases = function (configWithBases) {
-  return exclude(configWithBases, '**', isBaseProp, { entries: true })
-}
+export const removeBases = (configWithBases) =>
+  exclude(configWithBases, '**', isBaseProp, { entries: true })
 
-const isBaseProp = function ({ path }) {
+const isBaseProp = ({ path }) => {
   const key = path[path.length - 1]
   return (
     typeof key === 'string' &&
@@ -117,10 +111,10 @@ const isBaseProp = function ({ path }) {
 }
 
 // Used as `cwd` for all configuration properties
-export const getPropCwd = function (
+export const getPropCwd = (
   { configWithBases, defaultBase },
   { originalPath },
-) {
+) => {
   if (originalPath.length === 0) {
     return defaultBase
   }
@@ -131,7 +125,7 @@ export const getPropCwd = function (
 }
 
 // Retrieve the path to the `*[Items]CwdBase` property
-const getBasePath = function (originalPath) {
+const getBasePath = (originalPath) => {
   const lastKey = originalPath[originalPath.length - 1]
 
   if (!Number.isInteger(lastKey)) {

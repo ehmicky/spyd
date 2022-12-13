@@ -1,6 +1,4 @@
-const main = function (definition) {
-  return { info: { context: definition } }
-}
+const main = (definition) => ({ info: { context: definition } })
 
 // eslint-disable-next-line import/no-default-export
 export default {

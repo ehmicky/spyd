@@ -4,7 +4,7 @@ import { normalizeDefinition } from './definition.js'
 import { applyReturnValue } from './return.js'
 
 // Call `keyword.normalize()`, then `keyword.main()` and apply the return value
-export const applyKeywordMain = async function ({
+export const applyKeywordMain = async ({
   keyword,
   test,
   hasInput,
@@ -18,7 +18,7 @@ export const applyKeywordMain = async function ({
   info,
   memo,
   state,
-}) {
+}) => {
   const normalizedDefinition = await normalizeDefinition({
     definition,
     normalize,

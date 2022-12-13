@@ -1,8 +1,6 @@
 import { normalizeBoolean } from '../normalize/common.js'
 
-const main = function (definition) {
-  return definition ? undefined : { skip: true }
-}
+const main = (definition) => (definition ? undefined : { skip: true })
 
 // Apply `condition[(input, info)]` which skips the current rule if `false`
 // is returned.

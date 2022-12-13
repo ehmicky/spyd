@@ -27,13 +27,13 @@ import { safeNormalizeConfig } from './normalize.js'
 //  - This is optional, since this might not be wanted for some plugins
 //     - For example plugins which create combinations (like runners) since
 //       should use variations instead
-export const normalizePluginConfig = async function ({
+export const normalizePluginConfig = async ({
   pluginConfig: unmergedConfig,
   plugin,
   pluginConfigRules,
   opts,
   opts: { name, sharedConfig, sharedConfigName, shared },
-}) {
+}) => {
   const pluginConfig = deepMergePair(sharedConfig, unmergedConfig)
 
   if (pluginConfigRules === undefined && shared === undefined) {
@@ -62,20 +62,18 @@ export const normalizePluginConfig = async function ({
 }
 
 // When the value was merged due to `sharedConfig`, ensure `parent` is correct
-const getParent = function (
+const getParent = (
   { unmergedConfig, name, sharedConfigName },
   { originalPath },
-) {
-  return has(unmergedConfig, originalPath) ? name : sharedConfigName
-}
+) => (has(unmergedConfig, originalPath) ? name : sharedConfigName)
 
-const normalizeSharedConfig = async function ({
+const normalizeSharedConfig = async ({
   pluginConfig,
   pluginConfigRules = [],
   plugin,
   parent,
   opts: { context, cwd, shared = [], prefix, keywords },
-}) {
+}) => {
   const rules = new Set([getDummyRules(pluginConfigRules), shared])
   return await safeNormalizeConfig(pluginConfig, rules, {
     all: { cwd, prefix, parent, context: { ...context, plugin } },
@@ -85,12 +83,12 @@ const normalizeSharedConfig = async function ({
   })
 }
 
-const normalizeSpecificConfig = async function ({
+const normalizeSpecificConfig = async ({
   pluginConfig,
   pluginConfigRules = [],
   parent,
   opts: { context, cwd, shared = [], prefix, keywords },
-}) {
+}) => {
   const rules = new Set([getDummyRules(shared), pluginConfigRules])
   return await safeNormalizeConfig(pluginConfig, rules, {
     all: { cwd, prefix, parent, context },

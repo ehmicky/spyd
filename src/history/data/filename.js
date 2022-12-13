@@ -1,10 +1,10 @@
 // Retrieve filename from a metadatum
-export const serializeFilename = function ({ id, subId, timestamp }) {
+export const serializeFilename = ({ id, subId, timestamp }) => {
   const timestampStr = serializeTimestamp(timestamp)
   return `${timestampStr}_${id}_${subId}.json`
 }
 
-const serializeTimestamp = function (timestamp) {
+const serializeTimestamp = (timestamp) => {
   const date = new Date(timestamp)
   const year = date.getUTCFullYear()
   const month = padTimeField(date.getUTCMonth() + 1)
@@ -15,12 +15,10 @@ const serializeTimestamp = function (timestamp) {
   return `${year}_${month}_${day}_${hours}_${minutes}_${seconds}`
 }
 
-const padTimeField = function (timeField) {
-  return String(timeField).padStart(2, '0')
-}
+const padTimeField = (timeField) => String(timeField).padStart(2, '0')
 
 // Retrieve metadatum from a filename
-export const parseFilename = function (filename) {
+export const parseFilename = (filename) => {
   const result = RESULT_FILENAME_REGEXP.exec(filename)
 
   if (result === null) {
@@ -32,14 +30,7 @@ export const parseFilename = function (filename) {
   return { id, subId, timestamp }
 }
 
-const parseTimestamp = function ({
-  year,
-  month,
-  day,
-  hours,
-  minutes,
-  seconds,
-}) {
+const parseTimestamp = ({ year, month, day, hours, minutes, seconds }) => {
   const date = new Date(
     `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`,
   )

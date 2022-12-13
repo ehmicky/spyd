@@ -28,7 +28,7 @@ import { isNegativeLimit } from './transform.js'
 //  - Some units do not have directions, i.e. one cannot know programmatically
 //    whether an increase or a decrease is more desirable. This means users must
 //    explicitly specify it.
-export const checkLimits = function ({ combinations }) {
+export const checkLimits = ({ combinations }) => {
   const limitedCombinations = combinations.filter(isOverLimit)
 
   if (limitedCombinations.length === 0) {
@@ -39,16 +39,14 @@ export const checkLimits = function ({ combinations }) {
   throw new LimitError(limitErrors)
 }
 
-const isOverLimit = function (combination) {
-  return getDiffLimit(combination) !== undefined
-}
+const isOverLimit = (combination) => getDiffLimit(combination) !== undefined
 
-const getLimitErrors = function (combinations) {
+const getLimitErrors = (combinations) => {
   const combinationsGroups = Object.values(groupBy(combinations, getDiffLimit))
   return combinationsGroups.map(getLimitError).join('\n')
 }
 
-const getLimitError = function (combinations) {
+const getLimitError = (combinations) => {
   const diffLimit = getDiffLimit(combinations[0])
   const isNegative = isNegativeLimit(diffLimit.raw)
   const limitErrorBody = getLimitErrorBody(diffLimit, isNegative)
@@ -64,11 +62,9 @@ const getLimitError = function (combinations) {
   return `The following ${limitErrorBody}: ${combinationLimits}`
 }
 
-const getDiffLimit = function ({ stats: { diffLimit } }) {
-  return diffLimit
-}
+const getDiffLimit = ({ stats: { diffLimit } }) => diffLimit
 
-const getLimitErrorBody = function (diffLimit, isNegative) {
+const getLimitErrorBody = (diffLimit, isNegative) => {
   const diffLimitStr = stripStatSign(diffLimit, isNegative)
   const signStr = isNegative ? 'faster' : 'slower'
   return `must be at most ${diffLimitStr} ${signStr}`
@@ -76,7 +72,7 @@ const getLimitErrorBody = function (diffLimit, isNegative) {
 
 // `getCombinationName` passes an empty `noDimensions` since `dimensions` are
 // already filtered out in `programmaticResult`.
-const getLimitInfo = function (combination, isNegative) {
+const getLimitInfo = (combination, isNegative) => {
   const name = getCombinationName(combination, [])
   const diffStr = stripStatSign(combination.stats.diff, isNegative)
   const diffSuffix = `(${diffStr})`
@@ -84,17 +80,13 @@ const getLimitInfo = function (combination, isNegative) {
 }
 
 // Instead of a minus sign, we change the word "slower" to "faster"
-const stripStatSign = function (stat, isNegative) {
-  return isNegative ? stat.simple.replace(MINUS_SIGN_REGEXP, '') : stat.simple
-}
+const stripStatSign = (stat, isNegative) =>
+  isNegative ? stat.simple.replace(MINUS_SIGN_REGEXP, '') : stat.simple
 
 const MINUS_SIGN_REGEXP = /-(?=\d)/u
 
 // Combination names can be empty when `result.combinations.length` is only 1
-const hasCombinationNames = function (limitInfos) {
-  return limitInfos.length !== 1 || limitInfos[0].name !== ''
-}
+const hasCombinationNames = (limitInfos) =>
+  limitInfos.length !== 1 || limitInfos[0].name !== ''
 
-const getCombinationLimit = function ({ name, diffSuffix }) {
-  return `${name} ${diffSuffix}`
-}
+const getCombinationLimit = ({ name, diffSuffix }) => `${name} ${diffSuffix}`

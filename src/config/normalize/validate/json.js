@@ -1,7 +1,7 @@
 import isJsonValue from 'is-json-value'
 
 // Validate that a value is JSON-compatible
-export const validateJson = function (value) {
+export const validateJson = (value) => {
   const warnings = isJsonValue(value)
 
   if (warnings.length !== 0) {

@@ -33,7 +33,7 @@ export const veryPrecise = async () => {
 }
 
 // Very imprecise task
-export const imprecise = function () {
+export const imprecise = () => {
   randomInt(2)
 }
 
@@ -42,50 +42,50 @@ let fileContent
 
 // CPU-bound task
 export const cpu = {
-  async beforeAll() {
+  beforeAll: async () => {
     // eslint-disable-next-line fp/no-mutation
     fileContent = await readFile(CURRENT_URL, 'utf8')
   },
-  beforeEach({ context }) {
+  beforeEach: ({ context }) => {
     // eslint-disable-next-line no-param-reassign, fp/no-mutation
     context.hash = createHash('sha256')
   },
-  main({ context: { hash } }) {
+  main: ({ context: { hash } }) => {
     hash.update(fileContent)
     hash.digest('hex')
   },
 }
 
 // IO-bound read task
-export const read = async function () {
+export const read = async () => {
   await readFile(CURRENT_URL)
 }
 
 // IO-bound write task
 export const write = {
-  async beforeAll() {
+  beforeAll: async () => {
     // eslint-disable-next-line fp/no-mutation
     fileContent = await readFile(CURRENT_URL, 'utf8')
   },
-  async beforeEach({ context }) {
+  beforeEach: async ({ context }) => {
     // eslint-disable-next-line fp/no-mutation, no-param-reassign
     context.tmpPath = await tmpName()
   },
-  async main({ context: { tmpPath } }) {
+  main: async ({ context: { tmpPath } }) => {
     await writeFile(tmpPath, fileContent)
   },
-  async afterEach({ context: { tmpPath } }) {
+  afterEach: async ({ context: { tmpPath } }) => {
     await unlink(tmpPath)
   },
 }
 
 // Process-spawning-bound task
-export const spawn = async function () {
+export const spawn = async () => {
   await pExecFile('node', ['--version'])
 }
 
 // Network-bound task
-export const network = async function () {
+export const network = async () => {
   await got('https://example.com')
 }
 

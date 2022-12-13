@@ -55,12 +55,12 @@ import { getMean } from './sum.js'
 //     - Low time resolution
 //     - Custom units returning integers or already rounded measures
 // eslint-disable-next-line max-lines-per-function
-export const computeStats = function ({
+export const computeStats = ({
   measures,
   unsortedMeasures,
   outliers,
   precision,
-}) {
+}) => {
   const { outliersMin, outliersMax } = getOutliersPercentage(measures, outliers)
   const { minIndex, maxIndex, length } = getLengthFromLoops(
     measures.length,
@@ -121,7 +121,7 @@ export const computeStats = function ({
   }
 }
 
-const getQuantileStats = function (measures, minIndex, maxIndex) {
+const getQuantileStats = (measures, minIndex, maxIndex) => {
   const min = measures[minIndex]
   const max = measures[maxIndex]
   const median = getSortedMedian(measures, { minIndex, maxIndex })

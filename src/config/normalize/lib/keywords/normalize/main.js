@@ -7,13 +7,10 @@ import { normalizeAsyncMethods } from './async.js'
 import { validateKeywords } from './validate.js'
 
 // Normalize and validate `options.keywords`
-export const normalizeKeywords = function (keywords, sync) {
-  return addCustomKeywords(keywords).map((keyword) =>
-    normalizeKeyword(keyword, sync),
-  )
-}
+export const normalizeKeywords = (keywords, sync) =>
+  addCustomKeywords(keywords).map((keyword) => normalizeKeyword(keyword, sync))
 
-const addCustomKeywords = function (keywords) {
+const addCustomKeywords = (keywords) => {
   if (keywords === undefined) {
     return BUILTIN_KEYWORDS
   }
@@ -28,7 +25,7 @@ const addCustomKeywords = function (keywords) {
   return [...BUILTIN_KEYWORDS, ...keywords]
 }
 
-const normalizeKeyword = function (keyword, sync) {
+const normalizeKeyword = (keyword, sync) => {
   const keywordA = normalizeAsyncMethods(keyword, sync)
   return { ...DEFAULT_VALUES, ...keywordA }
 }

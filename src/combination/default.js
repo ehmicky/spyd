@@ -23,28 +23,26 @@ import { removePrefix } from './prefix.js'
 //  - Comparable in the history
 //  - Reported nicely
 //  - Selectable with `select`
-export const addDefaultIds = function (results, combinations) {
+export const addDefaultIds = (results, combinations) => {
   const defaultDimensions = getDefaultDimensions(combinations)
   return results.map((result) => addResultDefaultIds(result, defaultDimensions))
 }
 
-const getDefaultDimensions = function (combinations) {
+const getDefaultDimensions = (combinations) => {
   const targetDimensions = getCombsDimensions(combinations)
   return Object.fromEntries(
     targetDimensions.filter(hasDefaultId).map(getDefaultDimension),
   )
 }
 
-const hasDefaultId = function ({ defaultIdPrefix }) {
-  return defaultIdPrefix !== undefined
-}
+const hasDefaultId = ({ defaultIdPrefix }) => defaultIdPrefix !== undefined
 
-const getDefaultDimension = function (dimension) {
+const getDefaultDimension = (dimension) => {
   const id = getDefaultId(dimension.propName, dimension)
   return [dimension.propName, { id }]
 }
 
-const addResultDefaultIds = function (result, defaultDimensions) {
+const addResultDefaultIds = (result, defaultDimensions) => {
   const combinations = result.combinations.map((combination) => ({
     ...combination,
     dimensions: { ...defaultDimensions, ...combination.dimensions },
@@ -53,29 +51,20 @@ const addResultDefaultIds = function (result, defaultDimensions) {
 }
 
 // Find whether an id matches the default id pattern of a dimension.
-export const isInvalidDefaultId = function (id, { propName }) {
-  return DIMENSIONS.some((dimension) =>
-    isInvalidDimensionId(id, propName, dimension),
-  )
-}
+export const isInvalidDefaultId = (id, { propName }) =>
+  DIMENSIONS.some((dimension) => isInvalidDimensionId(id, propName, dimension))
 
-const isInvalidDimensionId = function (id, propName, dimension) {
-  return (
-    dimension.defaultIdPrefix !== undefined &&
-    id.startsWith(dimension.defaultIdPrefix) &&
-    !isDimensionDefaultId(id, propName, dimension)
-  )
-}
+const isInvalidDimensionId = (id, propName, dimension) =>
+  dimension.defaultIdPrefix !== undefined &&
+  id.startsWith(dimension.defaultIdPrefix) &&
+  !isDimensionDefaultId(id, propName, dimension)
 
-const isDimensionDefaultId = function (id, propName, dimension) {
-  return (
-    isDimension(propName, dimension.propName, dimension.prefixName) &&
-    id === getDefaultId(propName, dimension)
-  )
-}
+const isDimensionDefaultId = (id, propName, dimension) =>
+  isDimension(propName, dimension.propName, dimension.prefixName) &&
+  id === getDefaultId(propName, dimension)
 
 // Retrieve the default id of a dimension
-const getDefaultId = function (propName, { prefixName, defaultIdPrefix }) {
+const getDefaultId = (propName, { prefixName, defaultIdPrefix }) => {
   const propNameA = removePrefix(propName, prefixName)
   const propNameB = propNameA.replace(DOT_REGEXP, '_')
   return `${defaultIdPrefix}${propNameB}`

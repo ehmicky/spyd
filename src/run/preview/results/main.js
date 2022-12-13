@@ -19,13 +19,13 @@ import { updateCombinationEnd } from './duration.js'
 //     - And the size of table should not change between previews.
 // When uncalibrated, we skip it since no stats would be reported anyway.
 //  - We wait until calibration before removing the start description.
-export const updatePreviewStats = async function ({
+export const updatePreviewStats = async ({
   stats,
   previewState,
   durationState,
   sampleState,
   precision,
-}) {
+}) => {
   if (shouldSkipPreview(previewState, stats)) {
     return
   }
@@ -44,11 +44,9 @@ export const updatePreviewStats = async function ({
   await updatePreview(previewState)
 }
 
-const shouldSkipPreview = function ({ quiet }, { samples }) {
-  return quiet || samples === 0
-}
+const shouldSkipPreview = ({ quiet }, { samples }) => quiet || samples === 0
 
-const updateResultStats = async function (previewState, stats) {
+const updateResultStats = async (previewState, stats) => {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   previewState.result = updateCombinationStats(
     previewState.result,
@@ -59,7 +57,7 @@ const updateResultStats = async function (previewState, stats) {
 }
 
 // Update `previewState.report`, i.e. serialized report for previews
-export const updateReport = async function ({
+export const updateReport = async ({
   previewState,
   previewState: {
     durationLeft,
@@ -73,7 +71,7 @@ export const updateReport = async function ({
     sinceResult,
     noDimensions,
   },
-}) {
+}) => {
   const preview = {
     durationLeft,
     percentage,

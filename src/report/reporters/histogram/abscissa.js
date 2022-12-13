@@ -10,7 +10,7 @@ import {
 
 // Retrieve the horizontal line and the abscissa below the main content.
 // Includes the tick above the median and its label.
-export const getAbscissa = function ({
+export const getAbscissa = ({
   combinationTitles,
   titlesWidth,
   minBlockWidth,
@@ -19,7 +19,7 @@ export const getAbscissa = function ({
   medianIndex,
   min,
   max,
-}) {
+}) => {
   const bottomFullLine = getBottomFullLine({
     combinationTitles,
     contentWidth,
@@ -37,35 +37,31 @@ export const getAbscissa = function ({
   return `${bottomFullLine}${labelLine}`
 }
 
-const getBottomFullLine = function ({
+const getBottomFullLine = ({
   combinationTitles,
   contentWidth,
   medianIndex,
   min,
   max,
-}) {
+}) => {
   const paddedMin = getPaddedStat(min)
   const bottomLine = separatorColor(getBottomLine(contentWidth, medianIndex))
   const paddedMax = getPaddedStat(max)
   return `${combinationTitles}${paddedMin}${bottomLine}${paddedMax}\n`
 }
 
-const getPaddedStat = function ({ prettyPaddedColor }) {
-  return `${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}`
-}
+const getPaddedStat = ({ prettyPaddedColor }) =>
+  `${STAT_PADDING}${prettyPaddedColor}${STAT_PADDING}`
 
-export const getPaddedStatLength = function ({ prettyPadded }) {
-  return prettyPadded.length + STAT_PADDING_WIDTH * 2
-}
+export const getPaddedStatLength = ({ prettyPadded }) =>
+  prettyPadded.length + STAT_PADDING_WIDTH * 2
 
 const STAT_PADDING_WIDTH = 1
 const STAT_PADDING = ' '.repeat(STAT_PADDING_WIDTH)
 
-export const getTickLength = function () {
-  return TICK_LEFT.length
-}
+export const getTickLength = () => TICK_LEFT.length
 
-const getBottomLine = function (contentWidth, medianIndex) {
+const getBottomLine = (contentWidth, medianIndex) => {
   const startPadding = HORIZONTAL_LINE.repeat(medianIndex)
   const bottomLine = `${startPadding}${TICK_MIDDLE}`.padEnd(
     contentWidth,
@@ -74,13 +70,13 @@ const getBottomLine = function (contentWidth, medianIndex) {
   return `${TICK_LEFT}${bottomLine}${TICK_RIGHT}`
 }
 
-const getLabelLine = function ({
+const getLabelLine = ({
   titlesWidth,
   minBlockWidth,
   contentWidth,
   median,
   medianIndex,
-}) {
+}) => {
   const centeredMedian = centerString(
     median.prettyColor,
     medianIndex,

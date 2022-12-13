@@ -17,13 +17,10 @@ export const STATS_SEPARATOR_COLORED = separatorColor(STATS_SEPARATOR)
 
 // Separator between columns
 // Works on all terminals
-export const getColSeparator = function (mini) {
-  return mini ? MCOL_SEPARATOR : COL_SEPARATOR
-}
+export const getColSeparator = (mini) => (mini ? MCOL_SEPARATOR : COL_SEPARATOR)
 
-export const getColSeparatorColored = function (mini) {
-  return mini ? MCOL_SEPARATOR_COLORED : COL_SEPARATOR_COLORED
-}
+export const getColSeparatorColored = (mini) =>
+  mini ? MCOL_SEPARATOR_COLORED : COL_SEPARATOR_COLORED
 
 const COL_SEPARATOR_SIGN = '\u2502'
 const COL_PADDING_WIDTH = 1

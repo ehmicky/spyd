@@ -6,7 +6,7 @@ import { appendArray } from './append.js'
 // This is faster than just doing `Array.concat()` then `Array.sort()` and has
 // a `O(n)` time complexity.
 // For performance, if `bigArray` is empty, we just copy `smallArray` over.
-export const mergeSort = function (bigArray, smallArray) {
+export const mergeSort = (bigArray, smallArray) => {
   if (bigArray.length === 0) {
     appendArray(bigArray, smallArray)
     return
@@ -25,7 +25,7 @@ export const mergeSort = function (bigArray, smallArray) {
 // Any element could be copied. We're only looking to extend the size of
 // `bigArray`. We use one of its element to ensure the new array slots have
 // the correct type which speeds up memory allocation when re-assigned.
-const resizeArray = function (bigArray, smallArray) {
+const resizeArray = (bigArray, smallArray) => {
   const lastElement = bigArray[bigArray.length - 1]
   const smallArrayLength = smallArray.length
 
@@ -42,7 +42,7 @@ const resizeArray = function (bigArray, smallArray) {
 // we use imperative code.
 /* eslint-disable max-statements, max-depth, no-param-reassign, fp/no-let,
    fp/no-loops, fp/no-mutation */
-const mergeValues = function (bigArray, smallArray) {
+const mergeValues = (bigArray, smallArray) => {
   let index = bigArray.length - 1
   let smallIndex = smallArray.length - 1
   let bigIndex = index - smallIndex - 1

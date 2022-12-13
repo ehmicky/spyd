@@ -5,9 +5,8 @@ import { gitFormat } from './git.js'
 import { idFormat } from './id.js'
 import { timestampFormat } from './timestamp.js'
 
-export const findFormat = function (type) {
-  return FORMATS.find((format) => format.type === type)
-}
+export const findFormat = (type) =>
+  FORMATS.find((format) => format.type === type)
 
 // Order matters since the first successful parse() is used
 export const FORMATS = [

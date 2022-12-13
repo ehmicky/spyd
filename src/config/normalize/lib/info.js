@@ -11,7 +11,7 @@ import { applyMoves } from './move.js'
 // They are intended for error messages.
 // This is in contrast to `name|path` which are the main properties, intended to
 // work with everything else, including `info.inputs`.
-export const getInfo = function (path, { inputs, moves }) {
+export const getInfo = (path, { inputs, moves }) => {
   const name = serializePath(path)
   const originalPath = applyMoves(moves, path)
   const originalName = serializePath(originalPath)

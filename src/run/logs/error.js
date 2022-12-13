@@ -8,7 +8,7 @@ import { normalizeLogs } from './normalize.js'
 
 // When an exception is thrown, add the runner's last log lines to the error
 // message.
-export const addErrorTaskLogs = async function (error, logsPath) {
+export const addErrorTaskLogs = async (error, logsPath) => {
   if (error instanceof StopError) {
     return error
   }
@@ -27,7 +27,7 @@ export const addErrorTaskLogs = async function (error, logsPath) {
 }
 
 // Read the last lines from the logs file
-const readLogs = async function (logsPath) {
+const readLogs = async (logsPath) => {
   const logsReadFd = await open(logsPath, 'r')
 
   try {

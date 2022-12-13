@@ -12,15 +12,14 @@
 //  - `getMaxValue(degreesOfFreedom: integer) => integer`: approximate the
 //    critical value when the `degreesOfFreedom` are very high
 // This function transforms this raw table to a map used for efficient retrieval
-export const getCriticalValuesMap = function (criticalValuesRaw) {
-  return new Map(criticalValuesRaw.map(getCriticalValueEntry))
-}
+export const getCriticalValuesMap = (criticalValuesRaw) =>
+  new Map(criticalValuesRaw.map(getCriticalValueEntry))
 
-const getCriticalValueEntry = function ({
+const getCriticalValueEntry = ({
   significanceLevel,
   getMaxValue,
   criticalValues,
-}) {
+}) => {
   const entries = Object.entries(criticalValues).map(normalizeKey)
   const lastPreciseKey = entries.findIndex(isLastPreciseKey)
   const preciseEntries = entries.slice(0, lastPreciseKey + 1)
@@ -34,12 +33,10 @@ const getCriticalValueEntry = function ({
   ]
 }
 
-const normalizeKey = function ([key, value]) {
-  return [Number(key), value]
-}
+const normalizeKey = ([key, value]) => [Number(key), value]
 
 // Retrieve the last entry which can used as `preciseMap`
-const isLastPreciseKey = function ([key], index, entries) {
+const isLastPreciseKey = ([key], index, entries) => {
   const nextEntry = entries[index + 1]
   return nextEntry === undefined || key !== nextEntry[0] - 1
 }
@@ -52,11 +49,11 @@ const isLastPreciseKey = function ([key], index, entries) {
 //  - When low enough, we use the precise value
 //  - When higher, we use an interpolation between two precise values
 //  - When even higher, we use an approximation function
-export const getCriticalValue = function (
+export const getCriticalValue = (
   criticalValuesMap,
   degreesOfFreedom,
   significanceLevel,
-) {
+) => {
   const {
     preciseMap,
     impreciseEntries,
@@ -78,7 +75,7 @@ export const getCriticalValue = function (
 }
 
 // When using `impreciseEntries`, we interpolate values.
-const getImpreciseValue = function (impreciseEntries, degreesOfFreedom) {
+const getImpreciseValue = (impreciseEntries, degreesOfFreedom) => {
   const impreciseEntryIndex = impreciseEntries.findIndex(
     ([degreesOfFreedomA]) => degreesOfFreedomA >= degreesOfFreedom,
   )
@@ -93,14 +90,12 @@ const getImpreciseValue = function (impreciseEntries, degreesOfFreedom) {
 }
 
 // Round a number to a specific number of decimals
-const roundDecimals = function (float, decimalsCount = DEFAULT_DECIMALS_COUNT) {
+const roundDecimals = (float, decimalsCount = DEFAULT_DECIMALS_COUNT) => {
   const decimalsScale = 10 ** decimalsCount
   return Math.round(float * decimalsScale) / decimalsScale
 }
 
 // The default value is meant to fix Number.EPSILON rounding errors
-const getDefaultDecimalsCount = function () {
-  return Math.floor(-Math.log10(Number.EPSILON))
-}
+const getDefaultDecimalsCount = () => Math.floor(-Math.log10(Number.EPSILON))
 
 const DEFAULT_DECIMALS_COUNT = getDefaultDecimalsCount()

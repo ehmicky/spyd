@@ -13,7 +13,7 @@ import { removeDefaultHandlers, restoreDefaultHandlers } from './signals.js'
 // requires spawning processes again, making them go through cold starts again.
 // This would decrease precision and create difference between results depending
 // on how many times the benchmark was stopped/continued.
-export const addStopHandler = async function (previewState) {
+export const addStopHandler = async (previewState) => {
   const signalHandler = removeDefaultHandlers()
   const { cancelSignal, cancel } = createController()
   const stopState = { stopped: false, signalHandler, cancelSignal, cancel }
@@ -27,7 +27,7 @@ export const addStopHandler = async function (previewState) {
 }
 
 // Undo signal handling
-export const removeStopHandler = function ({ cancel, signalHandler }) {
+export const removeStopHandler = ({ cancel, signalHandler }) => {
   cancel()
   restoreDefaultHandlers(signalHandler)
 }

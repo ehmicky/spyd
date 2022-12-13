@@ -17,7 +17,7 @@ import {
 // so we fail hard.
 // The task sends an `error` object in a format that is based on JavaScript but
 // should work for any programming language: `name`, `message`, `stack`.
-export const throwOnTaskError = function ({ error: errorObject }) {
+export const throwOnTaskError = ({ error: errorObject }) => {
   if (errorObject === undefined) {
     return
   }

@@ -66,14 +66,14 @@ import { getGroupsCount, getClusterSizes } from './size.js'
 //        - During the run, e.g. by not using other applications while waiting
 //          for the benchmark to end
 //        - Between runs, e.g. by using some CI or container
-export const getEnvDev = function (
+export const getEnvDev = (
   array,
   {
     mean = getMean(array),
     variance = getVariance(array, { mean }),
     filter = defaultFilter,
   } = {},
-) {
+) => {
   const groupsCount = getGroupsCount(array.length)
 
   if (groupsCount <= 0 || variance === 0) {
@@ -98,11 +98,9 @@ export const getEnvDev = function (
   return envDev
 }
 
-const defaultFilter = function () {
-  return true
-}
+const defaultFilter = () => true
 
-const computeEnvDev = function (optimalVarianceRatio) {
+const computeEnvDev = (optimalVarianceRatio) => {
   const envDevSquared = Math.max(optimalVarianceRatio, MIN_ENV_DEV)
   return Math.sqrt(envDevSquared)
 }

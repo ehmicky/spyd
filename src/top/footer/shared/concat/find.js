@@ -2,13 +2,13 @@ import { isSameArray } from '../../../../utils/equal.js'
 import { findIndexFrom } from '../../../../utils/find.js'
 
 // Find another `dimensions` with the same names and exactly 1 different value.
-// eslint-disable-next-line max-params
-export const findConcatDimension = function (
+export const findConcatDimension = (
   firstDimensions,
   dimensionNames,
   secondDimensions,
   secondDimensionNames,
-) {
+  // eslint-disable-next-line max-params
+) => {
   if (!isSameArray(dimensionNames, secondDimensionNames)) {
     return
   }
@@ -38,14 +38,14 @@ export const findConcatDimension = function (
   return dimensionNames[differentDimensionIndexA]
 }
 
-// eslint-disable-next-line max-params
-const findDifferentDimension = function (
+const findDifferentDimension = (
   dimensionNames,
   firstDimensions,
   secondDimensions,
   startIndex,
-) {
-  return findIndexFrom(
+  // eslint-disable-next-line max-params
+) =>
+  findIndexFrom(
     dimensionNames,
     (dimensionName) =>
       !isSameArray(
@@ -54,4 +54,3 @@ const findDifferentDimension = function (
       ),
     startIndex,
   )
-}

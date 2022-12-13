@@ -44,14 +44,14 @@ import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 //  - Keyword cannot be skipped by user
 //  - Keyword author might add default values like `false` which would be noop
 //    in `main()`, but would evaluate definition function even if not needed
-export const applyKeywords = async function ({
+export const applyKeywords = async ({
   rule,
   input,
   state,
   info,
   keywords,
   sync,
-}) {
+}) => {
   // eslint-disable-next-line fp/no-let
   let memo = { input, info }
 
@@ -69,7 +69,7 @@ export const applyKeywords = async function ({
 
 // TODO: fix linting
 // eslint-disable-next-line max-lines-per-function
-const applyKeyword = async function ({
+const applyKeyword = async ({
   keyword: {
     name: keyword,
     aliases,
@@ -89,7 +89,7 @@ const applyKeyword = async function ({
   state,
   rule,
   sync,
-}) {
+}) => {
   const definition = getDefinition(rule, keyword, aliases)
 
   if (

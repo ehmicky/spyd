@@ -1,5 +1,5 @@
 // Group an array of objects into an object of objects based on a property
-export const groupBy = function (array, getGroup) {
+export const groupBy = (array, getGroup) => {
   const groups = {}
 
   array.forEach((object, index) => {
@@ -11,7 +11,7 @@ export const groupBy = function (array, getGroup) {
 
 // We directly mutate `groups` for performance reasons
 // eslint-disable-next-line max-params
-const addGroup = function (object, index, groups, getGroup) {
+const addGroup = (object, index, groups, getGroup) => {
   const groupValue =
     typeof getGroup === 'function' ? getGroup(object, index) : object[getGroup]
   const group = String(groupValue)

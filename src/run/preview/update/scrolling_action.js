@@ -6,16 +6,16 @@ import { addAction, removeAction } from '../action.js'
 // We fix this by making the scrolling logic assume the bottom bar has a
 // scrolling action, with the longest explanation. Once the bottom bar height
 // has been used by the scrolling logic, we update to the real scrolling action.
-export const addInitialScrollAction = function (previewState) {
+export const addInitialScrollAction = (previewState) => {
   addAction(previewState, SCROLL_ACTION)
 }
 
 // Add/remove action in to the bottom bar indicating whether the user can scroll
-export const addScrollAction = function ({
+export const addScrollAction = ({
   previewState,
   previewState: { scrollTop },
   maxScrollTop,
-}) {
+}) => {
   const canScrollUp = scrollTop !== 0
   const canScrollDown = scrollTop !== maxScrollTop
 
@@ -28,7 +28,7 @@ export const addScrollAction = function ({
   addAction(previewState, action)
 }
 
-const getScrollAction = function (canScrollUp, canScrollDown) {
+const getScrollAction = (canScrollUp, canScrollDown) => {
   if (!canScrollUp) {
     return SCROLL_DOWN_ACTION
   }

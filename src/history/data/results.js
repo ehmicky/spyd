@@ -11,7 +11,7 @@ import {
 } from './fs.js'
 
 // Retrieve all rawResults' metadata, which are stored in the filenames
-export const listMetadata = async function (cwd) {
+export const listMetadata = async (cwd) => {
   const historyDir = await getReadHistoryDir(cwd)
 
   if (historyDir === undefined) {
@@ -26,7 +26,7 @@ export const listMetadata = async function (cwd) {
 // Retrieve the contents of specific rawResults, stored on the filesystem,
 // by using their metadata.
 // Order must be preserved.
-export const fetchRawResults = async function (metadata, cwd) {
+export const fetchRawResults = async (metadata, cwd) => {
   const historyDir = await getReadHistoryDir(cwd)
 
   if (historyDir === undefined) {
@@ -47,7 +47,7 @@ export const fetchRawResults = async function (metadata, cwd) {
 const MAX_CONCURRENCY = 100
 
 // Retrieve the contents of a rawResult, by using its metadatum
-const fetchRawResult = async function (metadatum, historyDir) {
+const fetchRawResult = async (metadatum, historyDir) => {
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
   await checkHistoryFile(path)
@@ -56,7 +56,7 @@ const fetchRawResult = async function (metadatum, historyDir) {
 }
 
 // Save a new rawResult
-export const addRawResult = async function (metadatum, rawResultStr, cwd) {
+export const addRawResult = async (metadatum, rawResultStr, cwd) => {
   const historyDir = await getWriteHistoryDir(cwd)
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
@@ -64,7 +64,7 @@ export const addRawResult = async function (metadatum, rawResultStr, cwd) {
 }
 
 // Remove a rawResult from the filesystem
-export const removeRawResults = async function (metadata, cwd) {
+export const removeRawResults = async (metadata, cwd) => {
   const historyDir = await getReadHistoryDir(cwd)
 
   if (historyDir === undefined) {
@@ -76,7 +76,7 @@ export const removeRawResults = async function (metadata, cwd) {
   )
 }
 
-const removeRawResult = async function (metadatum, historyDir) {
+const removeRawResult = async (metadatum, historyDir) => {
   const filename = serializeFilename(metadatum)
   const path = `${historyDir}/${filename}`
   await deleteRawResult(path)

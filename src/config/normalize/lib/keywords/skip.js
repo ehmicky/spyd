@@ -10,7 +10,7 @@ import { callTest } from '../call/main.js'
 //  - This allows any keyword to have default values
 // Also skip the keyword if `undefinedInput` is `false` (default) and input is
 // `undefined`.
-export const shouldSkipKeyword = async function ({
+export const shouldSkipKeyword = async ({
   definition,
   input,
   undefinedInput,
@@ -18,13 +18,10 @@ export const shouldSkipKeyword = async function ({
   testSync,
   info,
   keyword,
-}) {
-  return (
-    definition === undefined ||
-    (!undefinedInput && input === undefined) ||
-    (await hasSkippedTest({ test, testSync, input, info, keyword }))
-  )
-}
+}) =>
+  definition === undefined ||
+  (!undefinedInput && input === undefined) ||
+  (await hasSkippedTest({ test, testSync, input, info, keyword }))
 
 // If `test(value, info) => boolean` is defined and returns `false`, the keyword
 // is skipped.
@@ -36,21 +33,11 @@ export const shouldSkipKeyword = async function ({
 //    specific value (e.g. `undefined` for `required|default` keywords), i.e.
 //    need to check the input during `test()` but should not pass it during
 //    `main()` not the definition function
-const hasSkippedTest = async function ({
-  test,
-  testSync,
-  input,
-  info,
-  keyword,
-}) {
-  return (
-    test !== undefined &&
-    !(await callTest({ test, testSync, input, info, keyword }))
-  )
-}
+const hasSkippedTest = async ({ test, testSync, input, info, keyword }) =>
+  test !== undefined &&
+  !(await callTest({ test, testSync, input, info, keyword }))
 
 // Function definitions returning `undefined` are skipped, unless
 // `undefinedDefinition` is `true`.
-export const shouldSkipMain = function (definition, undefinedDefinition) {
-  return definition === undefined && !undefinedDefinition
-}
+export const shouldSkipMain = (definition, undefinedDefinition) =>
+  definition === undefined && !undefinedDefinition

@@ -5,7 +5,7 @@ import { getCombsDimensionsIds } from './get.js'
 import { getUserIds } from './user.js'
 
 // Validate combination identifiers.
-export const validateCombinationsIds = function (combinations, inputsList) {
+export const validateCombinationsIds = (combinations, inputsList) => {
   const userIds = getUserIds(combinations, inputsList)
   userIds.forEach(validateUserId)
 
@@ -16,7 +16,7 @@ export const validateCombinationsIds = function (combinations, inputsList) {
 // Validate that identifiers don't use characters that we are using for parsing
 // or could use in the future.
 // Only for user-defined identifiers, not plugin-defined.
-export const validateUserId = function ({ id, messageName }) {
+export const validateUserId = ({ id, messageName }) => {
   if (id.trim() === '') {
     throw new UserError(
       `Invalid ${messageName} "${id}": the identifier must not be empty.`,
@@ -50,7 +50,7 @@ const USER_ID_INVALID_START = '-'
 // We forbid other characters for forward compatibility.
 const USER_ID_REGEXP = /^\w[\w-]*$/u
 
-const validateReservedIds = function (id, messageName) {
+const validateReservedIds = (id, messageName) => {
   const reservedIdA = RESERVED_IDS.find((reservedId) => id === reservedId)
 
   if (reservedIdA !== undefined) {
@@ -63,14 +63,14 @@ const validateReservedIds = function (id, messageName) {
 // 'not' and 'and' are used by `select`
 const RESERVED_IDS = ['not', 'and']
 
-const validateDimensionId = function ({ id, dimension }, index, allIds) {
+const validateDimensionId = ({ id, dimension }, index, allIds) => {
   validateDefaultId(id, dimension)
   validateDuplicateId({ id, dimension, index, allIds })
 }
 
 // Since ids must not be duplicate across dimensions, we need to forbid any
 // id which might be used as a dimension's default id.
-const validateDefaultId = function (id, dimension) {
+const validateDefaultId = (id, dimension) => {
   if (isInvalidDefaultId(id, dimension)) {
     throw new UserError(
       `The identifier "${id}" is reserved as a default value.`,
@@ -88,7 +88,7 @@ const validateDefaultId = function (id, dimension) {
 // not used for selection, reporting, `config.titles`, etc.
 // Identifier of previous results do not need to be checked for duplicate ids
 // since only their combinations matching the target result are kept.
-const validateDuplicateId = function ({ id, dimension, index, allIds }) {
+const validateDuplicateId = ({ id, dimension, index, allIds }) => {
   const duplicateId = allIds.slice(index + 1).find((nextId) => nextId.id === id)
 
   if (duplicateId === undefined) {
@@ -105,6 +105,4 @@ const validateDuplicateId = function ({ id, dimension, index, allIds }) {
 ${errorSuffix}`)
 }
 
-const isUserDimension = function ({ createdByUser }) {
-  return createdByUser
-}
+const isUserDimension = ({ createdByUser }) => createdByUser

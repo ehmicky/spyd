@@ -81,7 +81,7 @@ import { loadRunner } from './load.js'
 //     - too implicit/magic
 //     - this might give false positives, especially due to nested dependencies
 //     - this does not work well with bundled runners
-export const listTasks = async function (runners, cwd) {
+export const listTasks = async (runners, cwd) => {
   const commonVersions = await getCommonVersions()
   const dimensionsArray = runners.map(getDimensions)
   const noDimensions = getCombsNoDimensions(dimensionsArray)
@@ -93,11 +93,9 @@ export const listTasks = async function (runners, cwd) {
   return tasks.flat().filter(hasUniqueTaskId)
 }
 
-const getDimensions = function (runner) {
-  return { runner }
-}
+const getDimensions = (runner) => ({ runner })
 
-const getDimensionsTasks = async function ({
+const getDimensionsTasks = async ({
   dimensions: {
     runner,
     runner: { bugs },
@@ -105,7 +103,7 @@ const getDimensionsTasks = async function ({
   noDimensions,
   cwd,
   commonVersions,
-}) {
+}) => {
   try {
     const runnerA = await loadRunner(runner, cwd, commonVersions)
     const tasks = await Promise.all(
@@ -125,8 +123,7 @@ const getDimensionsTasks = async function ({
 //  - `tasks` array order (last has priority)
 // This allows overriding tasks when using shared configurations.
 // This only applies when the task files are using the same runner.
-const hasUniqueTaskId = function (task, index, tasks) {
-  return tasks
+const hasUniqueTaskId = (task, index, tasks) =>
+  tasks
     .slice(index + 1)
     .every(({ id, runner }) => id !== task.id || runner.id !== task.runner.id)
-}

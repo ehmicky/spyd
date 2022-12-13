@@ -19,7 +19,7 @@ import { getSingleTable } from './single.js'
 //  - It does not use a column separator
 //  - It has its own width
 //  - It is omitted if only filled with empty strings
-export const getTables = function (rows, screenWidth, mini = false) {
+export const getTables = (rows, screenWidth, mini = false) => {
   const rowsLeft = rows.map(getRowLeft)
   const rowsRight = rows.map(getRowRight)
   const leftWidth = Math.max(...rowsLeft.map(stringWidth))
@@ -46,16 +46,11 @@ export const getTables = function (rows, screenWidth, mini = false) {
     .join('\n')
 }
 
-const getRowLeft = function ([leftCell = '']) {
-  return leftCell
-}
+const getRowLeft = ([leftCell = '']) => leftCell
 
-const getRowRight = function ([, ...rightCells]) {
-  return rightCells
-}
+const getRowRight = ([, ...rightCells]) => rightCells
 
-const getAvailableWidth = function (screenWidth, leftWidth) {
-  return leftWidth === 0
+const getAvailableWidth = (screenWidth, leftWidth) =>
+  leftWidth === 0
     ? screenWidth
     : screenWidth - leftWidth - TITLE_SEPARATOR.length
-}

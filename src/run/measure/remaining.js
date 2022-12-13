@@ -17,10 +17,10 @@ import { hasMaxMeasures } from '../sample/max_measures.js'
 //    cleanup (afterEach and afterAll)
 //  - Any timeout might trigger or not depending on the machine speed, which
 //    means a benchmark might succeed or not depending on the machine.
-export const isRemainingCombination = function (
+export const isRemainingCombination = (
   { sampleState: { allSamples, measures }, stats: { loops, rmoe, cold } },
   { precision, stage, stopState: { stopped } },
-) {
+) => {
   if (stopped) {
     return false
   }
@@ -32,13 +32,7 @@ export const isRemainingCombination = function (
   return shouldKeepRunning({ measures, loops, rmoe, cold, precision })
 }
 
-const shouldKeepRunning = function ({
-  measures,
-  loops,
-  rmoe,
-  cold,
-  precision,
-}) {
+const shouldKeepRunning = ({ measures, loops, rmoe, cold, precision }) => {
   if (hasMaxMeasures(measures)) {
     return false
   }

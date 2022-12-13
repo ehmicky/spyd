@@ -14,10 +14,10 @@ import { getWidths } from './width.js'
 //  - This shows consistent results with other distribution-based reporters
 //    such as `boxplot`
 // Configuration properties:
-export const reportTerminal = function (
+export const reportTerminal = (
   { combinations, screenWidth },
   { mini, smooth },
-) {
+) => {
   const height = 2 * EXTRA_HEIGHT
   const { titlesWidth, minBlockWidth, contentWidth } = getWidths(
     combinations,
@@ -39,7 +39,7 @@ export const reportTerminal = function (
     .join('\n')
 }
 
-const serializeCombination = function ({
+const serializeCombination = ({
   combination,
   combination: {
     stats: { histogram, quantiles, min, max },
@@ -50,7 +50,7 @@ const serializeCombination = function ({
   height,
   mini,
   smooth,
-}) {
+}) => {
   const combinationTitles = getCombTitleColorPad(combination)
 
   if (histogram === undefined) {
@@ -91,7 +91,7 @@ const MEDIAN_QUANTILE = 50
 
 // Compute the position of the median tick on the screen.
 // When `histogram` has a single item, it is in the first bucket.
-const getMedianIndex = function ({ median, min, max, contentWidth }) {
+const getMedianIndex = ({ median, min, max, contentWidth }) => {
   const percentage =
     max.raw === min.raw ? 0 : (median.raw - min.raw) / (max.raw - min.raw)
   return Math.min(Math.floor(percentage * contentWidth), contentWidth - 1)

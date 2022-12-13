@@ -61,18 +61,15 @@ const rules = new Set([
     {
       name: 'force',
       pick: amongCommands(['remove']),
-      default() {
-        return !isTtyInput()
-      },
+      default: () => !isTtyInput(),
       schema: { type: 'boolean' },
     },
     {
       name: 'reporter',
       pick: amongCommands(['remove', 'run', 'show']),
       default: DEFAULT_REPORTERS,
-      transform(value, { inputs: { force: forceProp } }) {
-        return forceProp ? [] : value
-      },
+      transform: (value, { inputs: { force: forceProp } }) =>
+        forceProp ? [] : value,
     },
   ],
   [

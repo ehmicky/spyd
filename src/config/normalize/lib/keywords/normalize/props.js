@@ -9,7 +9,7 @@ import {
 } from './name.js'
 
 // Validate each `keyword.*` property
-export const validateKeywordProps = function (keyword, index, keywords) {
+export const validateKeywordProps = (keyword, index, keywords) => {
   validateRequiredProps(keyword)
   validateAliases(keyword)
   validateFunctions(keyword)
@@ -19,7 +19,7 @@ export const validateKeywordProps = function (keyword, index, keywords) {
   validateDuplicateKeyword(keyword, index, keywords)
 }
 
-const validateRequiredProps = function (keyword) {
+const validateRequiredProps = (keyword) => {
   REQUIRED_PROPS.forEach((propName) => {
     validateKeywordProp(keyword, propName)
   })
@@ -27,13 +27,13 @@ const validateRequiredProps = function (keyword) {
 
 const REQUIRED_PROPS = ['main']
 
-const validateKeywordProp = function (keyword, propName) {
+const validateKeywordProp = (keyword, propName) => {
   if (keyword[propName] === undefined) {
     throw new KeywordError(`"${propName}" must be defined.`)
   }
 }
 
-const validateAliases = function ({ aliases }) {
+const validateAliases = ({ aliases }) => {
   if (aliases === undefined) {
     return
   }
@@ -47,7 +47,7 @@ const validateAliases = function ({ aliases }) {
   })
 }
 
-const validateFunctions = function (keyword) {
+const validateFunctions = (keyword) => {
   FUNCTION_PROPS.forEach((propName) => {
     validateOptionalProp(keyword, propName, 'function')
   })
@@ -62,7 +62,7 @@ const FUNCTION_PROPS = [
   'mainAsync',
 ]
 
-const validateBooleans = function (keyword) {
+const validateBooleans = (keyword) => {
   BOOLEAN_PROPS.forEach((propName) => {
     validateOptionalProp(keyword, propName, 'boolean')
   })
@@ -70,7 +70,7 @@ const validateBooleans = function (keyword) {
 
 const BOOLEAN_PROPS = ['hasInput', 'undefinedInput', 'undefinedDefinition']
 
-const validateOptionalProp = function (keyword, propName, typeName) {
+const validateOptionalProp = (keyword, propName, typeName) => {
   const value = keyword[propName]
 
   if (value !== undefined && typeof value !== typeName) {
@@ -80,11 +80,11 @@ const validateOptionalProp = function (keyword, propName, typeName) {
   }
 }
 
-const validateProps = function (keywords) {
+const validateProps = (keywords) => {
   Object.keys(keywords).forEach(validateProp)
 }
 
-const validateProp = function (propName) {
+const validateProp = (propName) => {
   if (!VALID_PROPS.has(propName)) {
     const propNames = [...VALID_PROPS].join(', ')
     throw new KeywordError(

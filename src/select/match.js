@@ -26,7 +26,7 @@ import { findLastIndex } from '../utils/find.js'
 //       e.g. include a1-99 and b-z0
 //     - vice-versa, e.g. include all but a1-99 and b-z0
 //     - inclusion of all but specific combinations, e.g. b2 and o5
-export const matchSelectors = function (combination, selectors) {
+export const matchSelectors = (combination, selectors) => {
   if (isEmpty(selectors)) {
     return true
   }
@@ -46,9 +46,7 @@ export const matchSelectors = function (combination, selectors) {
 }
 
 // Matching is case-insensitive
-const normalizeCombinationId = function (id) {
-  return id.toLowerCase()
-}
+const normalizeCombinationId = (id) => id.toLowerCase()
 
 // An empty array selects any combinations:
 //  - In principle, users might expect either any or no combinations to be
@@ -64,30 +62,22 @@ const normalizeCombinationId = function (id) {
 //    instead.
 //     - While less logical, it is what users most likely mean
 //     - Also, it avoids --select= and --select="" from behaving differently
-const isEmpty = function (selectors) {
-  return (
-    selectors.length === 0 ||
-    (selectors.length === 1 && selectors[0].intersect.flat().length === 0)
-  )
-}
+const isEmpty = (selectors) =>
+  selectors.length === 0 ||
+  (selectors.length === 1 && selectors[0].intersect.flat().length === 0)
 
-const matchIds = function (combinationIds, { intersect }) {
-  return intersect.every((ids) => matchGroup(combinationIds, ids))
-}
+const matchIds = (combinationIds, { intersect }) =>
+  intersect.every((ids) => matchGroup(combinationIds, ids))
 
-const matchGroup = function (combinationIds, ids) {
-  return ids.some((id) => anyMatchId(combinationIds, id))
-}
+const matchGroup = (combinationIds, ids) =>
+  ids.some((id) => anyMatchId(combinationIds, id))
 
-const anyMatchId = function (combinationIds, id) {
-  return combinationIds.some((combinationId) => matchId(combinationId, id))
-}
+const anyMatchId = (combinationIds, id) =>
+  combinationIds.some((combinationId) => matchId(combinationId, id))
 
 // We allow partial substring matching:
 //  - Use cases:
 //     - Allows selecting a group of related tasks
 //     - Faster to type on the CLI
 //  - Simpler yet as useful as globbing or regular expressions
-const matchId = function (combinationId, id) {
-  return combinationId.includes(id)
-}
+const matchId = (combinationId, id) => combinationId.includes(id)

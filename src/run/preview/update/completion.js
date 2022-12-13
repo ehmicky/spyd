@@ -10,18 +10,18 @@ import now from 'precise-now'
 // `combinationStart` is undefined on the first preview.
 // `combinationEnd` is undefined when a combination has started but has not
 // computed its estimated end yet.
-export const updateCompletion = function (previewState) {
+export const updateCompletion = (previewState) => {
   const { durationLeft, percentage } = getCompletionProps(previewState)
   // eslint-disable-next-line fp/no-mutating-assign
   Object.assign(previewState, { durationLeft, percentage })
 }
 
-const getCompletionProps = function ({
+const getCompletionProps = ({
   combinationStart,
   combinationEnd,
   index,
   total,
-}) {
+}) => {
   const completePercentage = index / total
 
   if (combinationStart === undefined || combinationEnd === undefined) {
@@ -41,7 +41,7 @@ const getCompletionProps = function ({
 export const EMPTY_DURATION_LEFT = '--:--'
 
 // Retrieve seconds/minutes/hours left in a human-friendly string
-const getDurationLeft = function (nsecs) {
+const getDurationLeft = (nsecs) => {
   const secs = Math.ceil(nsecs / NANOSECS_TO_SECS)
   const minutes = Math.floor(secs / SECS_TO_MINUTES)
   const secsA = secs - minutes * SECS_TO_MINUTES
@@ -56,6 +56,4 @@ const NANOSECS_TO_SECS = 1e9
 const SECS_TO_MINUTES = 60
 const MINUTES_TO_HOURS = 60
 
-const padDuration = function (duration) {
-  return String(duration).padStart(2, '0')
-}
+const padDuration = (duration) => String(duration).padStart(2, '0')

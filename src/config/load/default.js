@@ -34,7 +34,7 @@ import { CONFIG_NPM_PREFIX } from './resolve.js'
 //  - We only allow this for the top-level flags not inside configuration files
 //    to keep those self-contained.
 // Retrieve the default value for the `config` CLI flag
-export const getDefaultConfig = async function ({ cwd }) {
+export const getDefaultConfig = async ({ cwd }) => {
   const lookupDirs = await getLookupDirs(cwd)
   const matchedDir = await findUp((cwdA) => findMatchingDir(cwdA, lookupDirs), {
     cwd,
@@ -45,7 +45,7 @@ export const getDefaultConfig = async function ({ cwd }) {
 
 // `find-up` does not support looking up for multiple files while also looking
 // for patterns like `./packages/spyd-config-*`, so we need to call it twice.
-const getLookupDirs = async function (cwd) {
+const getLookupDirs = async (cwd) => {
   const configPackageDir = await findUp(testConfigPackageDir, {
     cwd,
     type: 'directory',
@@ -58,7 +58,7 @@ const getLookupDirs = async function (cwd) {
 // Order matters here
 const DEFAULT_LOOKUP_DIRS = ['', 'benchmark']
 
-const testConfigPackageDir = async function (dir) {
+const testConfigPackageDir = async (dir) => {
   const packagesDir = `${dir}/packages`
 
   if (!(await pathExists(packagesDir))) {
@@ -75,16 +75,14 @@ const testConfigPackageDir = async function (dir) {
   return `${packagesDir}/${filename}`
 }
 
-const isConfigPackageDir = function (filename) {
-  return filename.startsWith(CONFIG_NPM_PREFIX)
-}
+const isConfigPackageDir = (filename) => filename.startsWith(CONFIG_NPM_PREFIX)
 
-const findMatchingDir = async function (cwd, lookupDirs) {
+const findMatchingDir = async (cwd, lookupDirs) => {
   const lookupDirsA = lookupDirs.map((lookupDir) => `${cwd}/${lookupDir}`)
   return await pLocate(lookupDirsA, hasMatchingPath)
 }
 
-const hasMatchingPath = async function (lookupDir) {
+const hasMatchingPath = async (lookupDir) => {
   if (!(await pathExists(lookupDir))) {
     return false
   }
@@ -93,13 +91,11 @@ const hasMatchingPath = async function (lookupDir) {
   return matchingPaths.length !== 0
 }
 
-const findMatchingPaths = async function (lookupDir) {
+const findMatchingPaths = async (lookupDir) => {
   const filenames = await readdir(lookupDir)
   return filenames
     .filter(isMatchingFilename)
     .map((filename) => normalize(`${lookupDir}/${filename}`))
 }
 
-const isMatchingFilename = function (filePath) {
-  return CONFIG_FILENAMES.has(filePath)
-}
+const isMatchingFilename = (filePath) => CONFIG_FILENAMES.has(filePath)

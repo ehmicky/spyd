@@ -2,10 +2,7 @@ import { binarySearch } from './binary_search.js'
 
 // Retrieve histogram of an array of floats or integers.
 // Array must be sorted and not empty.
-export const getHistogram = function (
-  array,
-  { minIndex, maxIndex, bucketCount },
-) {
+export const getHistogram = (array, { minIndex, maxIndex, bucketCount }) => {
   const min = array[minIndex]
   const max = array[maxIndex]
   const length = maxIndex - minIndex + 1
@@ -19,7 +16,7 @@ export const getHistogram = function (
 }
 
 // When the array has only integers, bucket edges are rounded to integers
-const arrayHasIntegers = function (array, minIndex, length) {
+const arrayHasIntegers = (array, minIndex, length) => {
   const strideLength = length / INTEGER_CHECK_LENGTH
   const strideIndexes = Array.from(
     { length: INTEGER_CHECK_LENGTH },
@@ -34,12 +31,11 @@ const arrayHasIntegers = function (array, minIndex, length) {
 // integers
 const INTEGER_CHECK_LENGTH = 100
 
-const getStrideIndex = function (index, minIndex, strideLength) {
-  return Math.floor(minIndex + index * strideLength)
-}
+const getStrideIndex = (index, minIndex, strideLength) =>
+  Math.floor(minIndex + index * strideLength)
 
 // Retrieve buckets `start` and `end`
-const getBucketEdges = function ({ min, max, bucketCount, hasIntegers }) {
+const getBucketEdges = ({ min, max, bucketCount, hasIntegers }) => {
   const bucketSize = (max - min) / bucketCount
 
   if (bucketSize === 0) {
@@ -56,22 +52,14 @@ const getBucketEdges = function ({ min, max, bucketCount, hasIntegers }) {
 }
 
 // Avoids float precision roundoff error at the end by using `max` directly
-const getBucketEdge = function (
-  bucketIndex,
-  { min, max, bucketCount, bucketSize },
-) {
-  return bucketIndex === bucketCount ? max : min + bucketIndex * bucketSize
-}
+const getBucketEdge = (bucketIndex, { min, max, bucketCount, bucketSize }) =>
+  bucketIndex === bucketCount ? max : min + bucketIndex * bucketSize
 
-const roundBucketEdge = function ([start, end]) {
-  return [start, end].map(Math.floor)
-}
+const roundBucketEdge = ([start, end]) => [start, end].map(Math.floor)
 
-const hasDifferentStartEnd = function ([start, end]) {
-  return start !== end
-}
+const hasDifferentStartEnd = ([start, end]) => start !== end
 
-const getBucket = function ({
+const getBucket = ({
   start,
   end,
   array,
@@ -79,7 +67,7 @@ const getBucket = function ({
   length,
   state,
   state: { startIndex },
-}) {
+}) => {
   const endIndex = binarySearch(array, end, startIndex, maxIndex)
   const frequency = (endIndex - startIndex) / length
 

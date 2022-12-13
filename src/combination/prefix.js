@@ -1,17 +1,14 @@
 // Check if a dimension's name is using a specific prefix
-export const hasPrefix = function (propName, prefixName) {
-  return propName.startsWith(PREFIXES[prefixName])
-}
+export const hasPrefix = (propName, prefixName) =>
+  propName.startsWith(PREFIXES[prefixName])
 
 // Add a specific prefix to a dimension's name
-export const addPrefix = function (propName, prefixName) {
-  return `${PREFIXES[prefixName]}${propName}`
-}
+export const addPrefix = (propName, prefixName) =>
+  `${PREFIXES[prefixName]}${propName}`
 
 // Remove a specific prefix to a dimension's name
-export const removePrefix = function (propName, prefixName) {
-  return propName.slice(PREFIXES[prefixName].length)
-}
+export const removePrefix = (propName, prefixName) =>
+  propName.slice(PREFIXES[prefixName].length)
 
 // Some dimensions can have multiple sub-dimensions.
 // Those use prefixes in internal properties, but not in output and error

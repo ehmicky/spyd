@@ -9,7 +9,7 @@ import { throwAbortError } from './error.js'
 import { STOP_SIGNALS } from './signals.js'
 
 // Listen for signals and trigger stop/abort logic
-export const handleStop = async function (stopState, previewState) {
+export const handleStop = async (stopState, previewState) => {
   await waitForStopSignals(stopState)
   await afterStop(stopState, previewState)
 
@@ -20,32 +20,32 @@ export const handleStop = async function (stopState, previewState) {
   await afterAbort(previewState)
 }
 
-const afterStop = async function (stopState, previewState) {
+const afterStop = async (stopState, previewState) => {
   // eslint-disable-next-line fp/no-mutation, no-param-reassign
   stopState.stopped = true
   removeAction(previewState, STOP_ACTION.name)
   await updateDescription(previewState, STOP_DESCRIPTION)
 }
 
-const beforeAbort = async function (previewState) {
+const beforeAbort = async (previewState) => {
   addAction(previewState, ABORT_ACTION)
   await updatePreview(previewState)
 }
 
-const afterAbort = async function (previewState) {
+const afterAbort = async (previewState) => {
   removeAction(previewState, ABORT_ACTION.name)
   await updatePreview(previewState)
   throwAbortError()
 }
 
-const waitForStopSignals = async function ({ cancelSignal }) {
+const waitForStopSignals = async ({ cancelSignal }) => {
   await waitForEvents(process, STOP_SIGNALS, cancelSignal)
 }
 
 // Users must wait 5 seconds before being able to abort.
 // This promotes proper cleanup.
 // Also, this prevents misuse due to users mistakenly hitting the keys twice.
-const waitForAbort = async function ({ cancelSignal }) {
+const waitForAbort = async ({ cancelSignal }) => {
   await waitForDelay(ABORT_DELAY, cancelSignal)
 }
 

@@ -13,7 +13,7 @@ import { initPreview } from './run/preview/start_end/main.js'
 
 // Measure code defined in a tasks file and report the results.
 // Default command.
-export const run = async function (configFlags) {
+export const run = async (configFlags) => {
   try {
     const config = await getConfig('run', configFlags)
     const previewState = initPreview(config)
@@ -32,7 +32,7 @@ export const run = async function (configFlags) {
 }
 
 // Show a previous result
-export const show = async function (configFlags) {
+export const show = async (configFlags) => {
   try {
     const config = await getConfig('show', configFlags)
     const { rawResult, history } = await getFromHistory(config)
@@ -45,7 +45,7 @@ export const show = async function (configFlags) {
 }
 
 // Remove a previous result
-export const remove = async function (configFlags) {
+export const remove = async (configFlags) => {
   try {
     const config = await getConfig('remove', configFlags)
     const { rawResult, history } = await getFromHistory(config)
@@ -59,7 +59,7 @@ export const remove = async function (configFlags) {
 }
 
 // Execute tasks without benchmarking them
-export const dev = async function (configFlags) {
+export const dev = async (configFlags) => {
   try {
     const config = await getConfig('dev', configFlags)
     const combinations = await listCombinations(config)

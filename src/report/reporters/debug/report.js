@@ -6,17 +6,17 @@ import { getTables } from '../../utils/table/main.js'
 import { getStatNames, getCell } from './stats.js'
 
 // Debugging reporter only meant for development purpose
-export const reportTerminal = function (
+export const reportTerminal = (
   { combinations, screenWidth },
   { mini, sparse, header, stats: statNames },
-) {
+) => {
   const statNamesA = getStatNames(combinations, statNames, sparse)
   const headerRows = getHeaderRow(statNamesA, mini, header)
   const bodyRows = getBodyRows(combinations, statNamesA)
   return getTables([...headerRows, ...bodyRows], screenWidth, mini)
 }
 
-const getHeaderRow = function (statNames, mini, header) {
+const getHeaderRow = (statNames, mini, header) => {
   if (!header) {
     return []
   }
@@ -26,15 +26,12 @@ const getHeaderRow = function (statNames, mini, header) {
   return mini ? [firstRow] : [firstRow, []]
 }
 
-const getHeaderName = function (statName) {
-  return fieldColor(STAT_TITLES[statName])
-}
+const getHeaderName = (statName) => fieldColor(STAT_TITLES[statName])
 
-const getBodyRows = function (combinations, statNames) {
-  return combinations.map((combination) => getBodyRow(combination, statNames))
-}
+const getBodyRows = (combinations, statNames) =>
+  combinations.map((combination) => getBodyRow(combination, statNames))
 
-const getBodyRow = function (combination, statNames) {
+const getBodyRow = (combination, statNames) => {
   const leftCell = getCombinationTitleColor(combination)
   const rightCells = statNames.map((statName) => getCell(statName, combination))
   return [leftCell, ...rightCells]

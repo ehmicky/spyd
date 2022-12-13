@@ -21,7 +21,7 @@ import { isNegativeLimit } from './transform.js'
 //  - The difference might not be due to the current commit but to the previous
 //    one, making it less meaningful
 //  - This would require additional visualization in reporters
-export const addCombinationsDiff = function (result, sinceResult) {
+export const addCombinationsDiff = (result, sinceResult) => {
   if (sinceResult === undefined || result.id === sinceResult.id) {
     return result
   }
@@ -34,10 +34,10 @@ export const addCombinationsDiff = function (result, sinceResult) {
 
 // `mean` can only be `undefined` for combinations not measured yet in
 // previews.
-const addCombinationDiff = function (
+const addCombinationDiff = (
   combination,
   { combinations: previousCombinations },
-) {
+) => {
   if (combination.stats.mean === undefined) {
     return combination
   }
@@ -65,7 +65,7 @@ const addCombinationDiff = function (
 // We do not try to hide or show the `diff` as 0% instead since users might:
 //  - think it is due to a bug
 //  - compute the diff themselves anyway
-const addDiff = function ({
+const addDiff = ({
   combination,
   combination: {
     config: { limit },
@@ -76,7 +76,7 @@ const addDiff = function ({
     stats: previousStats,
     stats: { mean: previousMean },
   },
-}) {
+}) => {
   const diff = mean / previousMean - 1
   const diffPrecise = haveSimilarMeans(stats, previousStats) === false
   const diffLimit = getDiffLimit(diff, diffPrecise, limit)
@@ -86,12 +86,10 @@ const addDiff = function ({
   }
 }
 
-const getDiffLimit = function (diff, diffPrecise, limit) {
-  return diffPrecise && limit !== undefined && isOverLimit(diff, limit)
+const getDiffLimit = (diff, diffPrecise, limit) =>
+  diffPrecise && limit !== undefined && isOverLimit(diff, limit)
     ? { diffLimit: limit }
     : {}
-}
 
-const isOverLimit = function (diff, limit) {
-  return isNegativeLimit(limit) ? diff < limit : diff > limit
-}
+const isOverLimit = (diff, limit) =>
+  isNegativeLimit(limit) ? diff < limit : diff > limit

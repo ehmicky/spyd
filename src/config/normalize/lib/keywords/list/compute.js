@@ -1,6 +1,4 @@
-const main = function (definition) {
-  return { input: definition }
-}
+const main = (definition) => ({ input: definition })
 
 // Apply `compute[(info)]` which sets an input from the system, instead of the
 // user

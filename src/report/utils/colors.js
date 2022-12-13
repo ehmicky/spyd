@@ -4,7 +4,7 @@ import colorsOption from 'colors-option'
 const chalk = colorsOption()
 const { redBright, level } = chalk
 
-const hslToChalk = function (hue, saturation, lightness) {
+const hslToChalk = (hue, saturation, lightness) => {
   const [red, green, blue] = colorConvert.hsl.rgb([hue, saturation, lightness])
   return chalk.rgb(red, green, blue)
 }
@@ -32,7 +32,7 @@ export const noteColor = grayColor
 export const suffixColor = grayColor
 
 // Gradient that works with 1, 4, 8 and 24-bit colors
-export const graphGradientColor = function (percentage) {
+export const graphGradientColor = (percentage) => {
   const percentageA = level < 3 ? 0 : percentage
   const lightness = MAX_GRAPH_LIGHTNESS - percentageA * MAX_GRAPH_SHADE
   return hslToChalk(MAIN_HUE, MAIN_SATURATION, lightness)

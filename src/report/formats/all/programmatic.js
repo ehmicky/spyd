@@ -1,12 +1,10 @@
 // Format meant for the programmatic result.
 export const PROGRAMMATIC_FORMAT = {
   name: 'programmatic',
-  detect() {
-    return false
-  },
+  detect: () => false,
   methods: [],
   // eslint-disable-next-line no-empty-function
-  report() {},
+  report: () => {},
   concat: false,
   footer: undefined,
   padding: false,

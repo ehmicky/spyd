@@ -1,5 +1,5 @@
 // Delta can be "first" to compare with the least recent rawResult.
-const parseFirst = function (delta) {
+const parseFirst = (delta) => {
   if (delta !== FIRST_DELTA) {
     return
   }
@@ -9,9 +9,7 @@ const parseFirst = function (delta) {
 
 const FIRST_DELTA = 'first'
 
-const findByFirst = function () {
-  return 0
-}
+const findByFirst = () => 0
 
 export const firstFormat = {
   type: 'first',

@@ -12,13 +12,13 @@ import { UserError } from './error.js'
 
 // Retrieve top-level properties that are shared with all plugins of a specific
 // type. Those are merged with plugin-specific properties.
-export const getSharedConfig = function (sharedConfig, shared) {
+export const getSharedConfig = (sharedConfig, shared) => {
   const sharedPropNames = getSharedPropNames(shared)
   const sharedConfigA = pick(sharedConfig, sharedPropNames)
   return { sharedConfig: sharedConfigA, sharedPropNames }
 }
 
-const getSharedPropNames = function (shared = []) {
+const getSharedPropNames = (shared = []) => {
   const sharedPropNames = getRuleNames(shared, [])
   const sharedPropNamesA = [
     ...new Set(sharedPropNames.map(serializeQuery)),
@@ -26,7 +26,7 @@ const getSharedPropNames = function (shared = []) {
   return sharedPropNamesA.filter(isPropRuleName)
 }
 
-const getRuleNames = function (rulesOrRule, indices) {
+const getRuleNames = (rulesOrRule, indices) => {
   const rulesOrRuleA =
     rulesOrRule instanceof Set ? [...rulesOrRule] : rulesOrRule
 
@@ -38,7 +38,7 @@ const getRuleNames = function (rulesOrRule, indices) {
 }
 
 // Parse and validate all `shared.*.name`
-const getRuleName = function ({ name }, indices) {
+const getRuleName = ({ name }, indices) => {
   try {
     return normalizeQuery(name)
   } catch (error) {
@@ -48,13 +48,13 @@ const getRuleName = function ({ name }, indices) {
 }
 
 // Normalize plugin-specific configuration property `name`
-export const normalizeRuleName = function (name) {
+export const normalizeRuleName = (name) => {
   const queryArrays = normalizeQuery(name)
   queryArrays.forEach(validateRuleName)
   return queryArrays
 }
 
-const validateRuleName = function (queryArray) {
+const validateRuleName = (queryArray) => {
   if (!isPropRuleName(queryArray)) {
     throw new UserError(
       `the first token must be a property name instead of: ${inspect(
@@ -64,12 +64,10 @@ const validateRuleName = function (queryArray) {
   }
 }
 
-const isPropRuleName = function ([firstToken]) {
-  return getTokenType(firstToken) === 'prop'
-}
+const isPropRuleName = ([firstToken]) => getTokenType(firstToken) === 'prop'
 
 // Validate that plugin configuration properties do not overwrite shared ones
-export const validateSharedProp = function (name, sharedPropNames) {
+export const validateSharedProp = (name, sharedPropNames) => {
   const sharedPropName = findSharedProp(name, sharedPropNames)
 
   if (sharedPropName !== undefined) {
@@ -80,12 +78,8 @@ export const validateSharedProp = function (name, sharedPropNames) {
   }
 }
 
-const findSharedProp = function (name, sharedPropNames) {
-  return sharedPropNames.find((sharedPropName) =>
-    isSharedProp(name, sharedPropName),
-  )
-}
+const findSharedProp = (name, sharedPropNames) =>
+  sharedPropNames.find((sharedPropName) => isSharedProp(name, sharedPropName))
 
-const isSharedProp = function (name, [sharedFirstToken]) {
-  return name.some(([firstToken]) => firstToken === sharedFirstToken)
-}
+const isSharedProp = (name, [sharedFirstToken]) =>
+  name.some(([firstToken]) => firstToken === sharedFirstToken)

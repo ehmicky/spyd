@@ -4,7 +4,7 @@ import { subtitleColor } from './colors.js'
 import { indentBlock } from './indent.js'
 
 // Prettify a value by highlighting keys and indenting it
-export const prettifyValue = function (value) {
+export const prettifyValue = (value) => {
   if (Array.isArray(value)) {
     return prettifyArray(value)
   }
@@ -20,20 +20,16 @@ export const prettifyValue = function (value) {
   return String(value).trim()
 }
 
-const prettifyArray = function (array) {
+const prettifyArray = (array) => {
   const prettifiedArray = array.map(prettifyValue).filter(Boolean)
   const newlines = array.some(isComplex) ? '\n\n' : '\n'
   return prettifiedArray.join(newlines)
 }
 
-const prettifyObject = function (object) {
-  return Object.entries(object)
-    .map(prettifyObjectPair)
-    .filter(Boolean)
-    .join('\n')
-}
+const prettifyObject = (object) =>
+  Object.entries(object).map(prettifyObjectPair).filter(Boolean).join('\n')
 
-const prettifyObjectPair = function ([name, value]) {
+const prettifyObjectPair = ([name, value]) => {
   const string = prettifyValue(value)
 
   if (string === '') {
@@ -45,10 +41,6 @@ const prettifyObjectPair = function ([name, value]) {
   return `${prefix}${stringA}`
 }
 
-const isComplex = function (value) {
-  return Array.isArray(value) || isPlainObj(value)
-}
+const isComplex = (value) => Array.isArray(value) || isPlainObj(value)
 
-const getPrefix = function (name) {
-  return subtitleColor(`${name}:`)
-}
+const getPrefix = (name) => subtitleColor(`${name}:`)
