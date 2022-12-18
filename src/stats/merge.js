@@ -38,6 +38,7 @@ const resizeArray = (bigArray, smallArray) => {
 
 // Copy the minimum value of `bigArray` or `smallArray` to the merged array,
 // the repeat until both arrays are merged.
+// Similar to an insertion sort.
 // This function is a hot path, which must be tuned for performance. This is why
 // we use imperative code.
 /* eslint-disable max-statements, max-depth, no-param-reassign, fp/no-let,
