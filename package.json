@@ -95,7 +95,7 @@
     "yargs": "^17.7.1"
   },
   "devDependencies": {
-    "@ehmicky/dev-tasks": "^2.0.67"
+    "@ehmicky/dev-tasks": "^2.0.68"
   },
   "engines": {
     "node": ">=14.18.0"
