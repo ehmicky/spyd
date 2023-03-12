@@ -1,7 +1,7 @@
+import Ajv from 'ajv/dist/2020.js'
 import ajvErrors from 'ajv-errors'
 import ajvFormats from 'ajv-formats'
 import ajvKeywords from 'ajv-keywords'
-import Ajv from 'ajv/dist/2020.js'
 import { decodePointer } from 'json-ptr'
 
 const normalize = (definition) => {
