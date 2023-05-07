@@ -66,8 +66,6 @@ const isDimensionDefaultId = (id, propName, dimension) =>
 // Retrieve the default id of a dimension
 const getDefaultId = (propName, { prefixName, defaultIdPrefix }) => {
   const propNameA = removePrefix(propName, prefixName)
-  const propNameB = propNameA.replace(DOT_REGEXP, '_')
+  const propNameB = propNameA.replaceAll('.', '_')
   return `${defaultIdPrefix}${propNameB}`
 }
-
-const DOT_REGEXP = /\./gu
