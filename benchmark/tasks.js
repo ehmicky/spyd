@@ -2,7 +2,6 @@
 import { execFile } from 'node:child_process'
 import { randomInt, createHash } from 'node:crypto'
 import { readFile, writeFile, unlink } from 'node:fs/promises'
-// eslint-disable-next-line no-shadow
 import { setTimeout } from 'node:timers/promises'
 import { promisify } from 'node:util'
 
