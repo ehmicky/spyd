@@ -1,6 +1,8 @@
 import process from 'node:process'
 
-import { waitForEvents, waitForDelay } from '../../utils/timeout.js'
+import delay from 'delay'
+
+import { waitForEvents } from '../../utils/timeout.js'
 import { addAction, removeAction } from '../preview/action.js'
 import { updateDescription, STOP_DESCRIPTION } from '../preview/description.js'
 import { updatePreview } from '../preview/update/main.js'
@@ -46,7 +48,7 @@ const waitForStopSignals = async ({ cancelSignal }) => {
 // This promotes proper cleanup.
 // Also, this prevents misuse due to users mistakenly hitting the keys twice.
 const waitForAbort = async ({ cancelSignal }) => {
-  await waitForDelay(ABORT_DELAY, cancelSignal)
+  await delay(ABORT_DELAY, { signal: cancelSignal })
 }
 
 const ABORT_DELAY = 5e3

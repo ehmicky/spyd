@@ -1,4 +1,3 @@
-import delay from 'delay'
 import { pEvent } from 'p-event'
 
 export const createController = () => {
@@ -14,9 +13,4 @@ export const waitForEvents = async (eventEmitter, signals, cancelSignal) => {
   const promise = pEvent(eventEmitter, signals)
   cancelSignal.addEventListener('abort', promise.cancel)
   await promise
-}
-
-// TODO: replace with `timers/promises` after dropping support for Node <15
-export const waitForDelay = async (duration, cancelSignal) => {
-  await delay(duration, { signal: cancelSignal })
 }
