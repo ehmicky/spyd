@@ -46,7 +46,6 @@ const getUuidFirstChars = (uuid, length) =>
   stripUuidDashes(uuid).slice(0, length)
 
 // Dashes are stripped from UUID to keep filenames short
-export const stripUuidDashes = (uuid) => uuid.replace(DASH_REGEXP, '')
+export const stripUuidDashes = (uuid) => uuid.replaceAll(DASH, '')
 
-// TODO: use `String.replaceAll()` instead after dropping support for Node 14
-const DASH_REGEXP = /-/gu
+const DASH = '-'
