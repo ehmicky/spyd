@@ -67,7 +67,7 @@
     "nvexeca": "^9.0.0",
     "os-name": "^5.1.0",
     "p-locate": "^6.0.0",
-    "p-map": "^5.5.0",
+    "p-map": "^6.0.0",
     "p-map-series": "^3.0.0",
     "p-props": "^5.0.0",
     "path-exists": "^5.0.0",
