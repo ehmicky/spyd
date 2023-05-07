@@ -1,5 +1,3 @@
-// TODO: use `util.stripVTControlCharacters()` after dropping support for
-// Node <16.11.0
 import stripAnsi from 'strip-ansi'
 
 import { addPadding } from '../utils/indent.js'
