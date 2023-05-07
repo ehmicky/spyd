@@ -1,7 +1,6 @@
 import delay from 'delay'
 import { pEvent } from 'p-event'
 
-// TODO: replace with `timers` after dropping support for Node <15
 export const createController = () => {
   const controller = new AbortController()
   return {
