@@ -37,7 +37,7 @@
     "bytes": "^3.1.2",
     "cli-cursor": "^4.0.0",
     "color-convert": "^2.0.1",
-    "colors-option": "^4.5.0",
+    "colors-option": "^5.0.0",
     "decamelize": "^6.0.0",
     "declarative-merge": "^2.5.0",
     "delay": "^5.0.0",
