@@ -29,7 +29,6 @@
     "lib": "src"
   },
   "dependencies": {
-    "abort-controller": "^3.0.0",
     "ajv": "^8.12.0",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.0-rc.0",
