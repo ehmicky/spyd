@@ -1,3 +1,5 @@
+import confirm from '@inquirer/confirm'
+
 import { isTtyInput } from '../../report/tty.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
@@ -50,12 +52,7 @@ const shouldRemoveFromHistory = async (force) => {
     return true
   }
 
-  // Lazy loads for performance
-  const { default: inquirer } = await import('inquirer')
-  const { confirmed } = await inquirer.prompt([
-    { type: 'confirm', name: 'confirmed', message: 'Remove the result?' },
-  ])
-  return confirmed
+  return await confirm({ message: 'Remove the result?' })
 }
 
 // Find the target result using the main delta.
