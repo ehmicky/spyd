@@ -77,7 +77,7 @@
     "semver": "^7.5.0",
     "set-array": "^4.0.0",
     "sort-on": "^5.2.0",
-    "string-width": "^5.1.2",
+    "string-width": "^6.1.0",
     "strip-ansi": "^7.0.1",
     "strip-final-newline": "^3.0.0",
     "time-resolution": "^2.0.0",
