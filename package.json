@@ -47,7 +47,6 @@
     "fast-glob": "^3.2.12",
     "filter-obj": "^5.1.0",
     "find-up": "^6.3.0",
-    "get-stream": "^6.0.0",
     "got": "^12.6.0",
     "indent-string": "^5.0.0",
     "inquirer": "^9.1.4",
