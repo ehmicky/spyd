@@ -1,8 +1,8 @@
 import process from 'node:process'
 
 import delay from 'delay'
+import { pEvent } from 'p-event'
 
-import { waitForEvents } from '../../utils/timeout.js'
 import { addAction, removeAction } from '../preview/action.js'
 import { updateDescription, STOP_DESCRIPTION } from '../preview/description.js'
 import { updatePreview } from '../preview/update/main.js'
@@ -40,8 +40,11 @@ const afterAbort = async (previewState) => {
   throwAbortError()
 }
 
+// TODO: replace with `once()` after dropping support for Node <15
 const waitForStopSignals = async ({ cancelSignal }) => {
-  await waitForEvents(process, STOP_SIGNALS, cancelSignal)
+  const promise = pEvent(process, STOP_SIGNALS)
+  cancelSignal.addEventListener('abort', promise.cancel)
+  await promise
 }
 
 // Users must wait 5 seconds before being able to abort.
