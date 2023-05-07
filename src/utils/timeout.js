@@ -1,6 +1,3 @@
-// TODO: remove this comment when dropping support for Node <15
-// eslint-disable-next-line no-shadow
-import AbortController from 'abort-controller'
 import delay from 'delay'
 import { pEvent } from 'p-event'
 
