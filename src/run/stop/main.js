@@ -1,5 +1,4 @@
 import { noUnhandledRejection } from '../../error/unhandled_rejection.js'
-import { createController } from '../../utils/timeout.js'
 import { addAction } from '../preview/action.js'
 import { refreshPreview } from '../preview/update/main.js'
 
@@ -15,8 +14,14 @@ import { removeDefaultHandlers, restoreDefaultHandlers } from './signals.js'
 // on how many times the benchmark was stopped/continued.
 export const addStopHandler = async (previewState) => {
   const signalHandler = removeDefaultHandlers()
-  const { cancelSignal, cancel } = createController()
-  const stopState = { stopped: false, signalHandler, cancelSignal, cancel }
+  const controller = new AbortController()
+  const cancel = controller.abort.bind(controller)
+  const stopState = {
+    stopped: false,
+    signalHandler,
+    cancelSignal: controller.signal,
+    cancel,
+  }
   // eslint-disable-next-line fp/no-mutation
   stopState.onAbort = noUnhandledRejection(handleStop(stopState, previewState))
 
