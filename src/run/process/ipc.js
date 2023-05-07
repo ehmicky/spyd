@@ -1,7 +1,6 @@
 import { once } from 'node:events'
+import { json } from 'node:stream/consumers'
 import { promisify } from 'node:util'
-
-import getStream from 'get-stream'
 
 import { PluginError } from '../../error/main.js'
 
@@ -63,12 +62,7 @@ export const receiveReturnValue = async (server) => {
 // Parse the request's JSON body
 const parseReturnValue = async (req) => {
   try {
-    const returnValueString = await Promise.race([
-      throwOnStreamError(req),
-      getStream(req),
-    ])
-    const returnValue = JSON.parse(returnValueString)
-    return returnValue
+    return await Promise.race([throwOnStreamError(req), json(req)])
   } catch (cause) {
     throw new PluginError('Could not receive HTTP request.', { cause })
   }
