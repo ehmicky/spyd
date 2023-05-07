@@ -91,7 +91,7 @@
     "wild-wild-path": "^3.6.0",
     "wild-wild-utils": "^4.9.0",
     "wrap-ansi": "^8.1.0",
-    "write-file-atomic": "^5.0.0",
+    "write-file-atomic": "^5.0.1",
     "yargs": "^17.7.1"
   },
   "devDependencies": {
