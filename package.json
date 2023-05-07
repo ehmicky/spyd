@@ -73,7 +73,7 @@
     "p-props": "^5.0.0",
     "path-exists": "^5.0.0",
     "path-type": "^5.0.0",
-    "precise-now": "^1.2.0",
+    "precise-now": "^2.0.0",
     "read-pkg-up": "^9.1.0",
     "semver": "^7.5.0",
     "set-array": "^4.0.0",
