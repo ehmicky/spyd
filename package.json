@@ -74,7 +74,7 @@
     "path-type": "^5.0.0",
     "precise-now": "^2.0.0",
     "read-pkg-up": "^9.1.0",
-    "semver": "^7.5.0",
+    "semver": "^7.5.3",
     "set-array": "^4.0.0",
     "sort-on": "^5.2.0",
     "string-width": "^6.1.0",
