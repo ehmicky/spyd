@@ -40,7 +40,7 @@
     "colors-option": "^5.0.0",
     "decamelize": "^6.0.0",
     "declarative-merge": "^3.0.0",
-    "delay": "^5.0.0",
+    "delay": "^6.0.0",
     "detect-newline": "^4.0.0",
     "env-ci": "^9.1.0",
     "execa": "^7.1.1",
