@@ -47,7 +47,7 @@
     "fast-glob": "^3.2.12",
     "filter-obj": "^5.1.0",
     "find-up": "^6.3.0",
-    "got": "^12.6.0",
+    "got": "^13.0.0",
     "indent-string": "^5.0.0",
     "is-interactive": "^2.0.0",
     "is-json-value": "^2.0.0",
