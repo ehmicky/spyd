@@ -58,8 +58,14 @@ export const resizeHistogram = (counts, newSize) => {
   return newHistogram
 }
 
-// eslint-disable-next-line max-params
-const getSum = (previousInteger, integer, previousFraction, fraction, counts) =>
+const getSum = (
+  previousInteger,
+  integer,
+  previousFraction,
+  fraction,
+  counts,
+  // eslint-disable-next-line max-params
+) =>
   integer === previousInteger
     ? getSimpleSum(integer, previousFraction, fraction, counts)
     : getComplexSum(
