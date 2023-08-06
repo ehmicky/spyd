@@ -19,7 +19,10 @@
   "keywords": [],
   "license": "MIT",
   "homepage": "https://www.github.com/ehmicky/spyd",
-  "repository": "ehmicky/spyd",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehmicky/spyd.git"
+  },
   "bugs": {
     "url": "https://github.com/ehmicky/spyd/issues"
   },
