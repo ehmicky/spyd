@@ -49,9 +49,8 @@ export const reportPreview = async (startProps) => {
 // Compute the report contents.
 // Unlike `reportPreview`, the first reporter is the programmatic one.
 export const reportCompute = async (startProps) => {
-  const [{ result: programmaticResult }, ...contents] = await computeContents(
-    startProps,
-  )
+  const [{ result: programmaticResult }, ...contents] =
+    await computeContents(startProps)
   const contentsA = finalizeContents(contents)
   return { programmaticResult, contents: contentsA }
 }
