@@ -1,7 +1,5 @@
 import stripFinalNewline from 'strip-final-newline'
 
-import { findLastIndex } from '../../utils/find.js'
-
 // Normalize task logs
 export const normalizeLogs = (taskLogs, truncated) => {
   const taskLogsA = stripFinalNewline(taskLogs.trim())
@@ -36,7 +34,7 @@ const stripPartialLine = (taskLogs, truncated) => {
 // Duplicate lines are very likely since the task is repeated.
 const removeDuplicateLines = (taskLogs) => {
   const lines = taskLogs.split('\n')
-  const duplicateIndex = findLastIndex(lines, isDuplicateLine)
+  const duplicateIndex = lines.findLastIndex(isDuplicateLine)
 
   if (duplicateIndex === -1) {
     return taskLogs
