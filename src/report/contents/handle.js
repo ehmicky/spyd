@@ -1,4 +1,4 @@
-import stripAnsi from 'strip-ansi'
+import { stripVTControlCharacters } from 'node:util'
 
 import { addPadding } from '../utils/indent.js'
 import { wrapRows } from '../utils/wrap.js'
@@ -20,7 +20,7 @@ export const handleContent = ({ content, padding, colors }) => {
 // Reporters should always assume `colors` are true, but the core remove this
 // from the returned content if not.
 const handleColors = (content, colors) =>
-  colors ? content : stripAnsi(content)
+  colors ? content : stripVTControlCharacters(content)
 
 // Trim the end of each line to avoid wrapping-related visual bugs
 const trimEnd = (content) => content.split('\n').map(trimEndLine).join('\n')
