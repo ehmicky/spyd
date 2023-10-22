@@ -79,7 +79,7 @@
     "read-pkg-up": "^10.1.0",
     "semver": "^7.5.4",
     "set-array": "^4.0.0",
-    "sort-on": "^5.2.0",
+    "sort-on": "^6.0.0",
     "string-width": "^6.1.0",
     "strip-ansi": "^7.1.0",
     "strip-final-newline": "^3.0.0",
