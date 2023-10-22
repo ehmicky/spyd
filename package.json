@@ -89,7 +89,7 @@
     "wild-wild-parser": "^5.0.0",
     "wild-wild-path": "^5.0.0",
     "wild-wild-utils": "^6.0.0",
-    "wrap-ansi": "^8.1.0",
+    "wrap-ansi": "^9.0.0",
     "write-file-atomic": "^5.0.1",
     "yargs": "^17.7.2"
   },
