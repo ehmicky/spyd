@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module'
 
-// TODO: replace with a JSON import after dropping support for Node <16.14.0
+// TODO: replace with a JSON import after dropping support for Node <21.0.0
 const {
   bugs: { url },
   engines: { node },
