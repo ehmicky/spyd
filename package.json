@@ -80,7 +80,7 @@
     "semver": "^7.5.4",
     "set-array": "^5.0.0",
     "sort-on": "^6.0.0",
-    "string-width": "^6.1.0",
+    "string-width": "^7.0.0",
     "strip-final-newline": "^3.0.0",
     "time-resolution": "^3.0.0",
     "tmp-promise": "^3.0.2",
