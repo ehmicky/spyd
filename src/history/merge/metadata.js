@@ -12,7 +12,7 @@ export const groupMetadata = (metadata) => {
 }
 
 const getMetadataGroupOrder = (metadataGroup) => {
-  const lastMetadatum = metadataGroup[metadataGroup.length - 1]
+  const lastMetadatum = metadataGroup.at(-1)
   return lastMetadatum.timestamp
 }
 

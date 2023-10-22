@@ -25,8 +25,7 @@ const getCriticalValueEntry = ({
   const preciseEntries = entries.slice(0, lastPreciseKey + 1)
   const impreciseEntries = entries.slice(lastPreciseKey)
   const preciseMap = new Map(preciseEntries)
-  const [impreciseEntriesMaxIndex] =
-    impreciseEntries[impreciseEntries.length - 1]
+  const [impreciseEntriesMaxIndex] = impreciseEntries.at(-1)
   return [
     roundDecimals(significanceLevel),
     { preciseMap, impreciseEntries, impreciseEntriesMaxIndex, getMaxValue },

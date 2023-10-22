@@ -103,7 +103,7 @@ export const removeBases = (configWithBases) =>
   exclude(configWithBases, '**', isBaseProp, { entries: true })
 
 const isBaseProp = ({ path }) => {
-  const key = path[path.length - 1]
+  const key = path.at(-1)
   return (
     typeof key === 'string' &&
     (key.endsWith(BASE_KEY_SUFFIX) || key.endsWith(BASE_ITEMS_SUFFIX))
@@ -126,13 +126,13 @@ export const getPropCwd = (
 
 // Retrieve the path to the `*[Items]CwdBase` property
 const getBasePath = (originalPath) => {
-  const lastKey = originalPath[originalPath.length - 1]
+  const lastKey = originalPath.at(-1)
 
   if (!Number.isInteger(lastKey)) {
     return [...originalPath.slice(0, -1), `${lastKey}${BASE_KEY_SUFFIX}`]
   }
 
-  const secondLastKey = originalPath[originalPath.length - 2]
+  const secondLastKey = originalPath.at(-2)
   return [
     ...originalPath.slice(0, -2),
     `${secondLastKey}${BASE_ITEMS_SUFFIX}`,

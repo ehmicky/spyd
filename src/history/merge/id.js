@@ -13,8 +13,7 @@ export const normalizeId = (newResult, history) => {
     return newResult
   }
 
-  const id =
-    history.length === 0 ? getDefaultId() : history[history.length - 1].id
+  const id = history.length === 0 ? getDefaultId() : history.at(-1).id
   return { ...newResult, id }
 }
 

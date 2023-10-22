@@ -18,7 +18,7 @@ export const HISTOGRAM_CHARS = canDisplayUnicode
   : [' ', '\u2584', '\u2588']
 // Characters displaying 0% and 100% visually
 export const [EMPTY_HISTOGRAM_CHAR] = HISTOGRAM_CHARS
-export const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS[HISTOGRAM_CHARS.length - 1]
+export const FULL_HISTOGRAM_CHAR = HISTOGRAM_CHARS.at(-1)
 
 // To compensate from the lack of characters on Windows, we increase the number
 // of characters shown per column

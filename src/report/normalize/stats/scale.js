@@ -2,7 +2,7 @@
 export const getScale = (minMeasure, kind) => {
   const scales = SCALES[kind]
   const scaleA = scales.find((scale) => minMeasure >= scale)
-  return scaleA === undefined ? scales[scales.length - 1] : scaleA
+  return scaleA === undefined ? scales.at(-1) : scaleA
 }
 
 // Possible scales for each unit kind.

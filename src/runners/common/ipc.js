@@ -22,7 +22,7 @@ export const handleEvents = async (handlers) => {
 // Send HTTP request to parent
 const sendReturnValue = async (body) =>
   await got({
-    url: argv[argv.length - 1],
+    url: argv.at(-1),
     method: 'POST',
     body,
     responseType: 'json',

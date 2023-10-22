@@ -85,7 +85,7 @@ const addLastResult = async ({
     return result
   }
 
-  const lastResult = history[history.length - 1]
+  const lastResult = history.at(-1)
   const lastResultA = { ...lastResult, combinations }
   const lastResultB = await normalizeCombAll(lastResultA, {
     sinceResult,

@@ -66,10 +66,7 @@ const parseToken = (
   }
 
   return {
-    intersect: [
-      ...intersect.slice(0, -1),
-      [...intersect[intersect.length - 1], token],
-    ],
+    intersect: [...intersect.slice(0, -1), [...intersect.at(-1), token]],
     negation,
   }
 }

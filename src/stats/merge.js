@@ -26,7 +26,7 @@ export const mergeSort = (bigArray, smallArray) => {
 // `bigArray`. We use one of its element to ensure the new array slots have
 // the correct type which speeds up memory allocation when re-assigned.
 const resizeArray = (bigArray, smallArray) => {
-  const lastElement = bigArray[bigArray.length - 1]
+  const lastElement = bigArray.at(-1)
   const smallArrayLength = smallArray.length
 
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation

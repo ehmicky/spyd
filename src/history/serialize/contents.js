@@ -25,14 +25,14 @@ export const serializeRawResult = (rawResult) => {
 //  - This creates better git stats when it comes to amount of lines changes
 // We only do this for arrays of simple types.
 const flattenArray = (rawResultStr) =>
-  rawResultStr.replace(SIMPLE_ARRAY_REGEXP, flattenArrayItems)
+  rawResultStr.replaceAll(SIMPLE_ARRAY_REGEXP, flattenArrayItems)
 
 // Matches `[...]` but not `[{ ... }]` nor `[[...]]`
 const SIMPLE_ARRAY_REGEXP = /(\[)([^[\]{]+)(\])/gmu
 
 // eslint-disable-next-line max-params
 const flattenArrayItems = (_, start, match, end) => {
-  const matchA = match.replace(WHITESPACES_REGEXP, ' ')
+  const matchA = match.replaceAll(WHITESPACES_REGEXP, ' ')
   return `${start}${matchA}${end}`
 }
 
