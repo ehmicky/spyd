@@ -60,7 +60,7 @@
     "json-ptr": "^3.1.1",
     "junk": "^4.0.1",
     "map-obj": "^5.0.2",
-    "modern-errors": "^7.0.0",
+    "modern-errors": "^7.0.1",
     "modern-errors-bugs": "^5.0.0",
     "modern-errors-clean": "^6.0.0",
     "modern-errors-cli": "^5.0.0",
