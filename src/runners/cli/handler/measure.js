@@ -92,6 +92,8 @@ const spawnProcess = async (command, { env, shell }) => {
 }
 
 const EXECA_OPTIONS = {
-  stdio: ['ignore', 'inherit', 'inherit'],
+  stdin: 'ignore',
+  stdout: 'inherit',
+  stderr: 'inherit',
   preferLocal: true,
 }

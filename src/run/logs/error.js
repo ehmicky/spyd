@@ -33,7 +33,7 @@ const readLogs = async (logsPath) => {
   try {
     const { size } = await logsReadFd.stat()
     const buffer = Buffer.alloc(ERROR_LOGS_LENGTH)
-    const position = size - ERROR_LOGS_LENGTH
+    const position = Math.max(size - ERROR_LOGS_LENGTH, 0)
     const truncated = size > ERROR_LOGS_LENGTH
     const { bytesRead } = await logsReadFd.read({ buffer, position })
     const taskLogs = buffer.slice(0, bytesRead).toString()
