@@ -1,4 +1,4 @@
-import { execa, execaCommand } from 'execa'
+import { execa, parseCommandString } from 'execa'
 import now from 'precise-now'
 
 import { TasksRunError } from '../../common/error.js'
@@ -68,7 +68,7 @@ const spawnProcesses = async (command, { repeat, env, shell }) => {
   // eslint-disable-next-line fp/no-loops, fp/no-let, fp/no-mutation
   for (let index = 0; index < repeat; index += 1) {
     // eslint-disable-next-line no-await-in-loop
-    await spawnProcess(command, { env, shell })
+    await safeSpawnProcess(command, { env, shell })
   }
 }
 
@@ -81,14 +81,21 @@ const spawnProcesses = async (command, { repeat, env, shell }) => {
 // More advanced logic can be achieved by either:
 //  - Using shell features (subshells, variables, etc.)
 //  - Adding the logic to the command internal logic
-const spawnProcess = async (command, { env, shell }) => {
+const safeSpawnProcess = async (command, { env, shell }) => {
   try {
-    return shell === 'none'
-      ? await execaCommand(command, { ...EXECA_OPTIONS, env })
-      : await execa(command, { ...EXECA_OPTIONS, env, shell })
+    return await spawnProcess(command, { env, shell })
   } catch (cause) {
     throw new TasksRunError('', { cause })
   }
+}
+
+const spawnProcess = async (command, { env, shell }) => {
+  if (shell !== 'none') {
+    return await execa(command, { ...EXECA_OPTIONS, env, shell })
+  }
+
+  const [file, ...args] = parseCommandString(command)
+  return await execa(file, args, { ...EXECA_OPTIONS, env })
 }
 
 const EXECA_OPTIONS = {
