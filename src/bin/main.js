@@ -2,7 +2,7 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { readPackageUp } from 'read-pkg-up'
+import { readPackageUp } from 'read-package-up'
 import updateNotifier from 'update-notifier'
 
 import { BaseError, UnknownError } from '../error/main.js'

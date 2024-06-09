@@ -1,7 +1,7 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { readPackageUp } from 'read-pkg-up'
+import { readPackageUp } from 'read-package-up'
 
 // Retrieve runtime versions common to all runners
 export const getCommonVersions = async () => await getSpydVersion()

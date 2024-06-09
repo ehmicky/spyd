@@ -76,7 +76,7 @@
     "path-exists": "^5.0.0",
     "path-type": "^5.0.0",
     "precise-now": "^3.0.0",
-    "read-pkg-up": "^10.1.0",
+    "read-package-up": "^11.0.0",
     "semver": "^7.6.2",
     "set-array": "^5.0.0",
     "sort-on": "^6.0.0",
