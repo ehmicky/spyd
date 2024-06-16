@@ -30,6 +30,7 @@ export const badHighlightColor = redBright.bold
 export const separatorColor = grayColor
 export const noteColor = grayColor
 export const suffixColor = grayColor
+export const noColor = (value) => value
 
 // Gradient that works with 1, 4, 8 and 24-bit colors
 export const graphGradientColor = (percentage) => {
@@ -38,7 +39,7 @@ export const graphGradientColor = (percentage) => {
   return hslToChalk(MAIN_HUE, MAIN_SATURATION, lightness)
 }
 
-// Choosen to work well in 4, 8 and 24-bit colors
+// Chosen to work well in 4, 8 and 24-bit colors
 const MAX_GRAPH_LIGHTNESS = MAIN_LIGHTNESS
 const MAX_GRAPH_DARKNESS = 20
 const MAX_GRAPH_SHADE = MAX_GRAPH_LIGHTNESS - MAX_GRAPH_DARKNESS

@@ -1,6 +1,7 @@
 import confirm from '@inquirer/confirm'
 
 import { isTtyInput } from '../../report/tty.js'
+import { separatorColor, noColor } from '../../report/utils/colors.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { shortenId } from '../merge/id.js'
@@ -52,7 +53,13 @@ const shouldRemoveFromHistory = async (force) => {
     return true
   }
 
-  return await confirm({ message: 'Remove the result?' })
+  return await confirm({
+    message: 'Remove the result?',
+    theme: {
+      prefix: separatorColor('?'),
+      style: { answer: noColor },
+    },
+  })
 }
 
 // Find the target result using the main delta.
