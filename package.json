@@ -32,7 +32,7 @@
     "lib": "src"
   },
   "dependencies": {
-    "@inquirer/confirm": "^1.0.7",
+    "@inquirer/confirm": "^3.1.10",
     "ajv": "^8.16.0",
     "ajv-errors": "^3.0.0",
     "ajv-formats": "^3.0.1",
