@@ -84,7 +84,7 @@
     "strip-final-newline": "^4.0.0",
     "time-resolution": "^3.0.0",
     "tmp-promise": "^3.0.2",
-    "update-notifier": "^7.0.0",
+    "update-notifier": "^7.1.0",
     "uuid": "^10.0.0",
     "wild-wild-parser": "^5.0.0",
     "wild-wild-path": "^5.0.0",
