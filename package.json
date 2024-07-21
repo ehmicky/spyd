@@ -74,7 +74,7 @@
     "p-map-series": "^3.0.0",
     "p-props": "^6.0.0",
     "path-exists": "^5.0.0",
-    "path-type": "^5.0.0",
+    "path-type": "^6.0.0",
     "precise-now": "^3.0.0",
     "read-package-up": "^11.0.0",
     "semver": "^7.6.3",
