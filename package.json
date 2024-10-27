@@ -85,7 +85,7 @@
     "time-resolution": "^3.0.0",
     "tmp-promise": "^3.0.2",
     "update-notifier": "^7.3.1",
-    "uuid": "^11.0.1",
+    "uuid": "^11.0.2",
     "wild-wild-parser": "^5.0.0",
     "wild-wild-path": "^5.0.0",
     "wild-wild-utils": "^6.0.0",
