@@ -5,7 +5,6 @@ import { compareSystems } from './systems.js'
 // Sort systems deeply so they are shown in a user-friendly and predictable way
 // in the footer
 export const sortSystems = (footer) => {
-  // eslint-disable-next-line fp/no-mutating-methods
   const systems = footer.systems
     .map(addSortProps)
     .sort(compareSystems)

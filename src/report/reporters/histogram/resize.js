@@ -10,7 +10,7 @@
 //  - newSize < oldSize:
 //     - `getSimpleSum()` not needed
 //     - if oldSize % newSize === 0, last part of `getComplexSum()` not needed
-// eslint-disable-next-line max-statements, complexity
+// eslint-disable-next-line max-statements
 export const resizeHistogram = (counts, newSize) => {
   const oldSize = counts.length
 

@@ -28,7 +28,6 @@ import { THRESHOLDS, isOutlier } from './threshold.js'
 //  - On the other side, if the range is too narrow, it will only work with
 //    smaller "stop points"
 export const getThresholdsIndexes = (quantiles, quantilesCount) => {
-  // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
   const outliersLimit = getOutliersLimit(quantilesCount)
 
@@ -143,7 +142,7 @@ const getThresholdIndexes = (
 //  - This can lead to quantileRatio being much higher than it should just
 //    because the measures close to `minIndex` happen to be close to each other.
 // We use imperative code and positional arguments for performance.
-// eslint-disable-next-line max-statements, complexity
+// eslint-disable-next-line max-statements
 const getOutliersIncrement = (
   quantiles,
   startIndex,

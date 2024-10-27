@@ -61,7 +61,6 @@ const getNewlineIndexes = (previewContent) => {
   for (let index = 0; index < previewContent.length; index += 1) {
     // eslint-disable-next-line max-depth
     if (previewContent[index] === '\n') {
-      // eslint-disable-next-line fp/no-mutating-methods
       newlineIndexes.push(index)
     }
   }

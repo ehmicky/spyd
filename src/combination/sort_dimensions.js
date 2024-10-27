@@ -20,7 +20,6 @@ export const sortDimensions = (result) => {
 
 const sortCombDimensions = (combination) => {
   const { dimensions } = combination
-  // eslint-disable-next-line fp/no-mutating-methods
   const dimensionNames = Object.keys(dimensions).sort(compareDimensionNames)
   const dimensionsA = Object.fromEntries(
     dimensionNames.map((dimensionName) => [
@@ -31,7 +30,7 @@ const sortCombDimensions = (combination) => {
   return { ...combination, dimensions: dimensionsA }
 }
 
-// eslint-disable-next-line complexity, max-statements
+// eslint-disable-next-line max-statements
 const compareDimensionNames = (dimensionNameA, dimensionNameB) => {
   const indexA = findDimensionIndex(dimensionNameA)
   const indexB = findDimensionIndex(dimensionNameB)

@@ -22,7 +22,6 @@ export const validateRuleKey = ({
     return
   }
 
-  // eslint-disable-next-line fp/no-mutating-methods
   const rulePropsA = [...ruleProps].sort().join(', ')
   throw new DefinitionError(
     `${message}'s "${ruleProp}" property must be valid: ${inspect(definitions)}

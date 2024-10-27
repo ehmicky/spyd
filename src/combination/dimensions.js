@@ -30,7 +30,6 @@ const getDimension = (
   { dimensions },
   { propName: dimensionPropName, prefixName, defaultIdPrefix, createdByUser },
 ) =>
-  // eslint-disable-next-line fp/no-mutating-methods
   Object.keys(dimensions)
     .filter((propName) => isDimension(propName, dimensionPropName, prefixName))
     .sort()

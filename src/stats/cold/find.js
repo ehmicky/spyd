@@ -9,7 +9,7 @@
 // Memory complexity is `O(1)` and very low by using a streaming logic.
 // This is optimized for performance, which explains the usage of imperative
 // programming patterns.
-/* eslint-disable max-statements, complexity, fp/no-let, fp/no-loops,
+/* eslint-disable max-statements, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */
 export const findClosestMean = (
   array,
@@ -82,5 +82,5 @@ export const findHotIndex = (
 
   return filteredIndex - 1
 }
-/* eslint-enable max-statements, complexity, fp/no-let, fp/no-loops,
+/* eslint-enable max-statements, fp/no-let, fp/no-loops,
    fp/no-mutation, max-depth, no-continue */

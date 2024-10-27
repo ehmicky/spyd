@@ -1,7 +1,6 @@
 // When a new warning is returned, add it to the list
 export const addWarning = ({ warning }, warnings, { prefix, originalName }) => {
   if (warning !== undefined) {
-    // eslint-disable-next-line fp/no-mutating-methods
     warnings.push(`${prefix} "${originalName}" ${warning}`)
   }
 }
@@ -19,7 +18,6 @@ export const logWarnings = (warnings, soft) => {
     return
   }
 
-  // eslint-disable-next-line fp/no-mutating-methods
   const warningsStr = [...new Set(warnings)].sort().join('\n')
   // eslint-disable-next-line no-console, no-restricted-globals
   console.warn(warningsStr)

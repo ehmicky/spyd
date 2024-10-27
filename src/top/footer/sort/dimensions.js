@@ -1,7 +1,6 @@
 import sortOn from 'sort-on'
 
 export const sortDimensionsArray = (dimensionsArray) =>
-  // eslint-disable-next-line fp/no-mutating-methods
   dimensionsArray.map(sortDimensionsEntries).sort(compareDimensionsEntries)
 
 // Sort each dimension within a given `dimensions` by its dimension name.
@@ -13,7 +12,7 @@ const sortDimensionsEntries = (dimensionsEntries) => {
 
 const sortDimensionValueArray = ([dimensionName, dimensionValueArray]) => [
   dimensionName,
-  // eslint-disable-next-line fp/no-mutating-methods
+
   [...dimensionValueArray].sort(),
 ]
 
@@ -21,7 +20,7 @@ const sortDimensionValueArray = ([dimensionName, dimensionValueArray]) => [
 //  - Sets with fewer `dimensions` are shown first
 //  - Then, we compare the first dimension of each set by name, then value
 //  - Then the second dimension, and so on
-// eslint-disable-next-line complexity
+
 const compareDimensionsEntries = (dimensionsEntriesA, dimensionsEntriesB) => {
   if (dimensionsEntriesA.length > dimensionsEntriesB.length) {
     return 1
@@ -47,7 +46,6 @@ const compareDimensionsEntries = (dimensionsEntriesA, dimensionsEntriesB) => {
   return 0
 }
 
-// eslint-disable-next-line complexity
 const compareDimensionsEntry = (
   [dimensionNameA, dimensionValueArrayA],
   [dimensionNameB, dimensionValueArrayB],
