@@ -36,5 +36,6 @@ export const binarySearch = (
       // eslint-disable-next-line fp/no-mutation
       start = middle
     }
+    // eslint-disable-next-line no-constant-condition
   } while (true)
 }

@@ -90,7 +90,9 @@ const getThresholdIndexes = (
   { maxIndex, minIndex, maxIndexSum, minIndexSum },
   { threshold, quantiles, reversedQuantiles, quantilesCount, outliersLimit },
 ) => {
+  // eslint-disable-next-line no-useless-assignment
   let maxIncrement = 0
+  // eslint-disable-next-line no-useless-assignment
   let minIncrement = 0
 
   do {

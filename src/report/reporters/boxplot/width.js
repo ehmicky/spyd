@@ -58,7 +58,7 @@ const getMinMaxBlockWidth = ({
 
   // eslint-disable-next-line fp/no-let
   let minMaxWidth = 0
-  // eslint-disable-next-line fp/no-let
+  // eslint-disable-next-line fp/no-let, no-useless-assignment
   let currentMinMaxWidth = 0
 
   // eslint-disable-next-line fp/no-loops

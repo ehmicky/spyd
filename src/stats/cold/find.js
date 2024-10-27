@@ -56,6 +56,7 @@ export const findHotIndex = (
 ) => {
   let sum = 0
   let filteredIndex = 0
+  // eslint-disable-next-line no-useless-assignment
   let incrementalMean = 0
 
   for (const value of array) {
