@@ -1,10 +1,10 @@
 import { inspect } from 'node:util'
 
 import {
-  serializeQuery,
-  parseQuery,
-  normalizeQuery,
   getTokenType,
+  normalizeQuery,
+  parseQuery,
+  serializeQuery,
 } from 'wild-wild-parser'
 import { pick } from 'wild-wild-utils'
 

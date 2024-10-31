@@ -1,4 +1,4 @@
-import { titleColor, noteColor } from '../../report/utils/colors.js'
+import { noteColor, titleColor } from '../../report/utils/colors.js'
 import { omitCombNoDimensions } from '../filter.js'
 
 import { getCombDimensionsIds } from './get.js'

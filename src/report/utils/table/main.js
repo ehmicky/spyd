@@ -1,9 +1,9 @@
 import stringWidth from 'string-width'
 
 import {
-  TITLE_SEPARATOR,
   getColSeparator,
   getColSeparatorColored,
+  TITLE_SEPARATOR,
 } from '../separator.js'
 
 import { getTablesRows } from './rows.js'

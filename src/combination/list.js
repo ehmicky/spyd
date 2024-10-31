@@ -1,6 +1,6 @@
 import { UserError } from '../error/main.js'
 import { selectCombinations } from '../select/main.js'
-import { mapValues, mapKeys } from '../utils/map.js'
+import { mapKeys, mapValues } from '../utils/map.js'
 
 import { validateCombinationsIds } from './ids/validate.js'
 import { toInputsList } from './inputs.js'

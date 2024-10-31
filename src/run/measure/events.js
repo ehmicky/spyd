@@ -1,9 +1,9 @@
 import { toInputsObject } from '../../combination/inputs.js'
 import { safeFinally } from '../../utils/finally.js'
-import { updateDescription, END_DESCRIPTION } from '../preview/description.js'
+import { END_DESCRIPTION, updateDescription } from '../preview/description.js'
 import { sendAndReceive } from '../process/ipc.js'
 
-import { startRunDuration, endRunDuration } from './duration.js'
+import { endRunDuration, startRunDuration } from './duration.js'
 import { performMeasureLoop } from './loop.js'
 import { getMinLoopDuration } from './min_loop_duration.js'
 

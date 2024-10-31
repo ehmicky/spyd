@@ -3,7 +3,7 @@ import { basename } from 'node:path'
 import fastGlob from 'fast-glob'
 import { isNotJunk } from 'junk'
 
-import { validateDefinedString, normalizeBoolean } from '../normalize/common.js'
+import { normalizeBoolean, validateDefinedString } from '../normalize/common.js'
 
 const main = (definition, input, { cwd }) => {
   if (!definition) {

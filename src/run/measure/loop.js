@@ -1,4 +1,4 @@
-import { getInitialStats, addStats } from '../../stats/add.js'
+import { addStats, getInitialStats } from '../../stats/add.js'
 import { pWhile } from '../../utils/p_while.js'
 import { truncateLogs } from '../logs/stream.js'
 import { updatePreviewStats } from '../preview/results/main.js'
@@ -6,10 +6,10 @@ import { measureSample } from '../sample/main.js'
 import { getInitialSampleState } from '../sample/state.js'
 
 import {
+  endRunDuration,
+  endSample,
   getInitialDurationState,
   startSample,
-  endSample,
-  endRunDuration,
 } from './duration.js'
 import { isRemainingCombination } from './remaining.js'
 

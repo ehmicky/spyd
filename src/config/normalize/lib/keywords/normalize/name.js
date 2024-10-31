@@ -2,7 +2,7 @@ import { inspect } from 'node:util'
 
 import isPlainObj from 'is-plain-obj'
 
-import { KeywordError, DefinitionError } from '../../error.js'
+import { DefinitionError, KeywordError } from '../../error.js'
 import { CORE_PROPS_SET } from '../../rule/props.js'
 import { BUILTIN_KEYWORDS } from '../list/main.js'
 

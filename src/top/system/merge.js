@@ -2,7 +2,7 @@ import { includeKeys } from 'filter-obj'
 
 import { hasPrefix, removePrefix } from '../../combination/prefix.js'
 import { groupBy } from '../../utils/group.js'
-import { mapValues, mapKeys } from '../../utils/map.js'
+import { mapKeys, mapValues } from '../../utils/map.js'
 
 import { mergeVersions } from './versions/merge.js'
 

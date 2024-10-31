@@ -1,7 +1,7 @@
 import {
   BaseError,
-  UnknownError,
   PluginError,
+  UnknownError,
   UserError,
 } from '../../error/main.js'
 import { normalizeReporters } from '../../report/config/main.js'
@@ -11,7 +11,7 @@ import { cleanObject } from '../../utils/clean.js'
 import { bugs } from '../../utils/package.js'
 import { PREFIX } from '../normalize/main.js'
 
-import { PluginError as PluginLibError, ConsumerError } from './lib/error.js'
+import { ConsumerError, PluginError as PluginLibError } from './lib/error.js'
 import { getPlugins } from './lib/main.js'
 
 // Handle the configuration plugins: runners and reporters

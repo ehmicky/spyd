@@ -2,10 +2,10 @@ import { centerString } from '../../utils/center.js'
 import { separatorColor } from '../../utils/colors.js'
 
 import {
-  TICK_LEFT,
-  TICK_RIGHT,
-  TICK_MIDDLE,
   HORIZONTAL_LINE,
+  TICK_LEFT,
+  TICK_MIDDLE,
+  TICK_RIGHT,
 } from './characters.js'
 
 // Retrieve the horizontal line and the abscissa below the main content.

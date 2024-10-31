@@ -6,7 +6,7 @@ import { readPackageUp } from 'read-package-up'
 import updateNotifier from 'update-notifier'
 
 import { BaseError, UnknownError } from '../error/main.js'
-import { run, show, remove, dev } from '../main.js'
+import { dev, remove, run, show } from '../main.js'
 
 import { parseCliFlags } from './parse.js'
 import { defineCli } from './top.js'

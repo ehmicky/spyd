@@ -3,7 +3,7 @@ import { getContents } from './contents/get.js'
 import { outputContents } from './contents/output.js'
 import { normalizeComputedResult } from './normalize/computed.js'
 import { normalizeEarlyResult } from './normalize/early.js'
-import { startReporters, endReporters } from './start_end.js'
+import { endReporters, startReporters } from './start_end.js'
 
 // Report final results in `show` and `remove` commands.
 // The `run` command needs to perform those steps separately due to previews:

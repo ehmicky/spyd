@@ -1,9 +1,9 @@
 import { reportPreview } from '../../../report/main.js'
 import { updateCombinationStats } from '../../normalize.js'
 import {
+  MEASURE_DESCRIPTION,
   setDescriptionIf,
   START_DESCRIPTION,
-  MEASURE_DESCRIPTION,
 } from '../description.js'
 import { updatePreview } from '../update/main.js'
 

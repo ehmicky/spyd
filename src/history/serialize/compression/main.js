@@ -1,8 +1,8 @@
 import { cleanObject } from '../../../utils/clean.js'
 
-import { decompressDimensions, compressDimensions } from './dimensions.js'
-import { decompressRunners, compressRunners } from './runners.js'
-import { decompressStats, compressStats } from './stats.js'
+import { compressDimensions, decompressDimensions } from './dimensions.js'
+import { compressRunners, decompressRunners } from './runners.js'
+import { compressStats, decompressStats } from './stats.js'
 
 // Reduce size of rawResults before saving.
 // We persist everything so that:

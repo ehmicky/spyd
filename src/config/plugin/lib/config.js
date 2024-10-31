@@ -3,7 +3,7 @@ import { has } from 'wild-wild-path'
 import { deepMergePair } from '../../merge.js'
 import { getDummyRules } from '../../normalize/dummy.js'
 
-import { UserError, PluginError, ConsumerError } from './error.js'
+import { ConsumerError, PluginError, UserError } from './error.js'
 import { safeNormalizeConfig } from './normalize.js'
 
 // Plugins use an array of objects for both selection and configuration.

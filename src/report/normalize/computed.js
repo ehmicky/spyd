@@ -2,11 +2,11 @@ import { setArray } from '../../utils/set.js'
 import { addScreenInfo } from '../tty.js'
 
 import {
-  normalizeCombAll,
   mergeResultProps,
+  normalizeCombAll,
   normalizeCombEach,
 } from './common.js'
-import { prettifyStats, prettifyHistoryStats } from './stats/main.js'
+import { prettifyHistoryStats, prettifyStats } from './stats/main.js'
 
 // Add report-specific properties to the target result, but only for
 // `combinations`. This is applied after measuring and history merging have

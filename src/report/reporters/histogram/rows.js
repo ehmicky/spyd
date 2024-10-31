@@ -1,7 +1,7 @@
 import {
-  HISTOGRAM_CHARS,
   EMPTY_HISTOGRAM_CHAR,
   FULL_HISTOGRAM_CHAR,
+  HISTOGRAM_CHARS,
 } from './characters.js'
 import { getHistogramColumns } from './columns.js'
 import { getFrequencies } from './frequencies.js'

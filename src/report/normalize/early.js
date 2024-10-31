@@ -1,9 +1,9 @@
 import {
-  normalizeNonCombAll,
-  normalizeCombAll,
-  normalizeNonCombEach,
   mergeResultProps,
+  normalizeCombAll,
   normalizeCombEach,
+  normalizeNonCombAll,
+  normalizeNonCombEach,
 } from './common.js'
 import { normalizeReportedResults } from './raw.js'
 import { normalizeTargetResult } from './target.js'

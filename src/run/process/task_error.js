@@ -1,15 +1,15 @@
 import {
   BaseError,
   PluginError,
-  UserError,
   TaskError,
+  UserError,
 } from '../../error/main.js'
 import {
   BaseError as RunnerBaseError,
+  ConfigError,
   TasksLoadError,
   TasksRunError,
   TasksSyntaxError,
-  ConfigError,
 } from '../../runners/common/error.js'
 
 // When a task throws during any stage, we propagate the error and fail the

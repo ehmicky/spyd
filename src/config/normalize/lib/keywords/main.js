@@ -1,5 +1,5 @@
 import { applyKeywordMain } from './apply.js'
-import { getDefinition, callDefinitionFunc } from './definition.js'
+import { callDefinitionFunc, getDefinition } from './definition.js'
 import { shouldSkipKeyword, shouldSkipMain } from './skip.js'
 
 // The library features is provided through plugins called "keywords".

@@ -1,4 +1,4 @@
-import { TASKS, HISTORY } from './groups.js'
+import { HISTORY, TASKS } from './groups.js'
 
 // Configuration shared by commands that can run combinations: `run`, `dev`
 export const COMBINATIONS_CONFIG = {

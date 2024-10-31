@@ -1,4 +1,4 @@
-import { open, mkdir, unlink } from 'node:fs/promises'
+import { mkdir, open, unlink } from 'node:fs/promises'
 import { dirname } from 'node:path'
 
 import { tmpName } from 'tmp-promise'

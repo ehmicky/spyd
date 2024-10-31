@@ -1,7 +1,7 @@
 import { statSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
 
-import { FILE_KEYWORD, DIR_KEYWORD } from './normalize.js'
+import { DIR_KEYWORD, FILE_KEYWORD } from './normalize.js'
 
 // Check the "file|directory" keywords
 export const validateType = (input, keywords) => {

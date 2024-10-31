@@ -3,7 +3,7 @@ import { getVariance } from '../variance.js'
 
 import { computeGroups } from './groups.js'
 import { getOptimalVarianceRatio } from './optimal.js'
-import { getGroupsCount, getClusterSizes } from './size.js'
+import { getClusterSizes, getGroupsCount } from './size.js'
 
 // Margin of errors depend on the central limit theorem which requires each
 // sample value to be independent from each other.

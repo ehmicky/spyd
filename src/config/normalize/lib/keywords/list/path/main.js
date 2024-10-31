@@ -4,7 +4,7 @@ import { validateDefinedString } from '../../normalize/common.js'
 
 import { validateAccess, validateAccessAsync } from './access.js'
 import { fileExists, fileExistsAsync, validateExists } from './exist.js'
-import { normalize, EXAMPLE_KEYWORDS } from './normalize.js'
+import { EXAMPLE_KEYWORDS, normalize } from './normalize.js'
 import { validateType, validateTypeAsync } from './type.js'
 
 const main = (keywords, input, { cwd }) => {

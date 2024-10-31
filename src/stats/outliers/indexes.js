@@ -1,5 +1,5 @@
 import { OUTLIERS_LIMIT } from './constants.js'
-import { THRESHOLDS, isOutlier } from './threshold.js'
+import { isOutlier, THRESHOLDS } from './threshold.js'
 
 // When using a single outliers threshold:
 //  - When there is a small aggregate of measures close to each other in the

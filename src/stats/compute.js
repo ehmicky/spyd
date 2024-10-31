@@ -4,7 +4,7 @@ import { getLengthFromLoops } from './length.js'
 import { filterOutliers } from './outliers/filter.js'
 import { getOutliersPercentage } from './outliers/main.js'
 import { getPrecisionStats } from './precision.js'
-import { getSortedMedian, getQuantiles } from './quantile.js'
+import { getQuantiles, getSortedMedian } from './quantile.js'
 import { getMean } from './sum.js'
 
 // Aggregate measures into discrete statistics.

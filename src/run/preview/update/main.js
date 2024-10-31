@@ -1,4 +1,4 @@
-import { printToStdout, clearScreen } from '../../../report/tty.js'
+import { clearScreen, printToStdout } from '../../../report/tty.js'
 
 import { getBottomBar } from './bottom_bar.js'
 import { updateCompletion } from './completion.js'

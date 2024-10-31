@@ -1,9 +1,9 @@
 import { get } from 'wild-wild-path'
-import { map, exclude } from 'wild-wild-utils'
+import { exclude, map } from 'wild-wild-utils'
 
 import { mapValues } from '../utils/map.js'
 
-import { isRecurseObject, isArrayUpdatesObject, isMergeProp } from './merge.js'
+import { isArrayUpdatesObject, isMergeProp, isRecurseObject } from './merge.js'
 
 // When resolving configuration relative file paths:
 //   - The CLI and programmatic flags always use the current directory.

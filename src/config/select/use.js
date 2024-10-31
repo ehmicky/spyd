@@ -1,7 +1,7 @@
 import { matchCombination } from '../../select/main.js'
 import { normalizeConfig } from '../normalize/main.js'
 
-import { SELECTABLE_PROPS, isConfigSelectorShape } from './normalize.js'
+import { isConfigSelectorShape, SELECTABLE_PROPS } from './normalize.js'
 
 // Selectors are searched in the object keys order.
 // One key must be "default" and is used as a fallback (even when it is not the

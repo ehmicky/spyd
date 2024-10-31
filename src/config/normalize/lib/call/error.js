@@ -1,16 +1,16 @@
 import normalizeException from 'normalize-exception'
 
-import { InputError, DefinitionError, KeywordError } from '../error.js'
+import { DefinitionError, InputError, KeywordError } from '../error.js'
 
 import {
-  addInputPrefix,
   addDefinitionPrefix,
+  addInputPrefix,
   addKeywordPrefix,
 } from './prefix.js'
 import {
   addCurrentDefinition,
-  addExampleDefinition,
   addCurrentInput,
+  addExampleDefinition,
   addExampleInput,
 } from './suffix.js'
 

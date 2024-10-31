@@ -1,14 +1,14 @@
 import { addToHistory } from '../history/data/main.js'
 import {
-  reportStart,
   reportCompute,
-  reportPrint,
   reportEnd,
+  reportPrint,
+  reportStart,
 } from '../report/main.js'
 
 import { measureCombinations } from './measure/main.js'
 import { normalizeNewResult, updateCombinationsStats } from './normalize.js'
-import { startPreview, endPreview } from './preview/start_end/main.js'
+import { endPreview, startPreview } from './preview/start_end/main.js'
 
 // Perform a new benchmark.
 // There is no watch mode because:

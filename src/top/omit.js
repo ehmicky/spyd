@@ -1,4 +1,4 @@
-import { includeKeys, excludeKeys } from 'filter-obj'
+import { excludeKeys, includeKeys } from 'filter-obj'
 
 // We only expose specific properties to reporters.
 // For example, we do not expose subId.

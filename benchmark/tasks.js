@@ -1,7 +1,7 @@
 // This is an example of tasks, used mostly for debugging
 import { execFile } from 'node:child_process'
-import { randomInt, createHash } from 'node:crypto'
-import { readFile, writeFile, unlink } from 'node:fs/promises'
+import { createHash, randomInt } from 'node:crypto'
+import { readFile, unlink, writeFile } from 'node:fs/promises'
 import { setTimeout } from 'node:timers/promises'
 import { promisify } from 'node:util'
 

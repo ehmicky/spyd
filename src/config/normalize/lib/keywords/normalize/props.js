@@ -3,9 +3,9 @@ import { inspect } from 'node:util'
 import { KeywordError } from '../../error.js'
 
 import {
+  validateDuplicateKeyword,
   validateName,
   validateNotBuiltin,
-  validateDuplicateKeyword,
 } from './name.js'
 
 // Validate each `keyword.*` property

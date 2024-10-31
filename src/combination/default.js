@@ -1,4 +1,4 @@
-import { getCombsDimensions, isDimension, DIMENSIONS } from './dimensions.js'
+import { DIMENSIONS, getCombsDimensions, isDimension } from './dimensions.js'
 import { removePrefix } from './prefix.js'
 
 // The target result defines which combinations are reported.

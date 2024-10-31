@@ -2,12 +2,12 @@ import { getCombinationPrefix } from '../../combination/ids/name.js'
 import { handlePluginError } from '../../config/plugin/error.js'
 import { useConfigSelectors } from '../../config/select/use.js'
 import { BaseError, PluginError } from '../../error/main.js'
-import { startLogs, stopLogs, hasLogs } from '../logs/create.js'
+import { hasLogs, startLogs, stopLogs } from '../logs/create.js'
 import { addErrorTaskLogs } from '../logs/error.js'
 import { startLogsStream, stopLogsStream } from '../logs/stream.js'
 import {
-  startCombinationPreview,
   endCombinationPreview,
+  startCombinationPreview,
 } from '../preview/combination.js'
 import { updateDescription } from '../preview/description.js'
 import {

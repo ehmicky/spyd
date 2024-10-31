@@ -11,7 +11,7 @@ import { refreshPreview } from '../update/main.js'
 
 import { startHandleKeypress, stopHandleKeypress } from './keypress.js'
 import { startHandleResize, stopHandleResize } from './resize.js'
-import { getPreviewState, addResultPreviewState } from './state.js'
+import { addResultPreviewState, getPreviewState } from './state.js'
 
 // Initialize the preview before the result has been loaded.
 export const initPreview = (config) => {

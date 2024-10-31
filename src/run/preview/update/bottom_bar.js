@@ -1,8 +1,8 @@
 import { handleContent } from '../../../report/contents/handle.js'
 import { getFullLineSeparator } from '../../../report/utils/line.js'
 
-import { getActions, ACTIONS_LABEL } from './actions.js'
-import { getCounterRow, getCounter } from './counter.js'
+import { ACTIONS_LABEL, getActions } from './actions.js'
+import { getCounter, getCounterRow } from './counter.js'
 import { getProgressRow } from './progress.js'
 
 // Retrieve bottom bar of preview

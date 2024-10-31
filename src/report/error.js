@@ -1,5 +1,5 @@
 import { handlePluginError } from '../config/plugin/error.js'
-import { PluginError, BaseError } from '../error/main.js'
+import { BaseError, PluginError } from '../error/main.js'
 
 // Create a reporter plugin error
 export const getReporterPluginError = (reporter, ...args) => {

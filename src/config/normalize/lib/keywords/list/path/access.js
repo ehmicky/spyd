@@ -1,7 +1,7 @@
-import { constants, accessSync } from 'node:fs'
+import { accessSync, constants } from 'node:fs'
 import { access } from 'node:fs/promises'
 
-import { READ_KEYWORD, WRITE_KEYWORD, EXEC_KEYWORD } from './normalize.js'
+import { EXEC_KEYWORD, READ_KEYWORD, WRITE_KEYWORD } from './normalize.js'
 
 // Check the "read|write|execute" keywords
 export const validateAccess = (input, keywords) => {

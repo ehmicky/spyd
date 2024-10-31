@@ -1,4 +1,4 @@
-import { getCombsDimensions, getCombDimensions } from '../dimensions.js'
+import { getCombDimensions, getCombsDimensions } from '../dimensions.js'
 
 import { removeDuplicateIds } from './has.js'
 

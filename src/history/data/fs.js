@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile, unlink, mkdir } from 'node:fs/promises'
+import { mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises'
 
 import { pathExists } from 'path-exists'
 import { isDirectory, isFile } from 'path-type'

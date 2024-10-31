@@ -1,21 +1,21 @@
 import confirm from '@inquirer/confirm'
 
 import { isTtyInput } from '../../report/tty.js'
-import { separatorColor, noColor } from '../../report/utils/colors.js'
+import { noColor, separatorColor } from '../../report/utils/colors.js'
 import { pickLast } from '../../utils/last.js'
 import { applyMainDelta, applySinceDelta } from '../delta/find.js'
 import { shortenId } from '../merge/id.js'
 import { groupMetadata, ungroupMetadata } from '../merge/metadata.js'
 import {
-  normalizeRawResultSave,
   normalizeRawResultLoad,
+  normalizeRawResultSave,
 } from '../serialize/main.js'
 
 import {
   addRawResult,
-  removeRawResults,
-  listMetadata,
   fetchRawResults,
+  listMetadata,
+  removeRawResults,
 } from './results.js'
 
 // Save rawResults so they can be compared or shown later.

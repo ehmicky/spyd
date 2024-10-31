@@ -1,4 +1,4 @@
-import { TASKS, REPORT, HISTORY } from './groups.js'
+import { HISTORY, REPORT, TASKS } from './groups.js'
 
 // Configuration specific to `run`
 export const RUN_CONFIG = {

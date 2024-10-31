@@ -4,7 +4,7 @@ import process from 'node:process'
 import delay from 'delay'
 
 import { addAction, removeAction } from '../preview/action.js'
-import { updateDescription, STOP_DESCRIPTION } from '../preview/description.js'
+import { STOP_DESCRIPTION, updateDescription } from '../preview/description.js'
 import { updatePreview } from '../preview/update/main.js'
 
 import { throwAbortError } from './error.js'

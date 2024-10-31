@@ -1,7 +1,7 @@
 import pProps from 'p-props'
 
 import { PluginError } from '../../../error/main.js'
-import { mapValues, mapKeys } from '../../../utils/map.js'
+import { mapKeys, mapValues } from '../../../utils/map.js'
 import { spawnProcess } from '../../../utils/spawn.js'
 
 import { VERSIONS_VALUE_SEPARATOR } from './merge.js'

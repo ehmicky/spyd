@@ -1,4 +1,4 @@
-import { serializePath, normalizePath } from 'wild-wild-parser'
+import { normalizePath, serializePath } from 'wild-wild-parser'
 import { remove } from 'wild-wild-path'
 
 import { KeywordError } from '../error.js'

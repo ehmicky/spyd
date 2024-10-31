@@ -1,7 +1,7 @@
 import {
   ALL_STAT_NAMES,
-  EXAMPLE_STAT_NAMES,
   EXAMPLE_STAT_NAME,
+  EXAMPLE_STAT_NAMES,
 } from './stats.js'
 
 export const config = new Set([

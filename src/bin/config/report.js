@@ -1,4 +1,4 @@
-import { REPORT, HISTORY } from './groups.js'
+import { HISTORY, REPORT } from './groups.js'
 
 // Configuration shared by commands that report results: `run`, `show`, `remove`
 export const REPORT_CONFIG = {

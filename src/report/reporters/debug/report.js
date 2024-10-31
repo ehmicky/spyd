@@ -3,7 +3,7 @@ import { getCombinationTitleColor } from '../../utils/combination_title.js'
 import { STAT_TITLES } from '../../utils/stat_titles.js'
 import { getTables } from '../../utils/table/main.js'
 
-import { getStatNames, getCell } from './stats.js'
+import { getCell, getStatNames } from './stats.js'
 
 // Debugging reporter only meant for development purpose
 export const reportTerminal = (

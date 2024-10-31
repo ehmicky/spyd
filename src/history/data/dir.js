@@ -1,4 +1,4 @@
-import { hasHistoryDir, ensureHistoryDir, checkHistoryDir } from './fs.js'
+import { checkHistoryDir, ensureHistoryDir, hasHistoryDir } from './fs.js'
 
 // Retrieve the history directory, for a read operation
 export const getReadHistoryDir = async (cwd) => {

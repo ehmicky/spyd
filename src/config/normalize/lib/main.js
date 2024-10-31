@@ -2,7 +2,7 @@ import { list } from 'wild-wild-path'
 
 import { cleanObject } from '../../../utils/clean.js'
 
-import { BaseError, UnknownError, InputError } from './error.js'
+import { BaseError, InputError, UnknownError } from './error.js'
 import { getInfo } from './info.js'
 import { applyKeywords } from './keywords/main.js'
 import { normalizeOpts } from './options.js'

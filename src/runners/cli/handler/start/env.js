@@ -1,6 +1,6 @@
 import decamelize from 'decamelize'
 
-import { mapValues, mapKeys } from '../../../../utils/map.js'
+import { mapKeys, mapValues } from '../../../../utils/map.js'
 
 // Inputs are passed as environment variables.
 // For example, input `thisExample` would be `SPYD_INPUTS_THIS_EXAMPLE`.

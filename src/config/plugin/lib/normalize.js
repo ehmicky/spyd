@@ -1,7 +1,7 @@
 import {
-  UnknownError,
-  InputError,
   DefinitionError,
+  InputError,
+  UnknownError,
 } from '../../normalize/lib/error.js'
 import { normalizeInputs } from '../../normalize/lib/main.js'
 

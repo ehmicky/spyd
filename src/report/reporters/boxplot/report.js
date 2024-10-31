@@ -3,7 +3,7 @@ import { getCombTitleColorPad } from '../../utils/combination_title.js'
 import { getBox } from './box.js'
 import { getLabels } from './labels.js'
 import { getMinMaxAll } from './min_max.js'
-import { normalizeQuantiles, isMeasuredCombination } from './normalize.js'
+import { isMeasuredCombination, normalizeQuantiles } from './normalize.js'
 import { getPositions } from './position.js'
 import { getWidths } from './width.js'
 

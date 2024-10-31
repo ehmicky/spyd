@@ -3,11 +3,11 @@ import pMap from 'p-map'
 import { getReadHistoryDir, getWriteHistoryDir } from './dir.js'
 import { parseFilename, serializeFilename } from './filename.js'
 import {
+  checkHistoryFile,
+  deleteRawResult,
   listFilenames,
   readRawResult,
   writeRawResult,
-  deleteRawResult,
-  checkHistoryFile,
 } from './fs.js'
 
 // Retrieve all rawResults' metadata, which are stored in the filenames

@@ -3,8 +3,8 @@ import sortOn from 'sort-on'
 
 import { addDefaultIds } from '../../combination/default.js'
 import {
-  removeSameCombinations,
   hasSameCombinations,
+  removeSameCombinations,
 } from '../../combination/result.js'
 import { groupBy } from '../../utils/group.js'
 import { pickLast } from '../../utils/last.js'

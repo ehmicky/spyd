@@ -3,37 +3,37 @@ import { cwd as getCwd } from 'node:process'
 
 import {
   DEFAULT_INPUTS,
-  EXAMPLE_INPUTS,
   EXAMPLE_INPUT_VALUE,
+  EXAMPLE_INPUTS,
 } from '../../combination/inputs.js'
 import {
-  transformLimit,
   EXAMPLE_LIMIT,
+  transformLimit,
 } from '../../history/compare/transform.js'
 import { DEFAULT_SAVE } from '../../history/data/main.js'
 import {
-  transformDelta,
   DEFAULT_MAIN_DELTA,
   DEFAULT_SINCE_DELTA,
+  transformDelta,
 } from '../../history/delta/transform.js'
 import { getDefaultId, LAST_ID } from '../../history/merge/id.js'
 import {
   DEFAULT_TITLES,
-  EXAMPLE_TITLES,
   EXAMPLE_TITLE,
+  EXAMPLE_TITLES,
 } from '../../report/normalize/titles_add.js'
 import { DEFAULT_REPORTERS } from '../../report/reporters/main.js'
 import { isTtyInput } from '../../report/tty.js'
 import {
-  transformPrecision,
   DEFAULT_PRECISION,
-  MIN_PRECISION,
   MAX_PRECISION,
+  MIN_PRECISION,
+  transformPrecision,
 } from '../../run/precision.js'
 import { DEFAULT_RUNNERS } from '../../runners/main.js'
 import { DEFAULT_SELECT, EXAMPLE_SELECT } from '../../select/main.js'
 import { DEFAULT_OUTLIERS } from '../../stats/outliers/main.js'
-import { EXAMPLE_SYSTEMS, EXAMPLE_SYSTEM } from '../../top/system/example.js'
+import { EXAMPLE_SYSTEM, EXAMPLE_SYSTEMS } from '../../top/system/example.js'
 import { CONFIG_RULES } from '../load/normalize.js'
 import { normalizeConfigSelectors } from '../select/normalize.js'
 

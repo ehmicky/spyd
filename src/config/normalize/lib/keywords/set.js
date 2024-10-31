@@ -1,4 +1,4 @@
-import { set, remove } from 'wild-wild-path'
+import { remove, set } from 'wild-wild-path'
 
 // Set an `input`'s new value.
 // `undefined` values delete the property too.

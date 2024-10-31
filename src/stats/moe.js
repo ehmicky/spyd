@@ -1,6 +1,6 @@
 import { getStudentTValue } from './critical_values/student_t.js'
 import { applyEnvDev } from './env_dev/apply.js'
-import { IDENTICAL_VARIANCE_SHIFT, areIdenticalMeasures } from './variance.js'
+import { areIdenticalMeasures, IDENTICAL_VARIANCE_SHIFT } from './variance.js'
 
 // Like `getMoe()` but taking `envDev` into account
 export const getAdjustedMoe = (stdev, length, envDev) => {
