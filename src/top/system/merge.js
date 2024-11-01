@@ -39,6 +39,7 @@ const removeSystemPrefix = (dimensionName) =>
 const useDimensionId = ({ id }) => id
 
 const getSystemDimensionsKey = ({ dimensions }) => {
+  // eslint-disable-next-line fp/no-mutating-methods
   const dimensionNames = Object.keys(dimensions).sort()
   return dimensionNames
     .map((dimensionName) => `${dimensionName}=${dimensions[dimensionName]}`)

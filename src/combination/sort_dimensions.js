@@ -20,6 +20,7 @@ export const sortDimensions = (result) => {
 
 const sortCombDimensions = (combination) => {
   const { dimensions } = combination
+  // eslint-disable-next-line fp/no-mutating-methods
   const dimensionNames = Object.keys(dimensions).sort(compareDimensionNames)
   const dimensionsA = Object.fromEntries(
     dimensionNames.map((dimensionName) => [

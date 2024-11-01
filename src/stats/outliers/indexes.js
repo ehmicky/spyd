@@ -28,6 +28,7 @@ import { isOutlier, THRESHOLDS } from './threshold.js'
 //  - On the other side, if the range is too narrow, it will only work with
 //    smaller "stop points"
 export const getThresholdsIndexes = (quantiles, quantilesCount) => {
+  // eslint-disable-next-line fp/no-mutating-methods
   const reversedQuantiles = [...quantiles].reverse()
   const outliersLimit = getOutliersLimit(quantilesCount)
 

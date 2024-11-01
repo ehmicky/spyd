@@ -1,6 +1,7 @@
 import sortOn from 'sort-on'
 
 export const sortDimensionsArray = (dimensionsArray) =>
+  // eslint-disable-next-line fp/no-mutating-methods
   dimensionsArray.map(sortDimensionsEntries).sort(compareDimensionsEntries)
 
 // Sort each dimension within a given `dimensions` by its dimension name.
@@ -13,6 +14,7 @@ const sortDimensionsEntries = (dimensionsEntries) => {
 const sortDimensionValueArray = ([dimensionName, dimensionValueArray]) => [
   dimensionName,
 
+  // eslint-disable-next-line fp/no-mutating-methods
   [...dimensionValueArray].sort(),
 ]
 

@@ -76,6 +76,7 @@ const concatValues = (
     ...secondDimensions[concatDimensionName],
   ]
 
+  // eslint-disable-next-line fp/no-mutating-methods
   dimensionsArray.splice(secondIndex, 1)
   return secondIndex - 1
 }

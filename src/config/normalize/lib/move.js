@@ -2,6 +2,7 @@ import { isParentPath, isSamePath } from 'wild-wild-parser'
 
 // When a property is moved to another with `rename|path`
 export const addMove = (moves, oldPath, newPath) => {
+  // eslint-disable-next-line fp/no-mutating-methods
   moves.push({ oldPath, newPath })
 }
 

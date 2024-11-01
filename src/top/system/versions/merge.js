@@ -32,7 +32,8 @@ const mergeValues = (values, previousValue) => {
   const valuesArray = values.split(VERSIONS_VALUE_SEPARATOR)
   return valuesArray.includes(previousValue)
     ? values
-    : [...valuesArray, previousValue].sort().join(VERSIONS_VALUE_SEPARATOR)
+    : // eslint-disable-next-line fp/no-mutating-methods
+      [...valuesArray, previousValue].sort().join(VERSIONS_VALUE_SEPARATOR)
 }
 
 // Some versions are too verbose when concatenated, so only keep the most

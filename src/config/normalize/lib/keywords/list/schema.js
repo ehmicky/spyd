@@ -40,6 +40,7 @@ const main = (validate, input) => {
 }
 
 const getValidationError = (errors) => {
+  // eslint-disable-next-line fp/no-mutating-methods
   const message = [...errors].reverse().map(serializeAjvError).join(', ')
   const messageA = message.startsWith('must')
     ? `${message}.`
