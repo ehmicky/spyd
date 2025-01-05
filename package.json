@@ -70,7 +70,7 @@
     "nvexeca": "^11.0.1",
     "os-name": "^6.0.0",
     "p-locate": "^6.0.0",
-    "p-map": "^7.0.2",
+    "p-map": "^7.0.3",
     "p-map-series": "^3.0.0",
     "p-props": "^6.0.0",
     "path-exists": "^5.0.0",
