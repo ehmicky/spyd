@@ -67,7 +67,7 @@
     "modern-errors-serialize": "^6.1.0",
     "modern-errors-switch": "^4.0.0",
     "normalize-exception": "^4.0.0",
-    "nvexeca": "^11.0.1",
+    "nvexeca": "^11.0.2",
     "os-name": "^6.0.0",
     "p-locate": "^6.0.0",
     "p-map": "^7.0.3",
