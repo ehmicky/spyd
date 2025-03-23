@@ -82,7 +82,7 @@
     "sort-on": "^6.1.0",
     "string-width": "^7.2.0",
     "strip-final-newline": "^4.0.0",
-    "time-resolution": "^3.0.0",
+    "time-resolution": "^3.0.1",
     "tmp-promise": "^3.0.2",
     "update-notifier": "^7.3.1",
     "uuid": "^11.1.0",
