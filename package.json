@@ -78,7 +78,7 @@
     "precise-now": "^3.0.1",
     "read-package-up": "^11.0.0",
     "semver": "^7.7.1",
-    "set-array": "^5.0.0",
+    "set-array": "^5.0.1",
     "sort-on": "^6.1.0",
     "string-width": "^7.2.0",
     "strip-final-newline": "^4.0.0",
