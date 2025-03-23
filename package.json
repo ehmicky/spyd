@@ -86,7 +86,7 @@
     "tmp-promise": "^3.0.2",
     "update-notifier": "^7.3.1",
     "uuid": "^11.1.0",
-    "wild-wild-parser": "^5.0.0",
+    "wild-wild-parser": "^5.0.1",
     "wild-wild-path": "^5.0.0",
     "wild-wild-utils": "^6.0.0",
     "wrap-ansi": "^9.0.0",
