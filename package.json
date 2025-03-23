@@ -65,7 +65,7 @@
     "modern-errors-clean": "^6.0.0",
     "modern-errors-cli": "^5.0.0",
     "modern-errors-serialize": "^6.1.0",
-    "modern-errors-switch": "^4.0.0",
+    "modern-errors-switch": "^4.0.1",
     "normalize-exception": "^4.0.1",
     "nvexeca": "^11.0.2",
     "os-name": "^6.0.0",
