@@ -63,7 +63,7 @@
     "modern-errors": "^7.1.2",
     "modern-errors-bugs": "^5.0.1",
     "modern-errors-clean": "^6.0.1",
-    "modern-errors-cli": "^5.1.0",
+    "modern-errors-cli": "^5.2.0",
     "modern-errors-serialize": "^6.1.1",
     "modern-errors-switch": "^4.1.0",
     "normalize-exception": "^4.0.1",
